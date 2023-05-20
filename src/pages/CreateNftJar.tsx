@@ -1,20 +1,26 @@
-import { FormBuilder } from "@daohaus/form-builder";
-import { MolochFields } from "@daohaus/moloch-v3-fields";
 
-import { APP_FORM } from "../legos/forms";
-import { Button, H2, SingleColumnLayout } from "@daohaus/ui";
-import { TARGET_DAO } from "../targetDao";
+import { MintForm } from "../components/MintForm";
+import { useDHConnect } from "@daohaus/connect";
+import { SingleColumnLayout } from "@daohaus/ui";
+import { useState } from "react";
+
+export type FormStates = "idle" | "loading" | "success" | "error";
 
 export const CreateNFTJar = () => {
-  // set up different pages and routes for these forms
+    const { provider, chainId } = useDHConnect();
+
+    const [formState, setFormState] = useState<FormStates>("idle");
+    const [txHash, setTxHash] = useState<string>("");
+    const [address, setAddress] = useState<string>("");
+    const [errMsg, setErrMsg] = useState<string>("");
   return (
     <>
       <SingleColumnLayout>
-        <H2>Mint the NFT</H2>
-
-        <FormBuilder
-          form={APP_FORM.CREATEJAR}
-          targetNetwork={TARGET_DAO.CHAIN_ID}
+        <MintForm 
+        setFormState={setFormState}
+        setTxHash={setTxHash}
+        setAddress={setAddress}
+        setErrMsg={setErrMsg}
         />
       </SingleColumnLayout>
     </>
