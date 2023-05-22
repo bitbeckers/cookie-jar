@@ -16,7 +16,9 @@ export const APP_CONTRACT: Record<string, ContractLego> = {
     type: "static",
     contractName: "COOKIENFT",
     abi: COOKIENFT_ABI,
-    targetAddress: ".nftAddress",
+    targetAddress: {
+      [TARGET_DAO.CHAIN_ID]: TARGET_DAO.NFT_ADDRESS,
+    },
   },
   POSTER: {
     type: "static",

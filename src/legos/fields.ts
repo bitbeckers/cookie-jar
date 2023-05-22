@@ -1,7 +1,17 @@
-import { FieldLego } from "@daohaus/form-builder";
 import { CustomFieldLego } from "./fieldConfig";
 
+
 export const APP_FIELD: Record<string, CustomFieldLego> = {
+  CSTEXTAREA: {
+    id: 'cstextarea',
+    type: 'cstextarea',
+    label: 'array input',
+    placeholder: 'array items seperated by new lines',
+    itemNoun: {
+      singular: "item",
+      plural: "items",
+    }
+  },
   TITLE: {
     id: "title",
     type: "input",
@@ -20,12 +30,6 @@ export const APP_FIELD: Record<string, CustomFieldLego> = {
     label: "Link",
     placeholder: "http://",
     expectType: "url",
-  },
-  TEST_FIELD: {
-    id: "testField",
-    type: "testField",
-    label: "Test Field",
-    placeholder: "Enter something",
   },
   JARTYPE: {
     id: "jarType",
@@ -49,6 +53,7 @@ export const APP_FIELD: Record<string, CustomFieldLego> = {
     id: "cookiePeriod",
     type: "input",
     label: "Cookie Period",
+    expectType: "ethAddress",
     placeholder: "Enter something",
   },
   COOKIE_TOKEN: {
@@ -57,11 +62,11 @@ export const APP_FIELD: Record<string, CustomFieldLego> = {
     label: "Cookie Token",
     placeholder: "Enter something",
   },
-  ALLOW_LIST: {
-    id: "allowList",
-    type: "csInput",
-    label: "Allow List",
-    itemNoun: { singular: "address", plural: "addresses" },
-    placeholder: "Enter something",
+  RECEIVER: {
+    id: "receiver",
+    type: "input",
+    label: "receiver",
+    expectType: "ethAddress",
+    placeholder: "0x...",
   },
 };

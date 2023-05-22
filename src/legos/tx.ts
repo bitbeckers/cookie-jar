@@ -30,18 +30,18 @@ export enum ProposalTypeIds {
 //   TARGET_DAO[import.meta.env.VITE_TARGET_KEY].ADDRESS
 // }","table":"reason","queryType":"list","title":"to eat a cookie","description":"${reason}","link":"${link}"}`,
 
-// 
+//
 export const APP_TX = {
   COOKIEJAR: {
-    id: 'COOKIEJAR',
+    id: "COOKIEJAR",
     contract: APP_CONTRACT.COOKIEJAR,
-    method: 'reachInJar',
+    method: "reachInJar",
     args: [
       `.receiver`,
       {
         type: "JSONDetails",
         jsonSchema: {
-          title: { type: "static", value: "to eat a cookie"},
+          title: { type: "static", value: "to eat a cookie" },
           user: `.user`,
           receiver: `.receiver`,
           description: `.reason`,
@@ -53,26 +53,17 @@ export const APP_TX = {
     ],
   },
   CREATENFTJAR: {
-    id: 'CREATENFTJAR',
-    contract: APP_CONTRACT.COOKIEJAR,
-    method: 'reachInJar',
-    staticArgs: [],
+    id: "CREATENFTJAR",
+    contract: APP_CONTRACT.COOKIENFT,
+    method: "cookieMint",
     args: [
-      `.receiver`,
-      {
-        type: "JSONDetails",
-        jsonSchema: {
-          title: { type: "static", value: "to eat a cookie"},
-          user: `.user`,
-          receiver: `.receiver`,
-          description: `.reason`,
-          link: `.link`,
-          table: { type: "static", value: "reason" },
-          queryType: { type: "static", value: "list" },
-        },
-      },
+      ".formValues.receiver",
+      ".formValues.cookiePeriod",
+      ".formValues.cookieAmount",
+      ".formValues.cookieToken",
+      ".formValues.allowList",
     ],
-  },
 
-  
+
+  },
 };
