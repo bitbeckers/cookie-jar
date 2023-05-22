@@ -37,15 +37,15 @@ export const APP_TX = {
     contract: APP_CONTRACT.COOKIEJAR,
     method: "reachInJar",
     args: [
-      `.receiver`,
+      ".formValues.receiver",
       {
         type: "JSONDetails",
         jsonSchema: {
           title: { type: "static", value: "to eat a cookie" },
-          user: `.user`,
-          receiver: `.receiver`,
-          description: `.reason`,
-          link: `.link`,
+          user: ".formValues.user",
+          receiver: ".formValues.receiver",
+          description: ".formValues.description",
+          link: ".formValues.link",
           table: { type: "static", value: "reason" },
           queryType: { type: "static", value: "list" },
         },
