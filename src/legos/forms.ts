@@ -17,9 +17,9 @@ export const APP_FORM: Record<string, CustomFormLego> = {
     tx: APP_TX.CREATENFTJAR as TXLego,
     fields: [
       APP_FIELD.RECEIVER,
-      APP_FIELD.COOKIE_AMOUNT,
       APP_FIELD.COOKIE_PERIOD,
       APP_FIELD.COOKIE_TOKEN,
+      APP_FIELD.COOKIE_AMOUNT,
       {...APP_FIELD.CSTEXTAREA, id:'allowList', label: 'Allow List'},
     ],
   },

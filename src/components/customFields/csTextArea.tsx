@@ -29,6 +29,11 @@ export const CSTextarea = (
   };
 
   return (
-    <WrappedTextArea {...props} rules={newRules} helperText={helperText} />
+    <WrappedTextArea
+      {...props}
+      rules={newRules}
+      helperText={helperText}
+      placeholder="Addresses seperated by new line "
+    />
   );
 };
