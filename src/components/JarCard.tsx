@@ -58,22 +58,21 @@ export const JarCard = ({
     <div style={{ marginBottom: "3rem" }}>
       <Card>
         <img src={cookie} alt="cookie" height={"20px"} />
-        <ParMd style={{ marginBottom: ".4rem" }}>
+
           <AddressDisplay
             address={record?.cookieJar}
             copy
             explorerNetworkId={TARGET_DAO.CHAIN_ID}
           />
-        </ParMd>
+
         <Label>Safe: </Label>
-        <ParMd style={{ marginBottom: ".4rem" }}>
-          
+
           <AddressDisplay
             address={record?.initParamsObj?.safe}
             copy
             explorerNetworkId={TARGET_DAO.CHAIN_ID}
           />
-        </ParMd>
+
         <Label>Type: </Label>
         <ParMd style={{ marginBottom: ".4rem" }}>??</ParMd>
         <Label>Title: </Label>

@@ -3,10 +3,9 @@ import { FieldLegoBase, FormLegoBase } from "@daohaus/utils";
 
 import { CSTextarea } from "../components/customFields/csTextArea";
 import { PeriodLength } from "../components/customFields/periodLength";
-import { MolochFields } from "@daohaus/moloch-v3-fields";
 
 export const AppFieldLookup = {
-  ...MolochFields,
+  ...CoreFieldLookup,
   periodLength: PeriodLength,
   cstextarea: CSTextarea,
 };

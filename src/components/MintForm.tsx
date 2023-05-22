@@ -1,10 +1,7 @@
-import { FormBuilder, StatusMsg } from "@daohaus/form-builder";
-import { FieldValues } from "react-hook-form";
-import { ethers } from 'ethers';
-import { CONTRACT_KEYCHAINS, ValidNetwork } from '@daohaus/keychain-utils';
+import { FormBuilder } from "@daohaus/form-builder";
+
 
 import { APP_FORM } from "../legos/forms";
-import { useToast } from "@daohaus/ui";
 import { TARGET_DAO } from "../targetDao";
 import { AppFieldLookup } from "../legos/fieldConfig";
 import { useDHConnect } from "@daohaus/connect";
@@ -26,6 +23,8 @@ export const MintForm = () => {
   }, [address]);
 
   if (!address) return null;
+
+  // TODO: override lifecycle methods to add custom logic
   
   return (
     <>
