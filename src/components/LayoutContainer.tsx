@@ -35,6 +35,7 @@ export const LayoutContainer = () => {
         ///{ label: "Allow List", href: `/members` },
         { label: "Claim", href: `/claims/${cookieChain}/${cookieAddress}` },
         { label: "Stats", href: `/history/${cookieChain}/${cookieAddress}` },
+        { label: "Config", href: `/config/${cookieChain}/${cookieAddress}` },
       ]}
       leftNav={
         <div>

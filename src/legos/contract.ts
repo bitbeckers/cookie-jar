@@ -3,6 +3,7 @@ import { ContractLego } from "@daohaus/utils";
 import { CONTRACT_KEYCHAINS } from "@daohaus/keychain-utils";
 import COOKIEJAR_ABI from "../abis/cookieJar.json";
 import COOKIENFT_ABI from "../abis/cookieNft.json";
+import COOKIEJARTARGET_ABI from "../abis/cookieJarTarget.json";
 import { TARGET_DAO } from "../targetDao";
 
 export const APP_CONTRACT: Record<string, ContractLego> = {
@@ -10,8 +11,14 @@ export const APP_CONTRACT: Record<string, ContractLego> = {
     type: "static",
     contractName: "COOKIEJAR",
     abi: COOKIEJAR_ABI,
-    targetAddress: ".cookieAddress",
+    targetAddress: ".formValues.targetSafeAddress",
   },
+  // COOKIEJARTARGET: {
+  //   type: "static",
+  //   contractName: "COOKIEJARTARGET",
+  //   abi: COOKIEJARTARGET_ABI,
+  //   targetAddress: ".formValues.targetSafe",
+  // },
   COOKIENFT: {
     type: "static",
     contractName: "COOKIENFT",

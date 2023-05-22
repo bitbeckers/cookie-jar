@@ -63,7 +63,22 @@ export const APP_TX = {
       ".formValues.cookieToken",
       ".formValues.allowList",
     ],
-
-
   },
+  COOKIEJARTARGET: {
+    id: "COOKIEJARTARGET",
+    contract: APP_CONTRACT.COOKIEJARTARGET,
+    method: "executeCall",
+    args: [
+      ".to",
+      ".value",
+      ".data"
+    ],
+    staticArgs: []
+    // method: "setConfig",
+    // args: [
+    //   ".formValues.cookiePeriod",
+    //   ".formValues.cookieAmount",
+    //   ".formValues.cookieToken",
+    // ],
+  }
 };
