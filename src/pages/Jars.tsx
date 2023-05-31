@@ -1,14 +1,11 @@
-import styled from "styled-components";
 
-import { H2, Label, Link, ParMd, SingleColumnLayout } from "@daohaus/ui";
+import { H2, SingleColumnLayout } from "@daohaus/ui";
 import { HausAnimated } from "../components/HausAnimated";
-import { StyledRouterLink } from "../components/Layout";
 import { useDHConnect } from "@daohaus/connect";
 import { TARGET_DAO } from "../targetDao";
 
 import cookie from "../assets/cookie.png";
 import { useCookieJarFactory } from "../hooks/useCookieJarFactory";
-import { NavLink } from "react-router-dom";
 import { JarCard } from "../components/JarCard";
 
 export const Jars = () => {

@@ -2,9 +2,7 @@ import { useQuery } from "react-query";
 
 import { createContract } from "@daohaus/tx-builder";
 import { ValidNetwork, Keychain } from "@daohaus/keychain-utils";
-import { nowInSeconds } from "@daohaus/utils";
 import { LOCAL_ABI } from "@daohaus/abis";
-import { TARGET_DAO } from "../targetDao";
 
 const fetchPosterRecords = async ({
   userAddress,

@@ -2,15 +2,11 @@ import styled from "styled-components";
 
 import {
   AddressDisplay,
-  Avatar,
-  Badge,
   Card,
   Label,
-  Link,
   ParMd,
 } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";
-import { useProfile } from "@daohaus/moloch-v3-hooks";
 import { TARGET_DAO } from "../targetDao";
 import { useCookieJar } from "../hooks/useCookieJar";
 import { ZERO_ADDRESS, formatPeriods, fromWei } from "@daohaus/utils";

@@ -1,14 +1,12 @@
 import { useState } from "react";
 
-import { Button, ParMd } from "@daohaus/ui";
 import { useTxBuilder } from "@daohaus/tx-builder";
 
-import { APP_TX } from "../legos/tx";
 import { TARGET_DAO } from "../targetDao";
-import { TXLego } from "@daohaus/utils";
 import { FormBuilder } from "@daohaus/form-builder";
 import { APP_FORM } from "../legos/forms";
 import { AppFieldLookup } from "../legos/fieldConfig";
+import { ParMd } from "@daohaus/ui";
 
 export enum StatusMsg {
   Compile = "Compiling Transaction Data",
@@ -32,7 +30,6 @@ export const ClaimForm = ({
   user: string | undefined;
   cookieAddress: string | undefined;
 }) => {
-  const { fireTransaction } = useTxBuilder();
   const [txStatus, setTxStatus] = useState<StatusMsg | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 

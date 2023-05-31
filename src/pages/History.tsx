@@ -1,4 +1,3 @@
-import styled from "styled-components";
 
 import { BiColumnLayout, ParMd, SingleColumnLayout } from "@daohaus/ui";
 

@@ -1,5 +1,5 @@
 import { useDHConnect } from "@daohaus/connect";
-import { Checkbox, Input, Label, SingleColumnLayout, Spinner } from "@daohaus/ui";
+import { SingleColumnLayout, Spinner } from "@daohaus/ui";
 
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
@@ -15,9 +15,7 @@ import { ClaimForm } from "../components/ClaimForm";
 import { useState } from "react";
 import { TARGET_DAO } from "../targetDao";
 import { useParams } from "react-router-dom";
-import { FormBuilder } from "@daohaus/form-builder";
-import { APP_FORM } from "../legos/forms";
-import { AppFieldLookup } from "../legos/fieldConfig";
+
 
 export const Claims = () => {
   
@@ -42,23 +40,6 @@ export const Claims = () => {
     });
 
   const isGnosis = chainId === TARGET_DAO.CHAIN_ID;
-
-  const handleReasonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setReason(e.target.value);
-  };
-
-  const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLink(e.target.value);
-  };
-
-  const handleReceiverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setReceiver(e.target.value);
-  };
-
-  const toggleChecked = () => {
-    setReceiver(address || "");
-    setAlternateReceiverCheck(!alternateReceiverCheck);
-  };
 
   if (isIdle)
     return (

@@ -12,19 +12,6 @@ export const APP_FIELD: Record<string, CustomFieldLego> = {
       plural: "items",
     },
   },
-  PROPOSAL_EXPIRY: {
-    id: "checkRender",
-    type: "checkRender",
-    gateLabel: "Add Expiration Date",
-    components: [
-      {
-        id: "proposalExpiry",
-        type: "proposalExpiry",
-        defaultValue: "0",
-        label: "Expiration",
-      },
-    ],
-  },
   TITLE: {
     id: "title",
     type: "input",
@@ -43,18 +30,6 @@ export const APP_FIELD: Record<string, CustomFieldLego> = {
     label: "Link",
     placeholder: "http://",
     expectType: "url",
-  },
-  JARTYPE: {
-    id: "jarType",
-    type: "select",
-    label: "Jar Type",
-    options: [
-      { name: "DAO", value: "baal", key: "baal" },
-      { name: "erc20", value: "erc20", key: "erc20" },
-      { name: "erc721", value: "erc721", key: "erc721" },
-      { name: "hats", value: "hats", key: "hats" },
-      { name: "pickles", value: "pickles", key: "pickles" },
-    ],
   },
   COOKIE_AMOUNT: {
     id: "cookieAmount",

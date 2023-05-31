@@ -10,16 +10,12 @@ import { AppFieldLookup } from "../legos/fieldConfig";
 import { useDHConnect } from "@daohaus/connect";
 import { useMemo, useState } from "react";
 import {
-  ReactSetter,
   ZERO_ADDRESS,
   encodeFunction,
-  encodeValues,
   handleErrorMessage,
-  isString,
 } from "@daohaus/utils";
 import { useParams } from "react-router-dom";
 import { useCookieJar } from "../hooks/useCookieJar";
-import { APP_CONTRACT } from "../legos/contract";
 import { useTxBuilder } from "@daohaus/tx-builder";
 import { useToast } from "@daohaus/ui";
 import { StatusMsg } from "./ClaimForm";
