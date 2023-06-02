@@ -1,4 +1,4 @@
-import { ParSm } from "@daohaus/ui";
+import { ParMd, ParSm, SingleColumnLayout } from "@daohaus/ui";
 import React from "react";
 import styled from "styled-components";
 
@@ -6,28 +6,33 @@ const ImageContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 20rem;
-  margin-bottom: 2rem;
+
+
+  height: 40rem;
+  margin-bottom: 5rem;
   .img-block {
     display: flex;
-    height: 12rem;
-    width: 12rem;
+    height: 24rem;
+    width: 24rem;
   }
   img {
-    height: 20rem;
-    width: 20rem;
+    height: 40rem;
+    width: 40rem;
   }
+
 `;
 
 export const NFTImage = ({ tokenId }: { tokenId: string }) => {
+  // TODO: don't hard code this
+  // link to animation
   const nft =
-    "https://ipfs.io/ipfs/QmWn8CP5AnqmPU2zKWZesk6EFhzk5zj72mdDQEaTPmwezF/";
+    "https://ipfs.io/ipfs/Qme4HsmWQSmShQ3dDPZGD8A5kyTPceTEP5dVkWnsMHhC2Z/";
   return (
     <ImageContainer>
       <div className="img-block">
         <img src={`${nft}${tokenId}.png`} />
-        <ParSm>next tokenId: {tokenId}</ParSm>
       </div>
+        <ParMd>next tokenId: {tokenId}</ParMd>
     </ImageContainer>
   );
 };
