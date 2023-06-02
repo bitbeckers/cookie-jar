@@ -90,7 +90,7 @@ export const MintForm = () => {
           <br />
           Your cookieJar is {minted?.cookieJar}
           <br />
-          Your account is {minted?.account}
+          Your account is (send funds to) {minted?.account}
         </SuccessText>
       )}
     </>

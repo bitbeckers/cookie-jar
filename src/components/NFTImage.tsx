@@ -1,3 +1,4 @@
+import { ParSm } from "@daohaus/ui";
 import React from "react";
 import styled from "styled-components";
 
@@ -25,6 +26,7 @@ export const NFTImage = ({ tokenId }: { tokenId: string }) => {
     <ImageContainer>
       <div className="img-block">
         <img src={`${nft}${tokenId}.png`} />
+        <ParSm>next tokenId: {tokenId}</ParSm>
       </div>
     </ImageContainer>
   );
