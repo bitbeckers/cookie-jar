@@ -2,8 +2,6 @@ import { H2, SingleColumnLayout } from "@daohaus/ui";
 import { HausAnimated } from "../components/HausAnimated";
 import { useDHConnect } from "@daohaus/connect";
 
-import cookie from "../assets/cookie.png";
-import { useCookieJarFactory } from "../hooks/useCookieJarFactory";
 import { JarCard } from "../components/JarCard";
 import { CookieJarEntry, useIndexer } from "../hooks/useIndexer";
 import { useEffect, useState } from "react";

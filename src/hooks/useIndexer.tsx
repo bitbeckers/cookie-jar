@@ -1,6 +1,6 @@
 import { createIndexer, IdbStorage, Event } from "chainsauce-web";
 import type { Indexer } from "chainsauce-web";
-import { ethers, BigNumberish } from "ethers";
+import { ethers } from "ethers";
 
 import FactoryABI from "../abis/CookieJarFactory.json";
 import { useEffect, useState } from "react";
@@ -21,7 +21,7 @@ export type CookieJarEntry = {
 };
 
 const parseSummonEvent = (event: Event) => {
-  // cookieJar, initializer, jarType
+  // cookieJar, initializer, details, uid
   const args = event.args;
   console.log("Event: ", event);
 
@@ -158,7 +158,7 @@ const useIndexer = () => {
     indexer.subscribe(
       addresses?.COOKIEJAR_FACTORY_ADDRESS,
       FactoryABI.abi,
-      27746237
+      28000000
     );
   }
 

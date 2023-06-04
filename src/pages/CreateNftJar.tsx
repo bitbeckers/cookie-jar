@@ -10,8 +10,10 @@ export type FormStates = "idle" | "loading" | "success" | "error";
 export const CreateNFTJar = () => {
   const { chainId, address } = useDHConnect();
   const target = useTargets();
+
+  console.log("target", target);
   const { totalSupply } = useCookieNFT({
-    nftAddress: target?.NFT_ADDRESS,
+    nftAddress: target?.LIST_COOKIEJAR_6551_ADDRESS,
     userAddress: address,
     chainId,
   });

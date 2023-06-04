@@ -9,12 +9,12 @@ import { useParams } from "react-router-dom";
 import { useTargets } from "../hooks/useTargets";
 
 export const History = () => {
-  const { address, chainId } = useDHConnect();
-  const { cookieAddress, cookieChain } = useParams();
+  const { address } = useDHConnect();
+  const { cookieAddress } = useParams();
   const target = useTargets();
 
   //TODO refactor when using chainsauce
-  const { records, parsed, leaderBoard, isLoading } = usePoster({
+  const { parsed, leaderBoard, isLoading } = usePoster({
     userAddress: address,
     cookieAddress: cookieAddress,
     chainId: target?.CHAIN_ID || TARGET_GNOSIS.CHAIN_ID,

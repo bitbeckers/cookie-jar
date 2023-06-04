@@ -1,5 +1,5 @@
 
-import { Avatar, Badge, Card, Link, ParMd } from "@daohaus/ui";
+import { Avatar, Card, ParMd } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";
 import { useProfile } from "@daohaus/moloch-v3-hooks";
 

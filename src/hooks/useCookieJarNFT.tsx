@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { createContract } from "@daohaus/tx-builder";
 import { ValidNetwork, Keychain } from "@daohaus/keychain-utils";
 
-import CookieNftAbi from "../abis/ImpCookieJar6551.json";
+import CookieNftAbi from "../abis/cookieNft.json";
 import { ZERO_ADDRESS } from "@daohaus/utils";
 
 // fetch user cookie claim data from the blockchain
@@ -21,15 +21,19 @@ const fetchNFT = async ({
   if (!nftAddress || !chainId) {
     throw new Error("No cookie jar address provided");
   }
+  console.log("CREATING CONTRACT");
+
   const nftContract = createContract({
     address: nftAddress,
-    abi: CookieNftAbi.abi,
+    abi: CookieNftAbi,
     chainId,
     rpcs,
   });
 
   // TODO: check if sold out
   // const cap = await nftContract.cap();
+
+  console.log(nftContract);
 
   try {
     const filter = nftContract.filters.Transfer(ZERO_ADDRESS, null);

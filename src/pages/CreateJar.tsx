@@ -1,6 +1,5 @@
 import { Button, H2, SingleColumnLayout } from "@daohaus/ui";
 import { StyledRouterLink } from "../components/Layout";
-import styled from "styled-components";
 
 export const CreateJar = () => {
   // set up different pages and routes for these forms
@@ -14,11 +13,12 @@ export const CreateJar = () => {
             NFT
           </Button>
         </StyledRouterLink>
-        <StyledRouterLink to="/mintZodiac">
-          <Button style={{ marginTop: "2rem", marginBottom: "2rem" }}>
-            Add to current safe
-          </Button>
-        </StyledRouterLink>
+        <Button
+          disabled={true}
+          style={{ marginTop: "2rem", marginBottom: "2rem" }}
+        >
+          Add to current safe
+        </Button>
       </SingleColumnLayout>
     </>
   );

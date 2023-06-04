@@ -1,12 +1,10 @@
-import { ParMd, ParSm, SingleColumnLayout } from "@daohaus/ui";
-import React from "react";
+import { ParMd } from "@daohaus/ui";
 import styled from "styled-components";
 
 const ImageContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
 
   height: 40rem;
   margin-bottom: 5rem;
@@ -19,7 +17,6 @@ const ImageContainer = styled.div`
     height: 40rem;
     width: 40rem;
   }
-
 `;
 
 export const NFTImage = ({ tokenId }: { tokenId: string }) => {
@@ -32,7 +29,7 @@ export const NFTImage = ({ tokenId }: { tokenId: string }) => {
       <div className="img-block">
         <img src={`${nft}${tokenId}.png`} />
       </div>
-        <ParMd>next tokenId: {tokenId}</ParMd>
+      <ParMd>next tokenId: {tokenId}</ParMd>
     </ImageContainer>
   );
 };

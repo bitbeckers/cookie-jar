@@ -49,16 +49,16 @@ export const useCookieJarFactory = () => {
 
   if (!addresses) return {};
 
-  const contract = new ethers.Contract(
+  const factoryContract = new ethers.Contract(
     addresses.COOKIEJAR_FACTORY_ADDRESS,
     CookieJarFactory.abi,
     provider?.getSigner()
   );
 
   return {
-    factoryContract: contract,
+    factoryContract,
     summonCookieJar: (details: Details, initializer: Initializer) =>
-      _summonCookieJar(contract, details, initializer),
+      _summonCookieJar(factoryContract, details, initializer),
   };
 };
 

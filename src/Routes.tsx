@@ -5,7 +5,6 @@ import { Claims } from "./pages/Claim";
 import { History } from "./pages/History";
 import { Jars } from "./pages/Jars";
 import { CreateJar } from "./pages/CreateJar";
-import { CreateForm } from "./pages/CreateForm";
 import { CreateNFTJar } from "./pages/CreateNftJar";
 import { ConfigForm } from "./components/ConfigForm";
 import { ManageForm } from "./components/ManageForm";

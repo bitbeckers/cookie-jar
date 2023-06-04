@@ -1,5 +1,4 @@
-import { MintForm } from "../components/MintForm";
-import { useDHConnect } from "@daohaus/connect";
+
 import { SingleColumnLayout } from "@daohaus/ui";
 import { MintFormZodiac } from "../components/MintFormZodiac";
 import styled from "styled-components";

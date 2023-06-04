@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { H2, Link, ParMd, SingleColumnLayout } from "@daohaus/ui";
+import { H2, ParMd, SingleColumnLayout } from "@daohaus/ui";
 import { StyledRouterLink } from "../components/Layout";
 // import cookie.png from assets
 import cookie from "../assets/cookie.png";
