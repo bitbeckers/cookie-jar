@@ -17,7 +17,7 @@ type Minted = {
   tokenId: string;
 };
 
-export const MintForm = () => {
+export const MintFormZodiac = () => {
   const { address, provider } = useDHConnect();
   const target = useTargets();
   const [txStatus, setTxStatus] = useState<StatusMsg | null>(null);
@@ -33,7 +33,6 @@ export const MintForm = () => {
     }
   }, [address]);
 
-  if (!address) return null;
 
   const onSuccess = async (args: TransactionReceipt) => {
     // TODO: filter account created instead of magic number 10

@@ -2,10 +2,9 @@ import { FieldValues } from "react-hook-form";
 import { FormBuilder } from "@daohaus/form-builder";
 
 import COOKIEJARTARGET_ABI from "../abis/cookieJarTarget.json";
-import COOKIEJAR_ABI from "../abis/cookieJar.json";
+import COOKIEJAR_CORE_ABI from "../abis/CookieJarCore.json";
 
 import { APP_FORM } from "../legos/forms";
-import { TARGET_DAO } from "../targetDao";
 import { AppFieldLookup } from "../legos/fieldConfig";
 import { useDHConnect } from "@daohaus/connect";
 import { useMemo, useState } from "react";
@@ -19,6 +18,7 @@ import { useCookieJar } from "../hooks/useCookieJar";
 import { useTxBuilder } from "@daohaus/tx-builder";
 import { useToast } from "@daohaus/ui";
 import { StatusMsg } from "./ClaimForm";
+import { useTargets } from "../hooks/useTargets";
 
 export type SummonStates = "idle" | "loading" | "success" | "error";
 
@@ -26,6 +26,7 @@ export const ConfigForm = () => {
   const { cookieAddress, cookieChain } = useParams();
   const { address } = useDHConnect();
   const { fireTransaction } = useTxBuilder();
+  const target = useTargets();
 
   const [summonState, setSummonState] = useState<SummonStates>("idle");
   const [txHash, setTxHash] = useState<string>("");
@@ -36,11 +37,13 @@ export const ConfigForm = () => {
   const [isLoading2, setIsLoading] = useState(false);
   const [status, setStatus] = useState<null | StatusMsg>(null);
 
+  if (!target) return null;
+
   const { isIdle, isLoading, error, data, hasClaimed, canClaim, refetch } =
     useCookieJar({
       cookieJarAddress: cookieAddress,
       userAddress: address,
-      chainId: TARGET_DAO.CHAIN_ID, // todo: use cookieChain
+      chainId: target.CHAIN_ID, // todo: use cookieChain
     });
 
   console.log("***************", data);
@@ -59,16 +62,19 @@ export const ConfigForm = () => {
   if (!address || !data?.target) return null;
 
   const handleSubmit = async (formValues: FieldValues) => {
-    console.log("*****----------**********", formValues.cookiePeriod,
-    formValues.cookieAmount,
-    formValues.cookieToken,);
-
-    // setConfig
-    const encodedFunction = encodeFunction(COOKIEJAR_ABI, "setConfig", [
+    console.log(
+      "*****----------**********",
       formValues.cookiePeriod,
       formValues.cookieAmount,
-      formValues.cookieToken,
-    ]);
+      formValues.cookieToken
+    );
+
+    // setConfig
+    const encodedFunction = encodeFunction(
+      COOKIEJAR_CORE_ABI.abi,
+      "setConfig",
+      [formValues.cookiePeriod, formValues.cookieAmount, formValues.cookieToken]
+    );
 
     console.log("encoded function", encodedFunction);
 
@@ -123,7 +129,7 @@ export const ConfigForm = () => {
     <>
       <FormBuilder
         form={APP_FORM.CONFIGJAR}
-        targetNetwork={TARGET_DAO.CHAIN_ID}
+        targetNetwork={target.CHAIN_ID}
         customFields={AppFieldLookup}
         defaultValues={defaultFields}
         onSubmit={(formValues) => {

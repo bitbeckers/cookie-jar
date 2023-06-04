@@ -2,29 +2,30 @@ import styled from "styled-components";
 
 import { AddressDisplay, Card, Label, ParMd } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";
-import { TARGET_DAO_GNOSIS } from "../targetDao";
 import { ZERO_ADDRESS, formatPeriods, fromWei } from "@daohaus/utils";
 import { StyledRouterLink } from "./Layout";
 import { CookieJarEntry } from "../hooks/useIndexer";
 import { BigNumber } from "ethers";
-import CookieJarABI from "../abis/cookieJar.json";
+import COOKIEJAR_CORE_ABI from "../abis/CookieJarCore.json";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useDHConnect } from "@daohaus/connect";
+import { useTargets } from "../hooks/useTargets";
 /**
 
  */
 export const JarCard = ({ record }: { record: CookieJarEntry }) => {
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
-
   const { provider } = useDHConnect();
+
+  const target = useTargets();
 
   useEffect(() => {
     const getIsAllowed = async () => {
       if (provider) {
         const cookieJarContract = new ethers.Contract(
           record.address,
-          CookieJarABI,
+          COOKIEJAR_CORE_ABI.abi,
           provider
         );
 
@@ -44,14 +45,14 @@ export const JarCard = ({ record }: { record: CookieJarEntry }) => {
         <AddressDisplay
           address={record.address}
           copy
-          explorerNetworkId={TARGET_DAO_GNOSIS.CHAIN_ID}
+          explorerNetworkId={target?.CHAIN_ID}
         />
 
         <Label>Safe: </Label>
         <AddressDisplay
           address={record.initializer.safeTarget}
           copy
-          explorerNetworkId={TARGET_DAO_GNOSIS.CHAIN_ID}
+          explorerNetworkId={target?.CHAIN_ID}
         />
 
         <Label>Type: </Label>
@@ -83,9 +84,7 @@ export const JarCard = ({ record }: { record: CookieJarEntry }) => {
         </ParMd>
         <ParMd style={{ marginBottom: ".4rem" }}>
           Go to{" "}
-          <StyledRouterLink
-            to={`/claims/${TARGET_DAO_GNOSIS.CHAIN_ID}/${record.address}`}
-          >
+          <StyledRouterLink to={`/claims/${target?.CHAIN_ID}/${record.address}`}>
             Claim
           </StyledRouterLink>{" "}
           to claim your tokens.

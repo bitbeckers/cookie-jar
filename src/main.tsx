@@ -7,7 +7,7 @@ import { HausThemeProvider } from "@daohaus/ui";
 import { Buffer } from "buffer";
 
 import { Routes } from "./Routes";
-import { TARGET_DAO } from "./targetDao";
+import { DEFAULT_TARGET } from "./targetDao";
 
 import "./App.css";
 
@@ -21,9 +21,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <HashRouter>
       <QueryClientProvider client={queryClient}>
-        <DHConnectProvider
-          daoChainId={TARGET_DAO.CHAIN_ID}
-        >
+        <DHConnectProvider daoChainId={DEFAULT_TARGET.CHAIN_ID}>
           <HausThemeProvider>
             <Routes />
           </HausThemeProvider>

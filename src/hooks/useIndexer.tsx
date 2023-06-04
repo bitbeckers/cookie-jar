@@ -2,11 +2,16 @@ import { createIndexer, IdbStorage, Event } from "chainsauce-web";
 import type { Indexer } from "chainsauce-web";
 import { ethers, BigNumberish } from "ethers";
 
-import FactoryABI from "../abis/factoryCookieJar.json";
-import { ADDRESSES } from "../utils/config";
+import FactoryABI from "../abis/CookieJarFactory.json";
 import { useEffect, useState } from "react";
 import { useDHConnect } from "@daohaus/connect";
-import { BaalInitializer, CookieJarInitializer, Erc20Initializer, Initializer } from "./useCookieJarFactory";
+import {
+  BaalInitializer,
+  CookieJarInitializer,
+  Erc20Initializer,
+  Initializer,
+} from "./useCookieJarFactory";
+import { useTargets } from "./useTargets";
 
 export type CookieJarEntry = {
   id: string;
@@ -130,8 +135,9 @@ async function handleEvent(indexer: Indexer<IdbStorage>, event: Event) {
 }
 
 const useIndexer = () => {
-  const { provider } = useDHConnect();
+  const { provider, chainId } = useDHConnect();
   const [indexer, setIndexer] = useState<Indexer<IdbStorage> | undefined>();
+  const addresses = useTargets();
 
   const storage = new IdbStorage(["cookieJars"]);
 
@@ -148,9 +154,12 @@ const useIndexer = () => {
 
   console.log(indexer);
 
-  if (indexer) {
-    // Don't set starting block to 0, bunch of indexing errors if you do
-    indexer.subscribe(ADDRESSES["0x64"].summonCookieJar, FactoryABI, 27746237);
+  if (addresses && indexer) {
+    indexer.subscribe(
+      addresses?.COOKIEJAR_FACTORY_ADDRESS,
+      FactoryABI.abi,
+      27746237
+    );
   }
 
   const getJars = async () => {

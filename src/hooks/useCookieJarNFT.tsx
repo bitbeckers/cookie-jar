@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { createContract } from "@daohaus/tx-builder";
 import { ValidNetwork, Keychain } from "@daohaus/keychain-utils";
 
-import CookieNftAbi from "../abis/cookieNft.json";
+import CookieNftAbi from "../abis/ImpCookieJar6551.json";
 import { ZERO_ADDRESS } from "@daohaus/utils";
 
 // fetch user cookie claim data from the blockchain
@@ -23,7 +23,7 @@ const fetchNFT = async ({
   }
   const nftContract = createContract({
     address: nftAddress,
-    abi: CookieNftAbi,
+    abi: CookieNftAbi.abi,
     chainId,
     rpcs,
   });

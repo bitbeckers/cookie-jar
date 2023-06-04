@@ -1,12 +1,10 @@
 import { useState } from "react";
 
-import { useTxBuilder } from "@daohaus/tx-builder";
-
-import { TARGET_DAO } from "../targetDao";
 import { FormBuilder } from "@daohaus/form-builder";
 import { APP_FORM } from "../legos/forms";
 import { AppFieldLookup } from "../legos/fieldConfig";
 import { ParMd } from "@daohaus/ui";
+import { useTargets } from "../hooks/useTargets";
 
 export enum StatusMsg {
   Compile = "Compiling Transaction Data",
@@ -32,12 +30,15 @@ export const ClaimForm = ({
 }) => {
   const [txStatus, setTxStatus] = useState<StatusMsg | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const target = useTargets();
+
+  if (!user || !cookieAddress || !target) return null;
 
   return (
     <>
       <FormBuilder
         form={APP_FORM.JARCLAIM}
-        targetNetwork={TARGET_DAO.CHAIN_ID}
+        targetNetwork={target.CHAIN_ID}
         defaultValues={{
           receiver: user,
           user: user,

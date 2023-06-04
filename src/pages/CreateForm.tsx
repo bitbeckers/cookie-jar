@@ -1,7 +1,6 @@
 import { FormBuilder } from "@daohaus/form-builder";
 
 import { APP_FORM } from "../legos/forms";
-import { TARGET_DAO } from "../targetDao";
 import { H2, SingleColumnLayout } from "@daohaus/ui";
 import { useParams } from "react-router-dom";
 import {
@@ -11,10 +10,12 @@ import {
   Initializer,
   useCookieJarFactory,
 } from "../hooks/useCookieJarFactory";
+import { useTargets } from "../hooks/useTargets";
 
 export const CreateForm = () => {
   const { jarType } = useParams();
-  const { summonCookieJar } = useCookieJarFactory();
+  const { factoryContract, summonCookieJar } = useCookieJarFactory();
+  const target = useTargets();
 
   const getForm = () => {
     let form;
@@ -105,7 +106,9 @@ export const CreateForm = () => {
       return;
     }
 
-    summonCookieJar(details, initializer);
+    if (factoryContract && summonCookieJar) {
+      summonCookieJar(details, initializer);
+    }
   };
 
   const form = getForm();
@@ -125,7 +128,7 @@ export const CreateForm = () => {
   return (
     <FormBuilder
       form={form}
-      targetNetwork={TARGET_DAO.CHAIN_ID}
+      targetNetwork={target?.CHAIN_ID}
       onSubmit={handleSubmit}
     />
   );

@@ -4,8 +4,7 @@ import { SingleColumnLayout, Spinner } from "@daohaus/ui";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 
-
-import { HAUS_NETWORK_DATA } from '@daohaus/keychain-utils';
+import { HAUS_NETWORK_DATA } from "@daohaus/keychain-utils";
 
 import { useCookieJar } from "../hooks/useCookieJar";
 import { DisplayClaim } from "../components/DisplayClaim";
@@ -13,15 +12,14 @@ import { Countdown } from "../components/Countdown";
 import { ClaimDetails } from "../components/DetailsBox";
 import { ClaimForm } from "../components/ClaimForm";
 import { useState } from "react";
-import { TARGET_DAO } from "../targetDao";
 import { useParams } from "react-router-dom";
-
+import { useTargets } from "../hooks/useTargets";
 
 export const Claims = () => {
-  
   const { address, chainId } = useDHConnect();
   const [showConfetti, setShowConfetti] = useState(false);
   const { width, height } = useWindowSize();
+  const target = useTargets();
 
   const [reason, setReason] = useState<string>("");
   const [link, setLink] = useState<string>("");
@@ -36,10 +34,10 @@ export const Claims = () => {
     useCookieJar({
       cookieJarAddress: cookieAddress,
       userAddress: address,
-      chainId: TARGET_DAO.CHAIN_ID,
+      chainId: target?.CHAIN_ID,
     });
 
-  const isGnosis = chainId === TARGET_DAO.CHAIN_ID;
+  const isGnosis = chainId === target?.CHAIN_ID;
 
   if (isIdle)
     return (
@@ -160,7 +158,9 @@ export const Claims = () => {
             <ClaimDetails
               claimAmt={data.claimAmt}
               claimPeriod={data.claimPeriod}
-              unit={HAUS_NETWORK_DATA[TARGET_DAO.CHAIN_ID]?.symbol || ""}
+              unit={
+                target ? HAUS_NETWORK_DATA[target.CHAIN_ID]?.symbol || "" : ""
+              }
             />
           </>
         }
@@ -173,7 +173,7 @@ export const Claims = () => {
         <ClaimDetails
           claimAmt={data.claimAmt}
           claimPeriod={data.claimPeriod}
-          unit={HAUS_NETWORK_DATA[TARGET_DAO.CHAIN_ID]?.symbol || ""}
+          unit={target ? HAUS_NETWORK_DATA[target.CHAIN_ID]?.symbol || "" : ""}
         />
         <ClaimForm
           user={address}
@@ -191,7 +191,7 @@ export const Claims = () => {
         <ClaimDetails
           claimAmt={data.claimAmt}
           claimPeriod={data.claimPeriod}
-          unit={HAUS_NETWORK_DATA[TARGET_DAO.CHAIN_ID]?.symbol || ""}
+          unit={target ? HAUS_NETWORK_DATA[target.CHAIN_ID]?.symbol || "" : ""}
         />
         <ClaimForm
           user={address}

@@ -1,21 +1,23 @@
-
 import { BiColumnLayout, ParMd, SingleColumnLayout } from "@daohaus/ui";
 
 import { usePoster } from "../hooks/usePoster";
 import { useDHConnect } from "@daohaus/connect";
-import { TARGET_DAO } from "../targetDao";
+import { TARGET_GNOSIS } from "../targetDao";
 import { HistoryCard } from "../components/HistoryCard";
 import { LeaderBoardCard } from "../components/LeaderBoardCard";
 import { useParams } from "react-router-dom";
+import { useTargets } from "../hooks/useTargets";
 
 export const History = () => {
   const { address, chainId } = useDHConnect();
   const { cookieAddress, cookieChain } = useParams();
+  const target = useTargets();
 
+  //TODO refactor when using chainsauce
   const { records, parsed, leaderBoard, isLoading } = usePoster({
     userAddress: address,
     cookieAddress: cookieAddress,
-    chainId: TARGET_DAO.CHAIN_ID,
+    chainId: target?.CHAIN_ID || TARGET_GNOSIS.CHAIN_ID,
   });
 
   return (

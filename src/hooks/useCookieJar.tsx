@@ -4,7 +4,7 @@ import { createContract } from '@daohaus/tx-builder';
 import { ValidNetwork, Keychain } from '@daohaus/keychain-utils';
 import { nowInSeconds } from '@daohaus/utils';
 
-import CookieJarAbi from '../abis/cookieJar.json';
+import CookieJarAbi from '../abis/CookieJarCore.json';
 
 // fetch user cookie claim data from the blockchain
 const fetchUserClaim = async ({
@@ -23,7 +23,7 @@ const fetchUserClaim = async ({
   }
   const cookieContract = createContract({
     address: cookieJarAddress,
-    abi: CookieJarAbi,
+    abi: CookieJarAbi.abi,
     chainId,
     rpcs,
   });

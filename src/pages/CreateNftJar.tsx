@@ -1,21 +1,20 @@
-
 import { MintForm } from "../components/MintForm";
 import { useDHConnect } from "@daohaus/connect";
 import { SingleColumnLayout } from "@daohaus/ui";
 import { NFTImage } from "../components/NFTImage";
-import { TARGET_DAO } from "../targetDao";
 import { useCookieNFT } from "../hooks/useCookieJarNFT";
+import { useTargets } from "../hooks/useTargets";
 
 export type FormStates = "idle" | "loading" | "success" | "error";
 
 export const CreateNFTJar = () => {
-    const { provider, chainId, address } = useDHConnect();
-    const { data, totalSupply } = useCookieNFT({
-        nftAddress: TARGET_DAO.NFT_ADDRESS,
-        userAddress: address,
-        chainId,
-    });
-  
+  const { chainId, address } = useDHConnect();
+  const target = useTargets();
+  const { totalSupply } = useCookieNFT({
+    nftAddress: target?.NFT_ADDRESS,
+    userAddress: address,
+    chainId,
+  });
 
   return (
     <>
@@ -26,5 +25,3 @@ export const CreateNFTJar = () => {
     </>
   );
 };
-
-

@@ -1,9 +1,9 @@
 import { BigNumberish, ContractTransaction } from "ethers";
 
-import COOKIEJAR_FACTORY from "../abis/factoryCookieJar.json";
-import { ADDRESSES } from "../utils/config";
+import CookieJarFactory from "../abis/CookieJarFactory.json";
 import { useDHConnect } from "@daohaus/connect";
 import { ethers } from "ethers";
+import { useTargets } from "./useTargets";
 
 export interface CookieJarInitializer {
   safeTarget: string;
@@ -30,6 +30,7 @@ export type Initializer =
   | Erc20Initializer;
 
 interface CookieJarFactory {
+  factoryContract: ethers.Contract;
   summonCookieJar: (
     details: Details,
     initializer: Initializer
@@ -42,85 +43,68 @@ export type Details = {
   description?: string;
 };
 
-export const useCookieJarFactory = (): CookieJarFactory => {
-  const { provider, chainId } = useDHConnect();
-  //TODO - support multiple chains
-  const addresses = ADDRESSES[chainId as "0x64"];
+export const useCookieJarFactory = () => {
+  const { provider } = useDHConnect();
+  const addresses = useTargets();
+
+  if (!addresses) return {};
 
   const contract = new ethers.Contract(
-    addresses.summonCookieJar,
-    COOKIEJAR_FACTORY,
+    addresses.COOKIEJAR_FACTORY_ADDRESS,
+    CookieJarFactory.abi,
     provider?.getSigner()
   );
 
-  const summonCookieJar = async (
-    details: Details,
-    initializer: Initializer
-  ) => {
-    let tx;
-    let _details;
-    let _initializer;
+  return {
+    factoryContract: contract,
+    summonCookieJar: (details: Details, initializer: Initializer) =>
+      _summonCookieJar(contract, details, initializer),
+  };
+};
 
-    console.log("contract", contract);
-    if (instanceOfBaalInitializer(initializer)) {
-      console.log("Summoning Baal Cookie Jar");
-      _details = {
-        ...details,
-        type: "BAAL",
-      };
+const _summonCookieJar = async (
+  contract: ethers.Contract,
+  details: Details,
+  initializer: Initializer
+) => {
+  let _details;
+  let _initializer;
+  const addresses = useTargets();
 
-      _initializer = ethers.utils.defaultAbiCoder.encode(
-        [
-          "address",
-          "uint256",
-          "uint256",
-          "address",
-          "address",
-          "uint256",
-          "bool",
-          "bool",
-        ],
-        [
-          initializer.safeTarget,
-          initializer.periodLength,
-          initializer.cookieAmount,
-          initializer.cookieToken,
-          initializer.dao,
-          initializer.threshold,
-          initializer.useShares,
-          initializer.useLoot,
-        ]
-      );
-    }
-    return {...parsedContent, initParamsObj, 
-      // parsedDetails
+  console.log("contract", contract);
+  if (instanceOfBaalInitializer(initializer)) {
+    console.log("Summoning Baal Cookie Jar");
+    _details = {
+      ...details,
+      type: "BAAL",
     };
-  });
 
-    if (instanceOfErc20Initializer(initializer)) {
-      console.log("Summoning ERC20 Cookie Jar");
+    console.log("_details: ", _details);
+    console.log("_initializer: ", initializer);
+    console.log("address: ", addresses?.BAAL_COOKIEJAR_ADDRESS);
 
-      _details = {
-        ...details,
-        type: "ERC20",
-      };
+    const detailString = JSON.stringify(_details);
 
-      _initializer = ethers.utils.defaultAbiCoder.encode(
-        ["address", "uint256", "uint256", "address", "address", "uint256"],
-        [
-          initializer.safeTarget,
-          initializer.periodLength,
-          initializer.cookieAmount,
-          initializer.cookieToken,
-          initializer.erc20Addr,
-          initializer.threshold,
-        ]
-      );
-    }
+    console.log("detailsString: ", JSON.stringify(_details));
+
+    return await contract.summonCookieJar(
+      detailString,
+      addresses?.BAAL_COOKIEJAR_ADDRESS,
+      initializer
+    );
+  }
+
+  if (instanceOfErc20Initializer(initializer)) {
+    console.log("Summoning ERC20 Cookie Jar");
+
+    _details = {
+      ...details,
+      type: "ERC20",
+    };
 
     console.log("_details: ", _details);
     console.log("_initializer: ", _initializer);
-    console.log("address: ", addresses.erc20CookieJar);
+    console.log("address: ", addresses?.ERC20_COOKIEJAR_ADDRESS);
 
     const detailString = JSON.stringify(_details);
 
@@ -128,14 +112,10 @@ export const useCookieJarFactory = (): CookieJarFactory => {
 
     return contract.summonCookieJar(
       detailString,
-      addresses.erc20CookieJar,
-      _initializer
+      addresses?.ERC20_COOKIEJAR_ADDRESS,
+      initializer
     );
-  };
-
-  return {
-    summonCookieJar,
-  };
+  }
 };
 
 function instanceOfBaalInitializer(
