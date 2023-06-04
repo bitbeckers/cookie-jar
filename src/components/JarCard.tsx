@@ -1,6 +1,8 @@
+import styled from "styled-components";
+
 import { AddressDisplay, Card, Label, ParMd } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";
-import { TARGET_DAO } from "../targetDao";
+import { TARGET_DAO_GNOSIS } from "../targetDao";
 import { ZERO_ADDRESS, formatPeriods, fromWei } from "@daohaus/utils";
 import { StyledRouterLink } from "./Layout";
 import { CookieJarEntry } from "../hooks/useIndexer";
@@ -38,21 +40,20 @@ export const JarCard = ({ record }: { record: CookieJarEntry }) => {
     <div style={{ marginBottom: "3rem" }}>
       <Card>
         <img src={cookie} alt="cookie" height={"20px"} />
-        <ParMd style={{ marginBottom: ".4rem" }}>
-          <AddressDisplay
-            address={record.address}
-            copy
-            explorerNetworkId={TARGET_DAO.CHAIN_ID}
-          />
-        </ParMd>
+
+        <AddressDisplay
+          address={record.address}
+          copy
+          explorerNetworkId={TARGET_DAO_GNOSIS.CHAIN_ID}
+        />
+
         <Label>Safe: </Label>
-        <ParMd style={{ marginBottom: ".4rem" }}>
-          <AddressDisplay
-            address={record.initializer.safeTarget}
-            copy
-            explorerNetworkId={TARGET_DAO.CHAIN_ID}
-          />
-        </ParMd>
+        <AddressDisplay
+          address={record.initializer.safeTarget}
+          copy
+          explorerNetworkId={TARGET_DAO_GNOSIS.CHAIN_ID}
+        />
+
         <Label>Type: </Label>
         <ParMd style={{ marginBottom: ".4rem" }}>{record.type}</ParMd>
         <Label>Title: </Label>
@@ -83,7 +84,7 @@ export const JarCard = ({ record }: { record: CookieJarEntry }) => {
         <ParMd style={{ marginBottom: ".4rem" }}>
           Go to{" "}
           <StyledRouterLink
-            to={`/claims/${TARGET_DAO.CHAIN_ID}/${record.address}`}
+            to={`/claims/${TARGET_DAO_GNOSIS.CHAIN_ID}/${record.address}`}
           >
             Claim
           </StyledRouterLink>{" "}

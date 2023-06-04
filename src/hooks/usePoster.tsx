@@ -65,7 +65,12 @@ export const usePoster = ({
 
   // Parse the events data and extract the relevant information
   const parsed = data?.events.map((record: any) => {
-    return JSON.parse(record.args[1]);
+    try {
+      return JSON.parse(record.args[1]);
+    } catch (error) {
+      console.log(error);
+      return record.args[1];
+    }
   });
 
   // Group the parsed records by user and count the number of records for each user

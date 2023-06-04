@@ -1,15 +1,30 @@
 import { LOCAL_ABI } from "@daohaus/abis";
 import { ContractLego } from "@daohaus/utils";
-import { CONTRACT_KEYCHAINS } from "@daohaus/keychain-utils";
 import COOKIEJAR_ABI from "../abis/cookieJar.json";
 import JAR_FACTORY_ABI from "../abis/factoryCookieJar.json";
+import COOKIENFT_ABI from "../abis/cookieNft.json";
+import { TARGET_DAO_GNOSIS } from "../targetDao";
 
 export const APP_CONTRACT: Record<string, ContractLego> = {
   COOKIEJAR: {
     type: "static",
     contractName: "COOKIEJAR",
     abi: COOKIEJAR_ABI,
-    targetAddress: ".cookieAddress",
+    targetAddress: ".formValues.targetAddress",
+  },
+  // COOKIEJARTARGET: {
+  //   type: "static",
+  //   contractName: "COOKIEJARTARGET",
+  //   abi: COOKIEJARTARGET_ABI,
+  //   targetAddress: ".formValues.target",
+  // },
+  COOKIENFT: {
+    type: "static",
+    contractName: "COOKIENFT",
+    abi: COOKIENFT_ABI,
+    targetAddress: {
+      [TARGET_DAO_GNOSIS.CHAIN_ID]: TARGET_DAO_GNOSIS.NFT_ADDRESS,
+    },
   },
   POSTER: {
     type: "static",

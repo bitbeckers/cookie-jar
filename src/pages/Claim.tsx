@@ -1,19 +1,24 @@
 import { useDHConnect } from "@daohaus/connect";
-import { Checkbox, Input, Label, Spinner } from "@daohaus/ui";
+import { SingleColumnLayout, Spinner } from "@daohaus/ui";
 
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
+
+
+import { HAUS_NETWORK_DATA } from '@daohaus/keychain-utils';
 
 import { useCookieJar } from "../hooks/useCookieJar";
 import { DisplayClaim } from "../components/DisplayClaim";
 import { Countdown } from "../components/Countdown";
 import { ClaimDetails } from "../components/DetailsBox";
-import { ClaimButton } from "../components/ClaimButton";
+import { ClaimForm } from "../components/ClaimForm";
 import { useState } from "react";
 import { TARGET_DAO } from "../targetDao";
 import { useParams } from "react-router-dom";
 
+
 export const Claims = () => {
+  
   const { address, chainId } = useDHConnect();
   const [showConfetti, setShowConfetti] = useState(false);
   const { width, height } = useWindowSize();
@@ -21,10 +26,10 @@ export const Claims = () => {
   const [reason, setReason] = useState<string>("");
   const [link, setLink] = useState<string>("");
   const [receiver, setReceiver] = useState<string>(address || "");
-  const [alternateReceiverCheck, setAlternateReceiverCheck] = useState<boolean>(false);
+  const [alternateReceiverCheck, setAlternateReceiverCheck] =
+    useState<boolean>(false);
 
   const { cookieAddress, cookieChain } = useParams();
-
 
   //   const { isIdle, isLoading, error, data, hasClaimed, canClaim, isMember, refetch } =
   const { isIdle, isLoading, error, data, hasClaimed, canClaim, refetch } =
@@ -34,25 +39,7 @@ export const Claims = () => {
       chainId: TARGET_DAO.CHAIN_ID,
     });
 
-  const isGnosis =
-    chainId === TARGET_DAO.CHAIN_ID;
-
-  const handleReasonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setReason(e.target.value);
-  };
-
-  const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLink(e.target.value);
-  };
-
-  const handleReceiverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setReceiver(e.target.value);
-  };
-
-  const toggleChecked = () => {
-    setReceiver(address || "");
-    setAlternateReceiverCheck(!alternateReceiverCheck);
-  };
+  const isGnosis = chainId === TARGET_DAO.CHAIN_ID;
 
   if (isIdle)
     return (
@@ -100,72 +87,72 @@ export const Claims = () => {
         description="You have already claimed your cookie. You will be able to claim again in the next claim period."
         element={
           <>
-            {showConfetti  && (
-                <Confetti
-                  width={width}
-                  height={height}
-                  gravity={0.05}
-                  recycle={false}
-                  numberOfPieces={100}
-                  tweenDuration={20000}
-                  colors={[
-                    "#f5deb3",
-                    "#e6c281",
-                    "#8a6015",
-                    "#f44336",
-                    "#e91e63",
-                    "#9c27b0",
-                    "#673ab7",
-                    "#3f51b5",
-                    "#2196f3",
-                    "#03a9f4",
-                    "#00bcd4",
-                    "#009688",
-                    "#4CAF50",
-                    "#8BC34A",
-                    "#CDDC39",
-                    "#FFEB3B",
-                    "#FFC107",
-                    "#FF9800",
-                    "#FF5722",
-                    "#795548",
-                  ]}
-                  onConfettiComplete={() => setShowConfetti(false)}
-                  drawShape={(ctx) => {
-                    // Draw the cookie
-                    ctx.beginPath();
-                    // ctx.fillStyle = '#f5deb3';
-                    ctx.arc(40, 40, 32, 0, 2 * Math.PI);
-                    ctx.fill();
+            {showConfetti && (
+              <Confetti
+                width={width}
+                height={height}
+                gravity={0.05}
+                recycle={false}
+                numberOfPieces={100}
+                tweenDuration={20000}
+                colors={[
+                  "#f5deb3",
+                  "#e6c281",
+                  "#8a6015",
+                  "#f44336",
+                  "#e91e63",
+                  "#9c27b0",
+                  "#673ab7",
+                  "#3f51b5",
+                  "#2196f3",
+                  "#03a9f4",
+                  "#00bcd4",
+                  "#009688",
+                  "#4CAF50",
+                  "#8BC34A",
+                  "#CDDC39",
+                  "#FFEB3B",
+                  "#FFC107",
+                  "#FF9800",
+                  "#FF5722",
+                  "#795548",
+                ]}
+                onConfettiComplete={() => setShowConfetti(false)}
+                drawShape={(ctx) => {
+                  // Draw the cookie
+                  ctx.beginPath();
+                  // ctx.fillStyle = '#f5deb3';
+                  ctx.arc(40, 40, 32, 0, 2 * Math.PI);
+                  ctx.fill();
 
-                    // Draw the chocolate chips
-                    const numChips = 15;
+                  // Draw the chocolate chips
+                  const numChips = 15;
 
-                    for (let i = 0; i < numChips; i++) {
-                      let randomSize = Math.floor(Math.random() * 2.4) + 1.6;
-                      let chipSize = randomSize;
-                      let chipX =
-                        Math.floor(Math.random() * (80 - chipSize * 2)) +
-                        chipSize;
-                      let chipY =
-                        Math.floor(Math.random() * (80 - chipSize * 2)) +
-                        chipSize;
+                  for (let i = 0; i < numChips; i++) {
+                    let randomSize = Math.floor(Math.random() * 2.4) + 1.6;
+                    let chipSize = randomSize;
+                    let chipX =
+                      Math.floor(Math.random() * (80 - chipSize * 2)) +
+                      chipSize;
+                    let chipY =
+                      Math.floor(Math.random() * (80 - chipSize * 2)) +
+                      chipSize;
 
-                      // Check if the chip is inside the cookie
-                      let dX = chipX - 40;
-                      let dY = chipY - 40;
-                      let distance = Math.sqrt(dX * dX + dY * dY);
-                      if (distance + chipSize <= 32) {
-                        // The chip is inside the cookie, so draw it
-                        ctx.beginPath();
-                        ctx.fillStyle = "#8b4513";
-                        ctx.arc(chipX, chipY, chipSize, 0, 2 * Math.PI);
-                        ctx.fill();
-                      }
+                    // Check if the chip is inside the cookie
+                    let dX = chipX - 40;
+                    let dY = chipY - 40;
+                    let distance = Math.sqrt(dX * dX + dY * dY);
+                    if (distance + chipSize <= 32) {
+                      // The chip is inside the cookie, so draw it
+                      ctx.beginPath();
+                      ctx.fillStyle = "#8b4513";
+                      ctx.arc(chipX, chipY, chipSize, 0, 2 * Math.PI);
+                      ctx.fill();
                     }
-                  }}
-                />
-              )}
+                  }
+                }}
+              />
+            )}
             <Countdown
               claimPeriod={data.claimPeriod}
               lastClaimed={data.lastClaimed}
@@ -173,7 +160,7 @@ export const Claims = () => {
             <ClaimDetails
               claimAmt={data.claimAmt}
               claimPeriod={data.claimPeriod}
-              unit={"xDai"}
+              unit={HAUS_NETWORK_DATA[TARGET_DAO.CHAIN_ID]?.symbol || ""}
             />
           </>
         }
@@ -182,99 +169,39 @@ export const Claims = () => {
   // Has not claimed
   if (data && !hasClaimed)
     return (
-      <DisplayClaim
-        heading="Go ahead, reach in and grab a cookie!"
-        description="You have not claimed your daily cookie yet. Claiming a cookie will send funds direct to you from the jar."
-        element={
-          <>
-            <ClaimDetails
-              claimAmt={data.claimAmt}
-              claimPeriod={data.claimPeriod}
-              unit={"xDai"}
-            />
-            <div className="input-box">
-              <Label>Reason for claiming</Label>
-              <Input
-                id="cookieReason"
-                full
-                onChange={handleReasonChange}
-                value={reason}
-                placeholder="Reason for claiming from cookie jar"
-              />
-              <Label>Link to details</Label>
-              <Input
-                id="cookieLink"
-                full
-                onChange={handleLinkChange}
-                value={link}
-                placeholder="Link to PR / Issue / hackmd /etc."
-              />
-              <Label>Give your cookie to someone else</Label>
-              <Checkbox title="alternate receiver" onClick={toggleChecked}></Checkbox>
-              {alternateReceiverCheck && <Input id="alternateReceiver" full placeholder={address} onChange={handleReceiverChange} value={receiver}></Input>}
-            </div>
-            <ClaimButton
-              reason={reason}
-              link={link}
-              user={address}
-              receiver={receiver || address}
-              cookieAddress={cookieAddress}
-              onSuccess={() => {
-                refetch();
-                setShowConfetti(true);
-              }}
-            />
-          </>
-        }
-      />
+      <SingleColumnLayout>
+        <ClaimDetails
+          claimAmt={data.claimAmt}
+          claimPeriod={data.claimPeriod}
+          unit={HAUS_NETWORK_DATA[TARGET_DAO.CHAIN_ID]?.symbol || ""}
+        />
+        <ClaimForm
+          user={address}
+          cookieAddress={cookieAddress}
+          onSuccess={() => {
+            refetch();
+            setShowConfetti(true);
+          }}
+        />
+      </SingleColumnLayout>
     );
   if (data && canClaim)
     return (
-      <DisplayClaim
-        heading="Go ahead, reach in and grab a cookie!"
-        description="You have not claimed your daily cookie yet. Claiming a cookie will send funds direct to you from the jar."
-        element={
-          <>
-            <ClaimDetails
-              claimAmt={data.claimAmt}
-              claimPeriod={data.claimPeriod}
-              unit={"xDai"}
-            />
-            <div className="input-box">
-              <Label>Reason for claiming</Label>
-              <Input
-                id="cookieReason"
-                full
-                onChange={handleReasonChange}
-                value={reason}
-                placeholder="Reason for claiming from cookie jar"
-              />
-              <Label>Link to details</Label>
-              <Input
-                id="cookieLink"
-                full
-                onChange={handleLinkChange}
-                value={link}
-                placeholder="Link to PR / Issue / hackmd /etc."
-              />
-              <Label>Give your cookie to someone else</Label>
-              <Checkbox title="alternate receiver" onClick={toggleChecked}></Checkbox>
-              {alternateReceiverCheck && <Input id="alternateReceiver" full placeholder={address} onChange={handleReceiverChange} value={receiver}></Input>}
-            </div>
-            <ClaimButton
-              reason={reason}
-              link={link}
-              user={address}
-              receiver={receiver || address}
-              cookieAddress={cookieAddress}
-              onSuccess={() => {
-                refetch();
-                setShowConfetti(true);
-              }}
-            />
-          </>
-        }
-      />
+      <SingleColumnLayout>
+        <ClaimDetails
+          claimAmt={data.claimAmt}
+          claimPeriod={data.claimPeriod}
+          unit={HAUS_NETWORK_DATA[TARGET_DAO.CHAIN_ID]?.symbol || ""}
+        />
+        <ClaimForm
+          user={address}
+          cookieAddress={cookieAddress}
+          onSuccess={() => {
+            refetch();
+            setShowConfetti(true);
+          }}
+        />
+      </SingleColumnLayout>
     );
 
   return null;

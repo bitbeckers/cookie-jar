@@ -3,8 +3,8 @@ import { TXBuilder } from "@daohaus/tx-builder";
 import { H4 } from "@daohaus/ui";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 import { TARGET_DAO } from "../targetDao";
-import { CurrentDaoProvider, useDaoData } from "@daohaus/moloch-v3-hooks";
 import { CookieLayout } from "./CookieLayout";
+import { StyledRouterLink } from "./Layout";
 
 /**
  * LayoutContainer component that wraps the entire application with a CookieLayout.
@@ -34,10 +34,12 @@ export const LayoutContainer = () => {
         ///{ label: "Allow List", href: `/members` },
         { label: "Claim", href: `/claims/${cookieChain}/${cookieAddress}` },
         { label: "Stats", href: `/history/${cookieChain}/${cookieAddress}` },
+        { label: "Config", href: `/config/${cookieChain}/${cookieAddress}` },
+        { label: "AllowList", href: `/manage/${cookieChain}/${cookieAddress}` },
       ]}
       leftNav={
         <div>
-          <H4>Cookie Jar</H4>
+          <StyledRouterLink to="/"><H4>Cookie Jar</H4></StyledRouterLink>
         </div>
       }
     >

@@ -1,9 +1,19 @@
-import { FieldLego } from "@daohaus/form-builder";
+import { ZERO_ADDRESS } from "@daohaus/utils";
 import { CustomFieldLego } from "./fieldConfig";
 
 export const APP_FIELD: Record<string, CustomFieldLego> = {
-  NAME: {
-    id: "name",
+  CSTEXTAREA: {
+    id: "cstextarea",
+    type: "cstextarea",
+    label: "array input",
+    placeholder: "array items seperated by new lines",
+    itemNoun: {
+      singular: "item",
+      plural: "items",
+    },
+  },
+  TITLE: {
+    id: "title",
     type: "input",
     label: "Name",
     placeholder: "Enter name",
@@ -20,44 +30,43 @@ export const APP_FIELD: Record<string, CustomFieldLego> = {
     label: "Safe address",
     placeholder: "Enter safe address",
   },
-  COOKIEAMOUNT: {
+  COOKIE_AMOUNT: {
     id: "cookieAmount",
-    type: "input",
-    label: "Cookie amount",
-    placeholder: "Enter cookie amount (in wei or equivalent)",
+    type: "toWeiInput",
+    label: "Cookie Amount",
+    placeholder: "Enter amount of cookies",
   },
-  PERIODLENGTH: {
-    id: "periodLength",
-    type: "input",
-    label: "Period length",
-    placeholder: "Enter period length (in seconds)",
+  COOKIE_PERIOD: {
+    id: "cookiePeriod",
+    type: "periodLength",
+    label: "Period Length",
   },
-  COOKIETOKEN: {
-    id: "cookieToken",
-    type: "input",
-    label: "Cookie token",
-    placeholder: "Enter cookie token address",
-  },
-  DAO: {
-    id: "dao",
-    type: "input",
-    label: "DAO address",
-    placeholder: "Enter DAO address",
-  },
-  THRESHOLD: {
-    id: "threshold",
-    type: "input",
-    label: "Threshold",
-    placeholder: "Enter threshold",
-  },
-  USESHARES: {
-    id: "useShares",
-    type: "switch",
-    label: "Use shares",
-    switches: [
+  COOKIE_TOKEN: {
+    id: "checkRenderToken",
+    type: "checkRender",
+    gateLabel: "Use Custom Token (native token by default)",
+    components: [
       {
-        id: "useShares",
-        fieldLabel: "Use shares",
+        id: "cookieToken",
+        type: "input",
+        label: "Cookie Token",
+        defaultValue: ZERO_ADDRESS,
+        expectType: "ethAddress",
+        placeholder: "Enter something",
+      },
+    ],
+  },
+  RECEIVER: {
+    id: "checkRenderReceiver",
+    type: "checkRender",
+    gateLabel: "Change owner role (minter by default)",
+    components: [
+      {
+        id: "receiver",
+        type: "input",
+        label: "receiver",
+        expectType: "ethAddress",
+        placeholder: "0x...",
       },
     ],
   },

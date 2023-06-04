@@ -92,6 +92,10 @@ export const useCookieJarFactory = (): CookieJarFactory => {
         ]
       );
     }
+    return {...parsedContent, initParamsObj, 
+      // parsedDetails
+    };
+  });
 
     if (instanceOfErc20Initializer(initializer)) {
       console.log("Summoning ERC20 Cookie Jar");

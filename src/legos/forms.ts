@@ -1,60 +1,66 @@
 import { CustomFormLego } from "./fieldConfig";
 import { APP_FIELD } from "./fields";
 import { APP_TX } from "./tx";
+import { TXLego } from "@daohaus/utils";
 
-const defaultRequiredFields = {
-  name: true,
-  description: false,
-  safeTarget: true,
-  cookieAmount: true,
-  periodLength: true,
-  cookieToken: true,
-};
-
-const defaultFields = [
-  APP_FIELD.NAME,
-  APP_FIELD.DESCRIPTION,
-  APP_FIELD.SAFETARGET,
-  APP_FIELD.COOKIEAMOUNT,
-  APP_FIELD.PERIODLENGTH,
-  APP_FIELD.COOKIETOKEN,
-];
 
 export const APP_FORM: Record<string, CustomFormLego> = {
-  CREATE_BAAL: {
-    id: "CREATE_BAAL",
-    title: "Create Baal Jar",
-    subtitle: "Build your MolochDAO V3 cookie jar",
-    description:
-      "Access to the cookie jar is determined by selected DAO tokens",
-    requiredFields: {
-      ...defaultRequiredFields,
-      dao: true,
-      threshold: true,
-      useShares: false,
-      useLoot: false,
-    },
+
+  CREATEJAR: {
+    id: "CREATEJAR",
+    title: "Mint Jar",
+    subtitle: "Own the utility",
+    description: "A cookie jar is a jar that holds cookies.",
+    requiredFields: { receiver: true, cookiePeriod: true, cookieToken: true, cookieAmount: true },
     log: true,
+    tx: APP_TX.CREATENFTJAR as TXLego,
     fields: [
-      ...defaultFields,
-      APP_FIELD.DAO,
-      APP_FIELD.THRESHOLD,
-      APP_FIELD.USESHARES,
-      APP_FIELD.USELOOT,
+      APP_FIELD.RECEIVER,
+      APP_FIELD.COOKIE_PERIOD,
+      APP_FIELD.COOKIE_TOKEN,
+      APP_FIELD.COOKIE_AMOUNT,
+      {...APP_FIELD.CSTEXTAREA, id:'allowList', label: 'Allow List'},
     ],
   },
-  CREATE_ERC20: {
-    id: "CREATE_ERC20",
-    title: "Create ERC20 Jar",
-    subtitle: "Build your ERC20 cookie jar",
-    description:
-      "Access to the cookie jar is determined by the ERC20 token balance",
-    requiredFields: {
-      ...defaultRequiredFields,
-      tokenAddress: true,
-      threshold: true,
-    },
+  CONFIGJAR: {
+    id: "CONFIGJAR",
+    title: "Config Jar",
+    subtitle: "You must own the jar",
+    description: "A cookie jar is a jar that holds cookies.",
+    requiredFields: { cookiePeriod: true, cookieToken: true, cookieAmount: true },
     log: true,
-    fields: [...defaultFields, APP_FIELD.TOKENADDRESS, APP_FIELD.THRESHOLD],
+    fields: [
+      APP_FIELD.COOKIE_PERIOD,
+      APP_FIELD.COOKIE_TOKEN,
+      APP_FIELD.COOKIE_AMOUNT
+    ],
   },
+  MANAGEJAR: {
+    id: "MANAGEJAR",
+    title: "Manage AllowList",
+    subtitle: "You must own the jar",
+    description: "A cookie jar is a jar that holds cookies.",
+    log: true,
+    fields: [
+      APP_FIELD.CSTEXTAREA,
+    ],
+  },
+  JARCLAIM: {
+    id: "JARCLAIM",
+    title: "Go ahead, reach in and grab a cookie!",
+    subtitle: "if you dare",
+    description: "You have not claimed your daily cookie yet. Claiming a cookie will send funds direct to you from the jar.",
+    requiredFields: { cookiePeriod: true, cookieToken: true, cookieAmount: true },
+    tx: APP_TX.COOKIEJAR as TXLego,
+    log: true,
+    fields: [
+      {...APP_FIELD.DESCRIPTION, label: 'Reason'},
+      APP_FIELD.LINK,
+      {
+        ...APP_FIELD.RECEIVER, 
+        // @ts-ignore
+        gateLabel: 'Claim for another user'},
+    ],
+  },
+  
 };

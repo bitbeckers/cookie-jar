@@ -1,7 +1,7 @@
 import { ValidNetwork } from "@daohaus/keychain-utils";
 
 //TODO WIP To get it to build again
-export const TARGET_DAO: {
+export const TARGET_DAO_GNOSIS: {
   DAO_ADDRESS: string;
   COOKIEJAR_FACTORY_ADDRESS: string;
   COOKIEJAR_ADDRESS: string;
@@ -11,6 +11,17 @@ export const TARGET_DAO: {
   COOKIEJAR_FACTORY_ADDRESS: "0x47135bC487036deea0c51bc9A63A6dAA9eA367ee",
   COOKIEJAR_ADDRESS: "0xEcA82593Fe07a2c197f1b701eaae402A0Da07707",
   CHAIN_ID: "0x64",
+// WIP To get it to build again
+export const TARGET_DAO_GOERLI: {
+  COOKIEJAR_FACTORY_ADDRESS: string;
+  COOKIEJAR_ADDRESS: string;
+  NFT_ADDRESS: string;
+  CHAIN_ID: ValidNetwork;
+} = {
+  COOKIEJAR_FACTORY_ADDRESS: "0x2f600A63a4E98b45e34664E589aD8C67Db495CC0",
+  COOKIEJAR_ADDRESS: "0xEcA82593Fe07a2c197f1b701eaae402A0Da07707",
+  NFT_ADDRESS: "0x9770e0EDd8b540fcB1BCBE216c9E228533F9Ec60",
+  CHAIN_ID: "0x5",
 };
 // cookie tester
 // must lowercase

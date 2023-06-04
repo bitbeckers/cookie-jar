@@ -1,4 +1,3 @@
-import styled from "styled-components";
 
 import { Avatar, Badge, Card, Link, ParMd } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";

@@ -1,11 +1,13 @@
-import { MolochFields } from "@daohaus/moloch-v3-fields";
 import { FieldLegoBase, FormLegoBase } from "@daohaus/utils";
-import { TestField } from "../components/customFields/fieldTest";
-import { JarType } from "../components/customFields/jarType";
+import { CoreFieldLookup } from "@daohaus/form-builder";
+
+import { CSTextarea } from "../components/customFields/csTextArea";
+import { PeriodLength } from "../components/customFields/periodLength";
 
 export const AppFieldLookup = {
-  ...MolochFields,
-  testField: TestField,
+  ...CoreFieldLookup,
+  periodLength: PeriodLength,
+  cstextarea: CSTextarea,
 };
 
 export type CustomFieldLego = FieldLegoBase<typeof AppFieldLookup>;
