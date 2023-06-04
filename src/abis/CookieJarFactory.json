@@ -1,0 +1,1825 @@
+{
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "cookieJar",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes",
+          "name": "initializer",
+          "type": "bytes"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "details",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "uid",
+          "type": "string"
+        }
+      ],
+      "name": "SummonCookieJar",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_moduleProxyFactory",
+          "type": "address"
+        }
+      ],
+      "name": "setProxyFactory",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_singleton",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_initializer",
+          "type": "bytes"
+        },
+        {
+          "internalType": "string",
+          "name": "_details",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_saltNonce",
+          "type": "uint256"
+        }
+      ],
+      "name": "summonCookieJar",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x608060405234801561001057600080fd5b5061001a3361001f565b61006f565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b61089d8061007e6000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c8063715018a61461005c5780638da5cb5b14610066578063e5b0bde31461008f578063f2fde38b146100a2578063fbddd751146100b5575b600080fd5b6100646100c8565b005b6000546001600160a01b03165b6040516001600160a01b03909116815260200160405180910390f35b61007361009d36600461060f565b6100dc565b6100646100b03660046106b8565b6101ae565b6100646100c33660046106b8565b61022c565b6100d0610256565b6100da60006102b0565b565b600154604051633c6ae1cf60e21b815260009182916001600160a01b039091169063f1ab873c9061011590899089908890600401610725565b6020604051808303816000875af1158015610134573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101589190610759565b9050600061016582610300565b90507fe82a16f418bac6bbd026f89ca451c913298150783a0faacbe2d8e17a5eb5c7fb8287878460405161019c9493929190610776565b60405180910390a15095945050505050565b6101b6610256565b6001600160a01b0381166102205760405162461bcd60e51b815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201526564647265737360d01b60648201526084015b60405180910390fd5b610229816102b0565b50565b610234610256565b600180546001600160a01b0319166001600160a01b0392909216919091179055565b6000546001600160a01b031633146100da5760405162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e65726044820152606401610217565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6060610314826001600160a01b0316610344565b61031d46610344565b60405160200161032e9291906107cb565b6040516020818303038152906040529050919050565b606061035b8261035384610361565b6001016103cb565b92915050565b600080608083901c156103795760809290921c916010015b604083901c1561038e5760409290921c916008015b602083901c156103a35760209290921c916004015b601083901c156103b85760109290921c916002015b600883901c1561035b5760010192915050565b606060006103da836002610810565b6103e5906002610827565b67ffffffffffffffff8111156103fd576103fd610583565b6040519080825280601f01601f191660200182016040528015610427576020820181803683370190505b509050600360fc1b816000815181106104425761044261083a565b60200101906001600160f81b031916908160001a905350600f60fb1b816001815181106104715761047161083a565b60200101906001600160f81b031916908160001a9053506000610495846002610810565b6104a0906001610827565b90505b6001811115610518576f181899199a1a9b1b9c1cb0b131b232b360811b85600f16601081106104d4576104d461083a565b1a60f81b8282815181106104ea576104ea61083a565b60200101906001600160f81b031916908160001a90535060049490941c9361051181610850565b90506104a3565b5083156105675760405162461bcd60e51b815260206004820181905260248201527f537472696e67733a20686578206c656e67746820696e73756666696369656e746044820152606401610217565b9392505050565b6001600160a01b038116811461022957600080fd5b634e487b7160e01b600052604160045260246000fd5b600067ffffffffffffffff808411156105b4576105b4610583565b604051601f8501601f19908116603f011681019082821181831017156105dc576105dc610583565b816040528093508581528686860111156105f557600080fd5b858560208301376000602087830101525050509392505050565b6000806000806080858703121561062557600080fd5b84356106308161056e565b9350602085013567ffffffffffffffff8082111561064d57600080fd5b818701915087601f83011261066157600080fd5b61067088833560208501610599565b9450604087013591508082111561068657600080fd5b508501601f8101871361069857600080fd5b6106a787823560208401610599565b949793965093946060013593505050565b6000602082840312156106ca57600080fd5b81356105678161056e565b60005b838110156106f05781810151838201526020016106d8565b50506000910152565b600081518084526107118160208601602086016106d5565b601f01601f19169290920160200192915050565b6001600160a01b0384168152606060208201819052600090610749908301856106f9565b9050826040830152949350505050565b60006020828403121561076b57600080fd5b81516105678161056e565b6001600160a01b038516815260806020820181905260009061079a908301866106f9565b82810360408401526107ac81866106f9565b905082810360608401526107c081856106f9565b979650505050505050565b600083516107dd8184602088016106d5565b8351908301906107f18183602088016106d5565b01949350505050565b634e487b7160e01b600052601160045260246000fd5b808202811582820484141761035b5761035b6107fa565b8082018082111561035b5761035b6107fa565b634e487b7160e01b600052603260045260246000fd5b60008161085f5761085f6107fa565b50600019019056fea264697066735822122079d45486c6d7bb6caa7379559bb33ca25fee53dd4fa57ecb71bddd135eaf5cb064736f6c63430008130033",
+    "sourceMap": "404:1630:81:-:0;;;634:16;;;;;;;;;-1:-1:-1;936:32:25;719:10:40;936:18:25;:32::i;:::-;404:1630:81;;2426:187:25;2499:16;2518:6;;-1:-1:-1;;;;;2534:17:25;;;-1:-1:-1;;;;;;2534:17:25;;;;;;2566:40;;2518:6;;;;;;;2566:40;;2499:16;2566:40;2489:124;2426:187;:::o;404:1630:81:-;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x608060405234801561001057600080fd5b50600436106100575760003560e01c8063715018a61461005c5780638da5cb5b14610066578063e5b0bde31461008f578063f2fde38b146100a2578063fbddd751146100b5575b600080fd5b6100646100c8565b005b6000546001600160a01b03165b6040516001600160a01b03909116815260200160405180910390f35b61007361009d36600461060f565b6100dc565b6100646100b03660046106b8565b6101ae565b6100646100c33660046106b8565b61022c565b6100d0610256565b6100da60006102b0565b565b600154604051633c6ae1cf60e21b815260009182916001600160a01b039091169063f1ab873c9061011590899089908890600401610725565b6020604051808303816000875af1158015610134573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101589190610759565b9050600061016582610300565b90507fe82a16f418bac6bbd026f89ca451c913298150783a0faacbe2d8e17a5eb5c7fb8287878460405161019c9493929190610776565b60405180910390a15095945050505050565b6101b6610256565b6001600160a01b0381166102205760405162461bcd60e51b815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201526564647265737360d01b60648201526084015b60405180910390fd5b610229816102b0565b50565b610234610256565b600180546001600160a01b0319166001600160a01b0392909216919091179055565b6000546001600160a01b031633146100da5760405162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e65726044820152606401610217565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6060610314826001600160a01b0316610344565b61031d46610344565b60405160200161032e9291906107cb565b6040516020818303038152906040529050919050565b606061035b8261035384610361565b6001016103cb565b92915050565b600080608083901c156103795760809290921c916010015b604083901c1561038e5760409290921c916008015b602083901c156103a35760209290921c916004015b601083901c156103b85760109290921c916002015b600883901c1561035b5760010192915050565b606060006103da836002610810565b6103e5906002610827565b67ffffffffffffffff8111156103fd576103fd610583565b6040519080825280601f01601f191660200182016040528015610427576020820181803683370190505b509050600360fc1b816000815181106104425761044261083a565b60200101906001600160f81b031916908160001a905350600f60fb1b816001815181106104715761047161083a565b60200101906001600160f81b031916908160001a9053506000610495846002610810565b6104a0906001610827565b90505b6001811115610518576f181899199a1a9b1b9c1cb0b131b232b360811b85600f16601081106104d4576104d461083a565b1a60f81b8282815181106104ea576104ea61083a565b60200101906001600160f81b031916908160001a90535060049490941c9361051181610850565b90506104a3565b5083156105675760405162461bcd60e51b815260206004820181905260248201527f537472696e67733a20686578206c656e67746820696e73756666696369656e746044820152606401610217565b9392505050565b6001600160a01b038116811461022957600080fd5b634e487b7160e01b600052604160045260246000fd5b600067ffffffffffffffff808411156105b4576105b4610583565b604051601f8501601f19908116603f011681019082821181831017156105dc576105dc610583565b816040528093508581528686860111156105f557600080fd5b858560208301376000602087830101525050509392505050565b6000806000806080858703121561062557600080fd5b84356106308161056e565b9350602085013567ffffffffffffffff8082111561064d57600080fd5b818701915087601f83011261066157600080fd5b61067088833560208501610599565b9450604087013591508082111561068657600080fd5b508501601f8101871361069857600080fd5b6106a787823560208401610599565b949793965093946060013593505050565b6000602082840312156106ca57600080fd5b81356105678161056e565b60005b838110156106f05781810151838201526020016106d8565b50506000910152565b600081518084526107118160208601602086016106d5565b601f01601f19169290920160200192915050565b6001600160a01b0384168152606060208201819052600090610749908301856106f9565b9050826040830152949350505050565b60006020828403121561076b57600080fd5b81516105678161056e565b6001600160a01b038516815260806020820181905260009061079a908301866106f9565b82810360408401526107ac81866106f9565b905082810360608401526107c081856106f9565b979650505050505050565b600083516107dd8184602088016106d5565b8351908301906107f18183602088016106d5565b01949350505050565b634e487b7160e01b600052601160045260246000fd5b808202811582820484141761035b5761035b6107fa565b8082018082111561035b5761035b6107fa565b634e487b7160e01b600052603260045260246000fd5b60008161085f5761085f6107fa565b50600019019056fea264697066735822122079d45486c6d7bb6caa7379559bb33ca25fee53dd4fa57ecb71bddd135eaf5cb064736f6c63430008130033",
+    "sourceMap": "404:1630:81:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1824:101:25;;;:::i;:::-;;1201:85;1247:7;1273:6;-1:-1:-1;;;;;1273:6:25;1201:85;;;-1:-1:-1;;;;;178:32:101;;;160:51;;148:2;133:18;1201:85:25;;;;;;;1551:481:81;;;;;;:::i;:::-;;:::i;2074:198:25:-;;;;;;:::i;:::-;;:::i;708:148:81:-;;;;;;:::i;:::-;;:::i;1824:101:25:-;1094:13;:11;:13::i;:::-;1888:30:::1;1915:1;1888:18;:30::i;:::-;1824:101::o:0;1551:481:81:-;1762:18;;:69;;-1:-1:-1;;;1762:69:81;;1699:7;;;;-1:-1:-1;;;;;1762:18:81;;;;:31;;:69;;1794:10;;1806:12;;1820:10;;1762:69;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;1722:110;;1843:17;1863:47;1899:9;1863:27;:47::i;:::-;1843:67;;1926:64;1950:9;1962:12;1976:8;1986:3;1926:64;;;;;;;;;:::i;:::-;;;;;;;;-1:-1:-1;2015:9:81;1551:481;-1:-1:-1;;;;;1551:481:81:o;2074:198:25:-;1094:13;:11;:13::i;:::-;-1:-1:-1;;;;;2162:22:25;::::1;2154:73;;;::::0;-1:-1:-1;;;2154:73:25;;4408:2:101;2154:73:25::1;::::0;::::1;4390:21:101::0;4447:2;4427:18;;;4420:30;4486:34;4466:18;;;4459:62;-1:-1:-1;;;4537:18:101;;;4530:36;4583:19;;2154:73:25::1;;;;;;;;;2237:28;2256:8;2237:18;:28::i;:::-;2074:198:::0;:::o;708:148:81:-;1094:13:25;:11;:13::i;:::-;789:18:81::1;:60:::0;;-1:-1:-1;;;;;;789:60:81::1;-1:-1:-1::0;;;;;789:60:81;;;::::1;::::0;;;::::1;::::0;;708:148::o;1359:130:25:-;1247:7;1273:6;-1:-1:-1;;;;;1273:6:25;719:10:40;1422:23:25;1414:68;;;;-1:-1:-1;;;1414:68:25;;4815:2:101;1414:68:25;;;4797:21:101;;;4834:18;;;4827:30;4893:34;4873:18;;;4866:62;4945:18;;1414:68:25;4613:356:101;2426:187:25;2499:16;2518:6;;-1:-1:-1;;;;;2534:17:25;;;-1:-1:-1;;;;;;2534:17:25;;;;;;2566:40;;2518:6;;;;;;;2566:40;;2499:16;2566:40;2489:124;2426:187;:::o;305:215:86:-;376:13;432:43;460:13;-1:-1:-1;;;;;432:43:86;:19;:43::i;:::-;477:34;497:13;477:19;:34::i;:::-;415:97;;;;;;;;;:::i;:::-;;;;;;;;;;;;;401:112;;305:215;;;:::o;1521:174:43:-;1580:13;1636:42;1648:5;1655:18;1667:5;1655:11;:18::i;:::-;1676:1;1655:22;1636:11;:42::i;:::-;1629:49;1521:174;-1:-1:-1;;1521:174:43:o;11708:663:48:-;11762:7;;11846:3;11837:12;;;:16;11833:98;;11883:3;11873:13;;;;;11914:2;11904:12;11833:98;11957:2;11948:11;;;:15;11944:95;;11993:2;11983:12;;;;;12023:1;12013:11;11944:95;12065:2;12056:11;;;:15;12052:95;;12101:2;12091:12;;;;;12131:1;12121:11;12052:95;12173:2;12164:11;;;:15;12160:95;;12209:2;12199:12;;;;;12239:1;12229:11;12160:95;12281:1;12272:10;;;:14;12268:64;;12316:1;12306:11;12358:6;11708:663;-1:-1:-1;;11708:663:48:o;1818:437:43:-;1893:13;1918:19;1950:10;1954:6;1950:1;:10;:::i;:::-;:14;;1963:1;1950:14;:::i;:::-;1940:25;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;1940:25:43;;1918:47;;-1:-1:-1;;;1975:6:43;1982:1;1975:9;;;;;;;;:::i;:::-;;;;:15;-1:-1:-1;;;;;1975:15:43;;;;;;;;;-1:-1:-1;;;2000:6:43;2007:1;2000:9;;;;;;;;:::i;:::-;;;;:15;-1:-1:-1;;;;;2000:15:43;;;;;;;;-1:-1:-1;2030:9:43;2042:10;2046:6;2042:1;:10;:::i;:::-;:14;;2055:1;2042:14;:::i;:::-;2030:26;;2025:128;2062:1;2058;:5;2025:128;;;-1:-1:-1;;;2105:5:43;2113:3;2105:11;2096:21;;;;;;;:::i;:::-;;;;2084:6;2091:1;2084:9;;;;;;;;:::i;:::-;;;;:33;-1:-1:-1;;;;;2084:33:43;;;;;;;;-1:-1:-1;2141:1:43;2131:11;;;;;2065:3;;;:::i;:::-;;;2025:128;;;-1:-1:-1;2170:10:43;;2162:55;;;;-1:-1:-1;;;2162:55:43;;6385:2:101;2162:55:43;;;6367:21:101;;;6404:18;;;6397:30;6463:34;6443:18;;;6436:62;6515:18;;2162:55:43;6183:356:101;2162:55:43;2241:6;1818:437;-1:-1:-1;;;1818:437:43:o;222:131:101:-;-1:-1:-1;;;;;297:31:101;;287:42;;277:70;;343:1;340;333:12;358:127;419:10;414:3;410:20;407:1;400:31;450:4;447:1;440:15;474:4;471:1;464:15;490:631;554:5;584:18;625:2;617:6;614:14;611:40;;;631:18;;:::i;:::-;706:2;700:9;674:2;760:15;;-1:-1:-1;;756:24:101;;;782:2;752:33;748:42;736:55;;;806:18;;;826:22;;;803:46;800:72;;;852:18;;:::i;:::-;892:10;888:2;881:22;921:6;912:15;;951:6;943;936:22;991:3;982:6;977:3;973:16;970:25;967:45;;;1008:1;1005;998:12;967:45;1058:6;1053:3;1046:4;1038:6;1034:17;1021:44;1113:1;1106:4;1097:6;1089;1085:19;1081:30;1074:41;;;;490:631;;;;;:::o;1126:1002::-;1231:6;1239;1247;1255;1308:3;1296:9;1287:7;1283:23;1279:33;1276:53;;;1325:1;1322;1315:12;1276:53;1364:9;1351:23;1383:31;1408:5;1383:31;:::i;:::-;1433:5;-1:-1:-1;1489:2:101;1474:18;;1461:32;1512:18;1542:14;;;1539:34;;;1569:1;1566;1559:12;1539:34;1607:6;1596:9;1592:22;1582:32;;1652:7;1645:4;1641:2;1637:13;1633:27;1623:55;;1674:1;1671;1664:12;1623:55;1697:73;1762:7;1757:2;1744:16;1739:2;1735;1731:11;1697:73;:::i;:::-;1687:83;;1823:2;1812:9;1808:18;1795:32;1779:48;;1852:2;1842:8;1839:16;1836:36;;;1868:1;1865;1858:12;1836:36;-1:-1:-1;1891:24:101;;1946:4;1938:13;;1934:27;-1:-1:-1;1924:55:101;;1975:1;1972;1965:12;1924:55;1998:73;2063:7;2058:2;2045:16;2040:2;2036;2032:11;1998:73;:::i;:::-;1126:1002;;;;-1:-1:-1;1988:83:101;;2118:2;2103:18;2090:32;;-1:-1:-1;;;1126:1002:101:o;2133:247::-;2192:6;2245:2;2233:9;2224:7;2220:23;2216:32;2213:52;;;2261:1;2258;2251:12;2213:52;2300:9;2287:23;2319:31;2344:5;2319:31;:::i;2385:250::-;2470:1;2480:113;2494:6;2491:1;2488:13;2480:113;;;2570:11;;;2564:18;2551:11;;;2544:39;2516:2;2509:10;2480:113;;;-1:-1:-1;;2627:1:101;2609:16;;2602:27;2385:250::o;2640:270::-;2681:3;2719:5;2713:12;2746:6;2741:3;2734:19;2762:76;2831:6;2824:4;2819:3;2815:14;2808:4;2801:5;2797:16;2762:76;:::i;:::-;2892:2;2871:15;-1:-1:-1;;2867:29:101;2858:39;;;;2899:4;2854:50;;2640:270;-1:-1:-1;;2640:270:101:o;2915:385::-;-1:-1:-1;;;;;3118:32:101;;3100:51;;3187:2;3182;3167:18;;3160:30;;;-1:-1:-1;;3207:44:101;;3232:18;;3224:6;3207:44;:::i;:::-;3199:52;;3287:6;3282:2;3271:9;3267:18;3260:34;2915:385;;;;;;:::o;3305:251::-;3375:6;3428:2;3416:9;3407:7;3403:23;3399:32;3396:52;;;3444:1;3441;3434:12;3396:52;3476:9;3470:16;3495:31;3520:5;3495:31;:::i;3561:640::-;-1:-1:-1;;;;;3832:32:101;;3814:51;;3901:3;3896:2;3881:18;;3874:31;;;-1:-1:-1;;3928:45:101;;3953:19;;3945:6;3928:45;:::i;:::-;4021:9;4013:6;4009:22;4004:2;3993:9;3989:18;3982:50;4055:32;4080:6;4072;4055:32;:::i;:::-;4041:46;;4135:9;4127:6;4123:22;4118:2;4107:9;4103:18;4096:50;4163:32;4188:6;4180;4163:32;:::i;:::-;4155:40;3561:640;-1:-1:-1;;;;;;;3561:640:101:o;4974:496::-;5153:3;5191:6;5185:13;5207:66;5266:6;5261:3;5254:4;5246:6;5242:17;5207:66;:::i;:::-;5336:13;;5295:16;;;;5358:70;5336:13;5295:16;5405:4;5393:17;;5358:70;:::i;:::-;5444:20;;4974:496;-1:-1:-1;;;;4974:496:101:o;5475:127::-;5536:10;5531:3;5527:20;5524:1;5517:31;5567:4;5564:1;5557:15;5591:4;5588:1;5581:15;5607:168;5680:9;;;5711;;5728:15;;;5722:22;;5708:37;5698:71;;5749:18;;:::i;5780:125::-;5845:9;;;5866:10;;;5863:36;;;5879:18;;:::i;5910:127::-;5971:10;5966:3;5962:20;5959:1;5952:31;6002:4;5999:1;5992:15;6026:4;6023:1;6016:15;6042:136;6081:3;6109:5;6099:39;;6118:18;;:::i;:::-;-1:-1:-1;;;6154:18:101;;6042:136::o",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "owner()": "8da5cb5b",
+    "renounceOwnership()": "715018a6",
+    "setProxyFactory(address)": "fbddd751",
+    "summonCookieJar(address,bytes,string,uint256)": "e5b0bde3",
+    "transferOwnership(address)": "f2fde38b"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"cookieJar\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"initializer\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"details\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"uid\",\"type\":\"string\"}],\"name\":\"SummonCookieJar\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_moduleProxyFactory\",\"type\":\"address\"}],\"name\":\"setProxyFactory\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_singleton\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_initializer\",\"type\":\"bytes\"},{\"internalType\":\"string\",\"name\":\"_details\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_saltNonce\",\"type\":\"uint256\"}],\"name\":\"summonCookieJar\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/factory/CookieJarFactory.sol\":\"CookieJarFactory\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@daohaus/baal-contracts/contracts/=lib/Baal/contracts/\",\":@gnosis.pm/safe-contracts/contracts/=lib/safe-contracts/contracts/\",\":@gnosis.pm/zodiac/contracts/=lib/zodiac/contracts/\",\":@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/\",\":@openzeppelin/contracts-upgradeable/contracts/=lib/openzeppelin-contracts-upgradeable/contracts/\",\":@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/\",\":@prb/test/=lib/prb-test/src/\",\":Baal/=lib/Baal/contracts/\",\":ds-test/=lib/forge-std/lib/ds-test/src/\",\":erc4626-tests/=lib/openzeppelin-contracts-upgradeable/lib/erc4626-tests/\",\":forge-std/=lib/forge-std/src/\",\":openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/\",\":openzeppelin-contracts/=lib/openzeppelin-contracts/\",\":openzeppelin/=lib/openzeppelin-contracts-upgradeable/contracts/\",\":prb-test/=lib/prb-test/src/\",\":safe-contracts/=lib/safe-contracts/contracts/\",\":sstore2/=lib/sstore2/contracts/\",\":zodiac/=lib/zodiac/contracts/\"]},\"sources\":{\"lib/Baal/contracts/interfaces/IPoster.sol\":{\"keccak256\":\"0x12609087c238d16adc8e5bf49ec5052dc44940a14e2b7d75a6b157eda0d8e0eb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://54a2a9c4c6c964eba3f5d72a9dc63a09f99c710cc7a3e78a7424fd4249a12ad9\",\"dweb:/ipfs/QmfCfwdbvxZyjxe76ZW3WDYMQ383rHTuUAosHQJsJ8tKNJ\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol\":{\"keccak256\":\"0x4075622496acc77fd6d4de4cc30a8577a744d5c75afad33fdeacf1704d6eda98\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://99c8cb3cd19a44bbfb6612605affb7d8b06cee1f6aa9362a37a8672b4f7eeaf8\",\"dweb:/ipfs/QmasyxFDBUp7k5KFgfDWEzM8PYSKEq7GVznzMJ1VxVRF4B\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol\":{\"keccak256\":\"0x89be10e757d242e9b18d5a32c9fbe2019f6d63052bbe46397a430a1d60d7f794\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f103ee2e4aecd37aac6ceefe670709cdd7613dee25fa2d4d9feaf7fc0aaa155e\",\"dweb:/ipfs/QmRiNZLoJk5k3HPMYGPGjZFd2ke1ZxjhJZkM45Ec9GH9hv\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/utils/AddressUpgradeable.sol\":{\"keccak256\":\"0x9c80f545915582e63fe206c6ce27cbe85a86fc10b9cd2a0e8c9488fb7c2ee422\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://310136ad60820af4177a11a61d77a3686faf5fca4942b600e08fc940db38396b\",\"dweb:/ipfs/QmbCzMNSTL7Zi7M4UCSqBrkHtp4jjxUnGbkneCZKdR1qeq\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol\":{\"keccak256\":\"0x963ea7f0b48b032eef72fe3a7582edf78408d6f834115b9feadd673a4d5bd149\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d6520943ea55fdf5f0bafb39ed909f64de17051bc954ff3e88c9e5621412c79c\",\"dweb:/ipfs/QmWZ4rAKTQbNG2HxGs46AcTXShsVytKeLs7CUCdCSv5N7a\"]},\"lib/openzeppelin-contracts/contracts/access/Ownable.sol\":{\"keccak256\":\"0x923b9774b81c1abfb992262ae7763b6e6de77b077a7180d53c6ebb7b1c8bd648\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://53445dc0431f9b45c06f567c6091da961d4087bec0010cca5bd62100fa624a38\",\"dweb:/ipfs/QmNvBYpBv183czrAqNXr76E8M3LF93ouAJFeAcHfb59Rcx\"]},\"lib/openzeppelin-contracts/contracts/proxy/Clones.sol\":{\"keccak256\":\"0x0e1fe02da411a6293004e5ee85bdd1facef5f1b6ef2aab8d36c73f0d77b448db\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c5bfd474499866fe24ac6b88eb92969395baf1e644a0f0b0054e66f9ae90c00e\",\"dweb:/ipfs/QmS5j268UauZARToNJazEBJDWvWM35j8kHx779PF3c5rib\"]},\"lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol\":{\"keccak256\":\"0xeb373f1fdc7b755c6a750123a9b9e3a8a02c1470042fd6505d875000a80bde0b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0e28648f994abf1d6bc345644a361cc0b7efa544f8bc0c8ec26011fed85a91ec\",\"dweb:/ipfs/QmVVE7AiRjKaQYYji7TkjmTeVzGpNmms5eoxqTCfvvpj6D\"]},\"lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Holder.sol\":{\"keccak256\":\"0x2e024ca51ce5abe16c0d34e6992a1104f356e2244eb4ccbec970435e8b3405e3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a74009db3c6fc8db851ba69ddb6795b5c1ef1120c5a00fd1a8dc3a717dd9d519\",\"dweb:/ipfs/QmZMk8Yh2X3gPS51ckUVLEXjZUhMSEeGApnA53WtjvLb9h\"]},\"lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Receiver.sol\":{\"keccak256\":\"0x3dd5e1a66a56f30302108a1da97d677a42b1daa60e503696b2bcbbf3e4c95bcb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0808de0ae4918c664643c885ca7fa6503e8ef2bd75609dfc85152c0128a3422d\",\"dweb:/ipfs/QmNrhFC1XgBKuuxfahFeiwi1MCdu3FLNpHj2uStgmf4iJj\"]},\"lib/openzeppelin-contracts/contracts/token/ERC721/IERC721Receiver.sol\":{\"keccak256\":\"0xa82b58eca1ee256be466e536706850163d2ec7821945abd6b4778cfb3bee37da\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6e75cf83beb757b8855791088546b8337e9d4684e169400c20d44a515353b708\",\"dweb:/ipfs/QmYvPafLfoquiDMEj7CKHtvbgHu7TJNPSVPSCjrtjV8HjV\"]},\"lib/openzeppelin-contracts/contracts/token/ERC721/utils/ERC721Holder.sol\":{\"keccak256\":\"0xe703814ee88fca440ac66fbfbbf3a5085d9028237145e6c3447c7ca44d1177ed\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2c09e9ee347c311074d0cce306cef98c1b9ab7d06ff360031c4c71214e1395ef\",\"dweb:/ipfs/QmTE9VX4ejp2D5wimaPvzoAZefAMVNybCwdYJm2sEwfXni\"]},\"lib/openzeppelin-contracts/contracts/utils/Context.sol\":{\"keccak256\":\"0xe2e337e6dde9ef6b680e07338c493ebea1b5fd09b43424112868e9cc1706bca7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6df0ddf21ce9f58271bdfaa85cde98b200ef242a05a3f85c2bc10a8294800a92\",\"dweb:/ipfs/QmRK2Y5Yc6BK7tGKkgsgn3aJEQGi5aakeSPZvS65PV8Xp3\"]},\"lib/openzeppelin-contracts/contracts/utils/Strings.sol\":{\"keccak256\":\"0x2626d8ab3dfdad0fad630c212ad146d59473d0f48b771784c61a7c1dbbea1f3f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d7c144532f1e7c76ac95fb6a8f617c1f740d7a73442a907eb60910e99dfa1fbf\",\"dweb:/ipfs/QmZsGyooD6emxB8JCuugRjnRYS2MPZEL586uuV7dgC8Jng\"]},\"lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol\":{\"keccak256\":\"0xd10975de010d89fd1c78dc5e8a9a7e7f496198085c151648f20cba166b32582b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://fb0048dee081f6fffa5f74afc3fb328483c2a30504e94a0ddd2a5114d731ec4d\",\"dweb:/ipfs/QmZptt1nmYoA5SgjwnSgWqgUSDgm4q52Yos3xhnMv3MV43\"]},\"lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol\":{\"keccak256\":\"0x447a5f3ddc18419d41ff92b3773fb86471b1db25773e07f877f548918a185bf1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://be161e54f24e5c6fae81a12db1a8ae87bc5ae1b0ddc805d82a1440a68455088f\",\"dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy\"]},\"lib/openzeppelin-contracts/contracts/utils/math/Math.sol\":{\"keccak256\":\"0xbaf3bd8c64ac943fafde717797ee797c96360586b9448ea25e9872490a6e6858\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bab65b9b5ea0c68e96e1a73460db616042f639d144a6a75595434cfa2a483ed4\",\"dweb:/ipfs/QmUgwEcWXaEu4VSpymiVq8tZYKgA44HPMWZowpg2L8Kiij\"]},\"lib/openzeppelin-contracts/contracts/utils/math/SignedMath.sol\":{\"keccak256\":\"0xf92515413956f529d95977adc9b0567d583c6203fc31ab1c23824c35187e3ddc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c50fcc459e49a9858b6d8ad5f911295cb7c9ab57567845a250bf0153f84a95c7\",\"dweb:/ipfs/QmcEW85JRzvDkQggxiBBLVAasXWdkhEysqypj9EaB6H2g6\"]},\"lib/zodiac/contracts/factory/ModuleProxyFactory.sol\":{\"keccak256\":\"0x40a3eb64fec76f1f77656a77b4c469b299f2d8b0523ed0f207d3879455c06a70\",\"license\":\"LGPL-3.0-only\",\"urls\":[\"bzz-raw://e7b8e119a97151ceff8c8495e68aeb9fc14cdff5872fe42e37da41a69b13cc51\",\"dweb:/ipfs/Qmdd5YrGfxasdm83sAdmqAaomSxktMYJenguPSUefkS4Kc\"]},\"src/core/CookieJarCore.sol\":{\"keccak256\":\"0x70fef7629f7a8dbd3d72faac294f9e5d64f2864c07c217da8c032eb563f24d31\",\"license\":\"Unlicense\",\"urls\":[\"bzz-raw://ef6dd40f65694c9cbde6a3e28d465c402c69c5468b6a03ea50415564191a21ff\",\"dweb:/ipfs/QmYeujZsX3Pz3zCeLrucwsnP1CGLnu1P2excybYVYEMUrn\"]},\"src/factory/CookieJarFactory.sol\":{\"keccak256\":\"0xdeb6d77b88b00e57e4321718a1cc7680afb74044eab7478b67ca02d8edfde7cd\",\"license\":\"Unlicense\",\"urls\":[\"bzz-raw://fb47a48cb0e882effff205fbd1bb0c35ee73f7850ec20cb7d3455d783cb2a444\",\"dweb:/ipfs/QmXyhczM1Q1wXy8wf7djsU6fxqhqW9Egb1k92hcP1t8pQH\"]},\"src/interfaces/ICookieJar.sol\":{\"keccak256\":\"0x5c193e62b0a307193b266710c92cf8225ce72d3d085c07949cad9f1f8f7681fb\",\"license\":\"Unlicense\",\"urls\":[\"bzz-raw://7cb449fbae620cb1d87297055939404bae32b8db4a216d5b747248127242745d\",\"dweb:/ipfs/QmTQz4nZoUkUFZSLECsGSNgCreNdHuUJKZ8pJ1SXJs7cnV\"]},\"src/lib/CookieUtils.sol\":{\"keccak256\":\"0x23d0c173e9850c86031124023f0493f221c271f4e11126823f6671582f455fa1\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://1a2194e29f73368f3f289ffd9b4ca5f1e9a1e81bd40f0f6f7e1951977663c60d\",\"dweb:/ipfs/QmNmRsgMPgz4SEaHmpKZNCsbTGz2Y6UQMLyZftuwVoqqsd\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.19+commit.7dd6d404"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "OwnershipTransferred",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "cookieJar",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes",
+              "name": "initializer",
+              "type": "bytes",
+              "indexed": false
+            },
+            {
+              "internalType": "string",
+              "name": "details",
+              "type": "string",
+              "indexed": false
+            },
+            {
+              "internalType": "string",
+              "name": "uid",
+              "type": "string",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "SummonCookieJar",
+          "anonymous": false
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "renounceOwnership"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_moduleProxyFactory",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setProxyFactory"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_singleton",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "_initializer",
+              "type": "bytes"
+            },
+            {
+              "internalType": "string",
+              "name": "_details",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_saltNonce",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "summonCookieJar",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "transferOwnership"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "owner()": {
+            "details": "Returns the address of the current owner."
+          },
+          "renounceOwnership()": {
+            "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
+          },
+          "transferOwnership(address)": {
+            "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        ":@daohaus/baal-contracts/contracts/=lib/Baal/contracts/",
+        ":@gnosis.pm/safe-contracts/contracts/=lib/safe-contracts/contracts/",
+        ":@gnosis.pm/zodiac/contracts/=lib/zodiac/contracts/",
+        ":@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
+        ":@openzeppelin/contracts-upgradeable/contracts/=lib/openzeppelin-contracts-upgradeable/contracts/",
+        ":@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+        ":@prb/test/=lib/prb-test/src/",
+        ":Baal/=lib/Baal/contracts/",
+        ":ds-test/=lib/forge-std/lib/ds-test/src/",
+        ":erc4626-tests/=lib/openzeppelin-contracts-upgradeable/lib/erc4626-tests/",
+        ":forge-std/=lib/forge-std/src/",
+        ":openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/",
+        ":openzeppelin-contracts/=lib/openzeppelin-contracts/",
+        ":openzeppelin/=lib/openzeppelin-contracts-upgradeable/contracts/",
+        ":prb-test/=lib/prb-test/src/",
+        ":safe-contracts/=lib/safe-contracts/contracts/",
+        ":sstore2/=lib/sstore2/contracts/",
+        ":zodiac/=lib/zodiac/contracts/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "src/factory/CookieJarFactory.sol": "CookieJarFactory"
+      },
+      "libraries": {}
+    },
+    "sources": {
+      "lib/Baal/contracts/interfaces/IPoster.sol": {
+        "keccak256": "0x12609087c238d16adc8e5bf49ec5052dc44940a14e2b7d75a6b157eda0d8e0eb",
+        "urls": [
+          "bzz-raw://54a2a9c4c6c964eba3f5d72a9dc63a09f99c710cc7a3e78a7424fd4249a12ad9",
+          "dweb:/ipfs/QmfCfwdbvxZyjxe76ZW3WDYMQ383rHTuUAosHQJsJ8tKNJ"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol": {
+        "keccak256": "0x4075622496acc77fd6d4de4cc30a8577a744d5c75afad33fdeacf1704d6eda98",
+        "urls": [
+          "bzz-raw://99c8cb3cd19a44bbfb6612605affb7d8b06cee1f6aa9362a37a8672b4f7eeaf8",
+          "dweb:/ipfs/QmasyxFDBUp7k5KFgfDWEzM8PYSKEq7GVznzMJ1VxVRF4B"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol": {
+        "keccak256": "0x89be10e757d242e9b18d5a32c9fbe2019f6d63052bbe46397a430a1d60d7f794",
+        "urls": [
+          "bzz-raw://f103ee2e4aecd37aac6ceefe670709cdd7613dee25fa2d4d9feaf7fc0aaa155e",
+          "dweb:/ipfs/QmRiNZLoJk5k3HPMYGPGjZFd2ke1ZxjhJZkM45Ec9GH9hv"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/utils/AddressUpgradeable.sol": {
+        "keccak256": "0x9c80f545915582e63fe206c6ce27cbe85a86fc10b9cd2a0e8c9488fb7c2ee422",
+        "urls": [
+          "bzz-raw://310136ad60820af4177a11a61d77a3686faf5fca4942b600e08fc940db38396b",
+          "dweb:/ipfs/QmbCzMNSTL7Zi7M4UCSqBrkHtp4jjxUnGbkneCZKdR1qeq"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol": {
+        "keccak256": "0x963ea7f0b48b032eef72fe3a7582edf78408d6f834115b9feadd673a4d5bd149",
+        "urls": [
+          "bzz-raw://d6520943ea55fdf5f0bafb39ed909f64de17051bc954ff3e88c9e5621412c79c",
+          "dweb:/ipfs/QmWZ4rAKTQbNG2HxGs46AcTXShsVytKeLs7CUCdCSv5N7a"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/access/Ownable.sol": {
+        "keccak256": "0x923b9774b81c1abfb992262ae7763b6e6de77b077a7180d53c6ebb7b1c8bd648",
+        "urls": [
+          "bzz-raw://53445dc0431f9b45c06f567c6091da961d4087bec0010cca5bd62100fa624a38",
+          "dweb:/ipfs/QmNvBYpBv183czrAqNXr76E8M3LF93ouAJFeAcHfb59Rcx"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/proxy/Clones.sol": {
+        "keccak256": "0x0e1fe02da411a6293004e5ee85bdd1facef5f1b6ef2aab8d36c73f0d77b448db",
+        "urls": [
+          "bzz-raw://c5bfd474499866fe24ac6b88eb92969395baf1e644a0f0b0054e66f9ae90c00e",
+          "dweb:/ipfs/QmS5j268UauZARToNJazEBJDWvWM35j8kHx779PF3c5rib"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol": {
+        "keccak256": "0xeb373f1fdc7b755c6a750123a9b9e3a8a02c1470042fd6505d875000a80bde0b",
+        "urls": [
+          "bzz-raw://0e28648f994abf1d6bc345644a361cc0b7efa544f8bc0c8ec26011fed85a91ec",
+          "dweb:/ipfs/QmVVE7AiRjKaQYYji7TkjmTeVzGpNmms5eoxqTCfvvpj6D"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Holder.sol": {
+        "keccak256": "0x2e024ca51ce5abe16c0d34e6992a1104f356e2244eb4ccbec970435e8b3405e3",
+        "urls": [
+          "bzz-raw://a74009db3c6fc8db851ba69ddb6795b5c1ef1120c5a00fd1a8dc3a717dd9d519",
+          "dweb:/ipfs/QmZMk8Yh2X3gPS51ckUVLEXjZUhMSEeGApnA53WtjvLb9h"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Receiver.sol": {
+        "keccak256": "0x3dd5e1a66a56f30302108a1da97d677a42b1daa60e503696b2bcbbf3e4c95bcb",
+        "urls": [
+          "bzz-raw://0808de0ae4918c664643c885ca7fa6503e8ef2bd75609dfc85152c0128a3422d",
+          "dweb:/ipfs/QmNrhFC1XgBKuuxfahFeiwi1MCdu3FLNpHj2uStgmf4iJj"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721Receiver.sol": {
+        "keccak256": "0xa82b58eca1ee256be466e536706850163d2ec7821945abd6b4778cfb3bee37da",
+        "urls": [
+          "bzz-raw://6e75cf83beb757b8855791088546b8337e9d4684e169400c20d44a515353b708",
+          "dweb:/ipfs/QmYvPafLfoquiDMEj7CKHtvbgHu7TJNPSVPSCjrtjV8HjV"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/token/ERC721/utils/ERC721Holder.sol": {
+        "keccak256": "0xe703814ee88fca440ac66fbfbbf3a5085d9028237145e6c3447c7ca44d1177ed",
+        "urls": [
+          "bzz-raw://2c09e9ee347c311074d0cce306cef98c1b9ab7d06ff360031c4c71214e1395ef",
+          "dweb:/ipfs/QmTE9VX4ejp2D5wimaPvzoAZefAMVNybCwdYJm2sEwfXni"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/utils/Context.sol": {
+        "keccak256": "0xe2e337e6dde9ef6b680e07338c493ebea1b5fd09b43424112868e9cc1706bca7",
+        "urls": [
+          "bzz-raw://6df0ddf21ce9f58271bdfaa85cde98b200ef242a05a3f85c2bc10a8294800a92",
+          "dweb:/ipfs/QmRK2Y5Yc6BK7tGKkgsgn3aJEQGi5aakeSPZvS65PV8Xp3"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/utils/Strings.sol": {
+        "keccak256": "0x2626d8ab3dfdad0fad630c212ad146d59473d0f48b771784c61a7c1dbbea1f3f",
+        "urls": [
+          "bzz-raw://d7c144532f1e7c76ac95fb6a8f617c1f740d7a73442a907eb60910e99dfa1fbf",
+          "dweb:/ipfs/QmZsGyooD6emxB8JCuugRjnRYS2MPZEL586uuV7dgC8Jng"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol": {
+        "keccak256": "0xd10975de010d89fd1c78dc5e8a9a7e7f496198085c151648f20cba166b32582b",
+        "urls": [
+          "bzz-raw://fb0048dee081f6fffa5f74afc3fb328483c2a30504e94a0ddd2a5114d731ec4d",
+          "dweb:/ipfs/QmZptt1nmYoA5SgjwnSgWqgUSDgm4q52Yos3xhnMv3MV43"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol": {
+        "keccak256": "0x447a5f3ddc18419d41ff92b3773fb86471b1db25773e07f877f548918a185bf1",
+        "urls": [
+          "bzz-raw://be161e54f24e5c6fae81a12db1a8ae87bc5ae1b0ddc805d82a1440a68455088f",
+          "dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/utils/math/Math.sol": {
+        "keccak256": "0xbaf3bd8c64ac943fafde717797ee797c96360586b9448ea25e9872490a6e6858",
+        "urls": [
+          "bzz-raw://bab65b9b5ea0c68e96e1a73460db616042f639d144a6a75595434cfa2a483ed4",
+          "dweb:/ipfs/QmUgwEcWXaEu4VSpymiVq8tZYKgA44HPMWZowpg2L8Kiij"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/utils/math/SignedMath.sol": {
+        "keccak256": "0xf92515413956f529d95977adc9b0567d583c6203fc31ab1c23824c35187e3ddc",
+        "urls": [
+          "bzz-raw://c50fcc459e49a9858b6d8ad5f911295cb7c9ab57567845a250bf0153f84a95c7",
+          "dweb:/ipfs/QmcEW85JRzvDkQggxiBBLVAasXWdkhEysqypj9EaB6H2g6"
+        ],
+        "license": "MIT"
+      },
+      "lib/zodiac/contracts/factory/ModuleProxyFactory.sol": {
+        "keccak256": "0x40a3eb64fec76f1f77656a77b4c469b299f2d8b0523ed0f207d3879455c06a70",
+        "urls": [
+          "bzz-raw://e7b8e119a97151ceff8c8495e68aeb9fc14cdff5872fe42e37da41a69b13cc51",
+          "dweb:/ipfs/Qmdd5YrGfxasdm83sAdmqAaomSxktMYJenguPSUefkS4Kc"
+        ],
+        "license": "LGPL-3.0-only"
+      },
+      "src/core/CookieJarCore.sol": {
+        "keccak256": "0x70fef7629f7a8dbd3d72faac294f9e5d64f2864c07c217da8c032eb563f24d31",
+        "urls": [
+          "bzz-raw://ef6dd40f65694c9cbde6a3e28d465c402c69c5468b6a03ea50415564191a21ff",
+          "dweb:/ipfs/QmYeujZsX3Pz3zCeLrucwsnP1CGLnu1P2excybYVYEMUrn"
+        ],
+        "license": "Unlicense"
+      },
+      "src/factory/CookieJarFactory.sol": {
+        "keccak256": "0xdeb6d77b88b00e57e4321718a1cc7680afb74044eab7478b67ca02d8edfde7cd",
+        "urls": [
+          "bzz-raw://fb47a48cb0e882effff205fbd1bb0c35ee73f7850ec20cb7d3455d783cb2a444",
+          "dweb:/ipfs/QmXyhczM1Q1wXy8wf7djsU6fxqhqW9Egb1k92hcP1t8pQH"
+        ],
+        "license": "Unlicense"
+      },
+      "src/interfaces/ICookieJar.sol": {
+        "keccak256": "0x5c193e62b0a307193b266710c92cf8225ce72d3d085c07949cad9f1f8f7681fb",
+        "urls": [
+          "bzz-raw://7cb449fbae620cb1d87297055939404bae32b8db4a216d5b747248127242745d",
+          "dweb:/ipfs/QmTQz4nZoUkUFZSLECsGSNgCreNdHuUJKZ8pJ1SXJs7cnV"
+        ],
+        "license": "Unlicense"
+      },
+      "src/lib/CookieUtils.sol": {
+        "keccak256": "0x23d0c173e9850c86031124023f0493f221c271f4e11126823f6671582f455fa1",
+        "urls": [
+          "bzz-raw://1a2194e29f73368f3f289ffd9b4ca5f1e9a1e81bd40f0f6f7e1951977663c60d",
+          "dweb:/ipfs/QmNmRsgMPgz4SEaHmpKZNCsbTGz2Y6UQMLyZftuwVoqqsd"
+        ],
+        "license": "UNLICENSED"
+      }
+    },
+    "version": 1
+  },
+  "ast": {
+    "absolutePath": "src/factory/CookieJarFactory.sol",
+    "id": 44249,
+    "exportedSymbols": {
+      "Clones": [
+        30538
+      ],
+      "CookieJarCore": [
+        43540
+      ],
+      "CookieJarFactory": [
+        44248
+      ],
+      "CookieUtils": [
+        44514
+      ],
+      "ModuleProxyFactory": [
+        40537
+      ],
+      "Ownable": [
+        30444
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "38:1997:81",
+    "nodes": [
+      {
+        "id": 44153,
+        "nodeType": "PragmaDirective",
+        "src": "38:23:81",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          "0.8",
+          ".19"
+        ]
+      },
+      {
+        "id": 44155,
+        "nodeType": "ImportDirective",
+        "src": "63:64:81",
+        "nodes": [],
+        "absolutePath": "lib/openzeppelin-contracts/contracts/proxy/Clones.sol",
+        "file": "@openzeppelin/contracts/proxy/Clones.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 44249,
+        "sourceUnit": 30539,
+        "symbolAliases": [
+          {
+            "foreign": {
+              "id": 44154,
+              "name": "Clones",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 30538,
+              "src": "71:6:81",
+              "typeDescriptions": {}
+            },
+            "nameLocation": "-1:-1:-1"
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "id": 44157,
+        "nodeType": "ImportDirective",
+        "src": "128:94:81",
+        "nodes": [],
+        "absolutePath": "lib/zodiac/contracts/factory/ModuleProxyFactory.sol",
+        "file": "@gnosis.pm/zodiac/contracts/factory/ModuleProxyFactory.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 44249,
+        "sourceUnit": 40538,
+        "symbolAliases": [
+          {
+            "foreign": {
+              "id": 44156,
+              "name": "ModuleProxyFactory",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 40537,
+              "src": "136:18:81",
+              "typeDescriptions": {}
+            },
+            "nameLocation": "-1:-1:-1"
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "id": 44159,
+        "nodeType": "ImportDirective",
+        "src": "223:67:81",
+        "nodes": [],
+        "absolutePath": "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
+        "file": "@openzeppelin/contracts/access/Ownable.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 44249,
+        "sourceUnit": 30445,
+        "symbolAliases": [
+          {
+            "foreign": {
+              "id": 44158,
+              "name": "Ownable",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 30444,
+              "src": "231:7:81",
+              "typeDescriptions": {}
+            },
+            "nameLocation": "-1:-1:-1"
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "id": 44161,
+        "nodeType": "ImportDirective",
+        "src": "292:57:81",
+        "nodes": [],
+        "absolutePath": "src/core/CookieJarCore.sol",
+        "file": "src/core/CookieJarCore.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 44249,
+        "sourceUnit": 43541,
+        "symbolAliases": [
+          {
+            "foreign": {
+              "id": 44160,
+              "name": "CookieJarCore",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 43540,
+              "src": "300:13:81",
+              "typeDescriptions": {}
+            },
+            "nameLocation": "-1:-1:-1"
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "id": 44163,
+        "nodeType": "ImportDirective",
+        "src": "350:52:81",
+        "nodes": [],
+        "absolutePath": "src/lib/CookieUtils.sol",
+        "file": "src/lib/CookieUtils.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 44249,
+        "sourceUnit": 44515,
+        "symbolAliases": [
+          {
+            "foreign": {
+              "id": 44162,
+              "name": "CookieUtils",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 44514,
+              "src": "358:11:81",
+              "typeDescriptions": {}
+            },
+            "nameLocation": "-1:-1:-1"
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "id": 44248,
+        "nodeType": "ContractDefinition",
+        "src": "404:1630:81",
+        "nodes": [
+          {
+            "id": 44168,
+            "nodeType": "VariableDeclaration",
+            "src": "447:46:81",
+            "nodes": [],
+            "constant": false,
+            "mutability": "mutable",
+            "name": "moduleProxyFactory",
+            "nameLocation": "475:18:81",
+            "scope": 44248,
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_ModuleProxyFactory_$40537",
+              "typeString": "contract ModuleProxyFactory"
+            },
+            "typeName": {
+              "id": 44167,
+              "nodeType": "UserDefinedTypeName",
+              "pathNode": {
+                "id": 44166,
+                "name": "ModuleProxyFactory",
+                "nameLocations": [
+                  "447:18:81"
+                ],
+                "nodeType": "IdentifierPath",
+                "referencedDeclaration": 40537,
+                "src": "447:18:81"
+              },
+              "referencedDeclaration": 40537,
+              "src": "447:18:81",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_ModuleProxyFactory_$40537",
+                "typeString": "contract ModuleProxyFactory"
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "id": 44178,
+            "nodeType": "EventDefinition",
+            "src": "500:88:81",
+            "nodes": [],
+            "anonymous": false,
+            "eventSelector": "e82a16f418bac6bbd026f89ca451c913298150783a0faacbe2d8e17a5eb5c7fb",
+            "name": "SummonCookieJar",
+            "nameLocation": "506:15:81",
+            "parameters": {
+              "id": 44177,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 44170,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "cookieJar",
+                  "nameLocation": "530:9:81",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 44178,
+                  "src": "522:17:81",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 44169,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "522:7:81",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 44172,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "initializer",
+                  "nameLocation": "547:11:81",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 44178,
+                  "src": "541:17:81",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 44171,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "541:5:81",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 44174,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "details",
+                  "nameLocation": "567:7:81",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 44178,
+                  "src": "560:14:81",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 44173,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "560:6:81",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 44176,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "uid",
+                  "nameLocation": "583:3:81",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 44178,
+                  "src": "576:10:81",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 44175,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "576:6:81",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "521:66:81"
+            }
+          },
+          {
+            "id": 44182,
+            "nodeType": "FunctionDefinition",
+            "src": "634:16:81",
+            "nodes": [],
+            "body": {
+              "id": 44181,
+              "nodeType": "Block",
+              "src": "648:2:81",
+              "nodes": [],
+              "statements": []
+            },
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "parameters": {
+              "id": 44179,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "645:2:81"
+            },
+            "returnParameters": {
+              "id": 44180,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "648:0:81"
+            },
+            "scope": 44248,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "id": 44196,
+            "nodeType": "FunctionDefinition",
+            "src": "708:148:81",
+            "nodes": [],
+            "body": {
+              "id": 44195,
+              "nodeType": "Block",
+              "src": "779:77:81",
+              "nodes": [],
+              "statements": [
+                {
+                  "expression": {
+                    "id": 44193,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "id": 44189,
+                      "name": "moduleProxyFactory",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 44168,
+                      "src": "789:18:81",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_ModuleProxyFactory_$40537",
+                        "typeString": "contract ModuleProxyFactory"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "arguments": [
+                        {
+                          "id": 44191,
+                          "name": "_moduleProxyFactory",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 44184,
+                          "src": "829:19:81",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        ],
+                        "id": 44190,
+                        "name": "ModuleProxyFactory",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 40537,
+                        "src": "810:18:81",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_contract$_ModuleProxyFactory_$40537_$",
+                          "typeString": "type(contract ModuleProxyFactory)"
+                        }
+                      },
+                      "id": 44192,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "typeConversion",
+                      "lValueRequested": false,
+                      "nameLocations": [],
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "810:39:81",
+                      "tryCall": false,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_ModuleProxyFactory_$40537",
+                        "typeString": "contract ModuleProxyFactory"
+                      }
+                    },
+                    "src": "789:60:81",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_ModuleProxyFactory_$40537",
+                      "typeString": "contract ModuleProxyFactory"
+                    }
+                  },
+                  "id": 44194,
+                  "nodeType": "ExpressionStatement",
+                  "src": "789:60:81"
+                }
+              ]
+            },
+            "functionSelector": "fbddd751",
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [
+              {
+                "id": 44187,
+                "kind": "modifierInvocation",
+                "modifierName": {
+                  "id": 44186,
+                  "name": "onlyOwner",
+                  "nameLocations": [
+                    "769:9:81"
+                  ],
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 30363,
+                  "src": "769:9:81"
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "769:9:81"
+              }
+            ],
+            "name": "setProxyFactory",
+            "nameLocation": "717:15:81",
+            "parameters": {
+              "id": 44185,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 44184,
+                  "mutability": "mutable",
+                  "name": "_moduleProxyFactory",
+                  "nameLocation": "741:19:81",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 44196,
+                  "src": "733:27:81",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 44183,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "733:7:81",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "732:29:81"
+            },
+            "returnParameters": {
+              "id": 44188,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "779:0:81"
+            },
+            "scope": 44248,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "id": 44247,
+            "nodeType": "FunctionDefinition",
+            "src": "1551:481:81",
+            "nodes": [],
+            "body": {
+              "id": 44246,
+              "nodeType": "Block",
+              "src": "1712:320:81",
+              "nodes": [],
+              "statements": [
+                {
+                  "assignments": [
+                    44211
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 44211,
+                      "mutability": "mutable",
+                      "name": "cookieJar",
+                      "nameLocation": "1736:9:81",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 44246,
+                      "src": "1722:23:81",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_CookieJarCore_$43540",
+                        "typeString": "contract CookieJarCore"
+                      },
+                      "typeName": {
+                        "id": 44210,
+                        "nodeType": "UserDefinedTypeName",
+                        "pathNode": {
+                          "id": 44209,
+                          "name": "CookieJarCore",
+                          "nameLocations": [
+                            "1722:13:81"
+                          ],
+                          "nodeType": "IdentifierPath",
+                          "referencedDeclaration": 43540,
+                          "src": "1722:13:81"
+                        },
+                        "referencedDeclaration": 43540,
+                        "src": "1722:13:81",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_CookieJarCore_$43540",
+                          "typeString": "contract CookieJarCore"
+                        }
+                      },
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 44220,
+                  "initialValue": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": 44215,
+                            "name": "_singleton",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 44198,
+                            "src": "1794:10:81",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          },
+                          {
+                            "id": 44216,
+                            "name": "_initializer",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 44200,
+                            "src": "1806:12:81",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bytes_memory_ptr",
+                              "typeString": "bytes memory"
+                            }
+                          },
+                          {
+                            "id": 44217,
+                            "name": "_saltNonce",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 44204,
+                            "src": "1820:10:81",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            },
+                            {
+                              "typeIdentifier": "t_bytes_memory_ptr",
+                              "typeString": "bytes memory"
+                            },
+                            {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          ],
+                          "expression": {
+                            "id": 44213,
+                            "name": "moduleProxyFactory",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 44168,
+                            "src": "1762:18:81",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_contract$_ModuleProxyFactory_$40537",
+                              "typeString": "contract ModuleProxyFactory"
+                            }
+                          },
+                          "id": 44214,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberLocation": "1781:12:81",
+                          "memberName": "deployModule",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 40536,
+                          "src": "1762:31:81",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_bytes_memory_ptr_$_t_uint256_$returns$_t_address_$",
+                            "typeString": "function (address,bytes memory,uint256) external returns (address)"
+                          }
+                        },
+                        "id": 44218,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "nameLocations": [],
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "1762:69:81",
+                        "tryCall": false,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "id": 44212,
+                      "name": "CookieJarCore",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 43540,
+                      "src": "1748:13:81",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_contract$_CookieJarCore_$43540_$",
+                        "typeString": "type(contract CookieJarCore)"
+                      }
+                    },
+                    "id": 44219,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "typeConversion",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1748:84:81",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_CookieJarCore_$43540",
+                      "typeString": "contract CookieJarCore"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1722:110:81"
+                },
+                {
+                  "assignments": [
+                    44222
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 44222,
+                      "mutability": "mutable",
+                      "name": "uid",
+                      "nameLocation": "1857:3:81",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 44246,
+                      "src": "1843:17:81",
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_string_memory_ptr",
+                        "typeString": "string"
+                      },
+                      "typeName": {
+                        "id": 44221,
+                        "name": "string",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "1843:6:81",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_string_storage_ptr",
+                          "typeString": "string"
+                        }
+                      },
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 44230,
+                  "initialValue": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": 44227,
+                            "name": "cookieJar",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 44211,
+                            "src": "1899:9:81",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_contract$_CookieJarCore_$43540",
+                              "typeString": "contract CookieJarCore"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_contract$_CookieJarCore_$43540",
+                              "typeString": "contract CookieJarCore"
+                            }
+                          ],
+                          "id": 44226,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "lValueRequested": false,
+                          "nodeType": "ElementaryTypeNameExpression",
+                          "src": "1891:7:81",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_address_$",
+                            "typeString": "type(address)"
+                          },
+                          "typeName": {
+                            "id": 44225,
+                            "name": "address",
+                            "nodeType": "ElementaryTypeName",
+                            "src": "1891:7:81",
+                            "typeDescriptions": {}
+                          }
+                        },
+                        "id": 44228,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "nameLocations": [],
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "1891:18:81",
+                        "tryCall": false,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "expression": {
+                        "id": 44223,
+                        "name": "CookieUtils",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 44514,
+                        "src": "1863:11:81",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_contract$_CookieUtils_$44514_$",
+                          "typeString": "type(library CookieUtils)"
+                        }
+                      },
+                      "id": 44224,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberLocation": "1875:15:81",
+                      "memberName": "getCookieJarUid",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 44475,
+                      "src": "1863:27:81",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_view$_t_address_$returns$_t_string_memory_ptr_$",
+                        "typeString": "function (address) view returns (string memory)"
+                      }
+                    },
+                    "id": 44229,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1863:47:81",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_memory_ptr",
+                      "typeString": "string memory"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1843:67:81"
+                },
+                {
+                  "eventCall": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": 44234,
+                            "name": "cookieJar",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 44211,
+                            "src": "1950:9:81",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_contract$_CookieJarCore_$43540",
+                              "typeString": "contract CookieJarCore"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_contract$_CookieJarCore_$43540",
+                              "typeString": "contract CookieJarCore"
+                            }
+                          ],
+                          "id": 44233,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "lValueRequested": false,
+                          "nodeType": "ElementaryTypeNameExpression",
+                          "src": "1942:7:81",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_address_$",
+                            "typeString": "type(address)"
+                          },
+                          "typeName": {
+                            "id": 44232,
+                            "name": "address",
+                            "nodeType": "ElementaryTypeName",
+                            "src": "1942:7:81",
+                            "typeDescriptions": {}
+                          }
+                        },
+                        "id": 44235,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "nameLocations": [],
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "1942:18:81",
+                        "tryCall": false,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "id": 44236,
+                        "name": "_initializer",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 44200,
+                        "src": "1962:12:81",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes_memory_ptr",
+                          "typeString": "bytes memory"
+                        }
+                      },
+                      {
+                        "id": 44237,
+                        "name": "_details",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 44202,
+                        "src": "1976:8:81",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_string_memory_ptr",
+                          "typeString": "string memory"
+                        }
+                      },
+                      {
+                        "id": 44238,
+                        "name": "uid",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 44222,
+                        "src": "1986:3:81",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_string_memory_ptr",
+                          "typeString": "string memory"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_bytes_memory_ptr",
+                          "typeString": "bytes memory"
+                        },
+                        {
+                          "typeIdentifier": "t_string_memory_ptr",
+                          "typeString": "string memory"
+                        },
+                        {
+                          "typeIdentifier": "t_string_memory_ptr",
+                          "typeString": "string memory"
+                        }
+                      ],
+                      "id": 44231,
+                      "name": "SummonCookieJar",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 44178,
+                      "src": "1926:15:81",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_bytes_memory_ptr_$_t_string_memory_ptr_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (address,bytes memory,string memory,string memory)"
+                      }
+                    },
+                    "id": 44239,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1926:64:81",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 44240,
+                  "nodeType": "EmitStatement",
+                  "src": "1921:69:81"
+                },
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "id": 44243,
+                        "name": "cookieJar",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 44211,
+                        "src": "2015:9:81",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_CookieJarCore_$43540",
+                          "typeString": "contract CookieJarCore"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_contract$_CookieJarCore_$43540",
+                          "typeString": "contract CookieJarCore"
+                        }
+                      ],
+                      "id": 44242,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "nodeType": "ElementaryTypeNameExpression",
+                      "src": "2007:7:81",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_address_$",
+                        "typeString": "type(address)"
+                      },
+                      "typeName": {
+                        "id": 44241,
+                        "name": "address",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "2007:7:81",
+                        "typeDescriptions": {}
+                      }
+                    },
+                    "id": 44244,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "typeConversion",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "2007:18:81",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "functionReturnParameters": 44208,
+                  "id": 44245,
+                  "nodeType": "Return",
+                  "src": "2000:25:81"
+                }
+              ]
+            },
+            "functionSelector": "e5b0bde3",
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "summonCookieJar",
+            "nameLocation": "1560:15:81",
+            "parameters": {
+              "id": 44205,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 44198,
+                  "mutability": "mutable",
+                  "name": "_singleton",
+                  "nameLocation": "1584:10:81",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 44247,
+                  "src": "1576:18:81",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 44197,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1576:7:81",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 44200,
+                  "mutability": "mutable",
+                  "name": "_initializer",
+                  "nameLocation": "1609:12:81",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 44247,
+                  "src": "1596:25:81",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 44199,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1596:5:81",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 44202,
+                  "mutability": "mutable",
+                  "name": "_details",
+                  "nameLocation": "1637:8:81",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 44247,
+                  "src": "1623:22:81",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 44201,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1623:6:81",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 44204,
+                  "mutability": "mutable",
+                  "name": "_saltNonce",
+                  "nameLocation": "1655:10:81",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 44247,
+                  "src": "1647:18:81",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 44203,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1647:7:81",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1575:91:81"
+            },
+            "returnParameters": {
+              "id": 44208,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 44207,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 44247,
+                  "src": "1699:7:81",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 44206,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1699:7:81",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1698:9:81"
+            },
+            "scope": 44248,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [
+          {
+            "baseName": {
+              "id": 44164,
+              "name": "Ownable",
+              "nameLocations": [
+                "433:7:81"
+              ],
+              "nodeType": "IdentifierPath",
+              "referencedDeclaration": 30444,
+              "src": "433:7:81"
+            },
+            "id": 44165,
+            "nodeType": "InheritanceSpecifier",
+            "src": "433:7:81"
+          }
+        ],
+        "canonicalName": "CookieJarFactory",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [
+          44248,
+          30444,
+          32821
+        ],
+        "name": "CookieJarFactory",
+        "nameLocation": "413:16:81",
+        "scope": 44249,
+        "usedErrors": []
+      }
+    ],
+    "license": "Unlicense"
+  },
+  "id": 81
+}
