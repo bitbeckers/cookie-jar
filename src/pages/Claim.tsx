@@ -50,7 +50,7 @@ export const Claims = () => {
     return (
       <DisplayClaim
         heading="Connect to Gnosis Chain"
-        description="Free Ryder DAO is only on Gnosis Chain."
+        description="Cookie Jar is only on Gnosis Chain."
       />
     );
   }

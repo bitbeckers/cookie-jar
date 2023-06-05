@@ -24,10 +24,15 @@ export interface Erc20Initializer extends CookieJarInitializer {
   threshold: BigNumberish;
 }
 
+export interface ListInitializer extends CookieJarInitializer {
+  allowList: string[];
+}
+
 export type Initializer =
   | CookieJarInitializer
   | BaalInitializer
-  | Erc20Initializer;
+  | Erc20Initializer
+  | ListInitializer;
 
 interface CookieJarFactory {
   factoryContract: ethers.Contract;

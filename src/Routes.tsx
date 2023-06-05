@@ -8,7 +8,6 @@ import { CreateJar } from "./pages/CreateJar";
 import { CreateNFTJar } from "./pages/CreateNftJar";
 import { ConfigForm } from "./components/ConfigForm";
 import { ManageForm } from "./components/ManageForm";
-import { CreateZodiacJar } from "./pages/CreateZodiacJar";
 
 export const Routes = () => {
   return (
@@ -37,7 +36,6 @@ export const Routes = () => {
         <Route path={`/jars`} element={<Jars />} />
         <Route path={`/create`} element={<CreateJar />} />
         <Route path={`/mint`} element={<CreateNFTJar />} />
-        <Route path={`/mintZodiac`} element={<CreateZodiacJar />} />
       </Route>
     </Router>
   );

@@ -1,10 +1,10 @@
-import { useQuery } from 'react-query';
+import { useQuery } from "react-query";
 
-import { createContract } from '@daohaus/tx-builder';
-import { ValidNetwork, Keychain } from '@daohaus/keychain-utils';
-import { nowInSeconds } from '@daohaus/utils';
+import { createContract } from "@daohaus/tx-builder";
+import { ValidNetwork, Keychain } from "@daohaus/keychain-utils";
+import { nowInSeconds } from "@daohaus/utils";
 
-import CookieJarAbi from '../abis/CookieJarCore.json';
+import CookieJarAbi from "../abis/CookieJarCore.json";
 
 // fetch user cookie claim data from the blockchain
 const fetchUserClaim = async ({
@@ -19,7 +19,7 @@ const fetchUserClaim = async ({
   rpcs?: Keychain;
 }) => {
   if (!cookieJarAddress || !chainId) {
-    throw new Error('No cookie jar address provided');
+    throw new Error("No cookie jar address provided");
   }
   const cookieContract = createContract({
     address: cookieJarAddress,
@@ -33,17 +33,18 @@ const fetchUserClaim = async ({
     const claimAmt = await cookieContract.cookieAmount(); // get amount of cookie token to claim
     const claimPeriod = await cookieContract.periodLength(); // get the period length for claims
     const cookieToken = await cookieContract.cookieToken(); // get the cookie token address
-    const target = await cookieContract.target(); // get the target safe address
-    // const isAllowList = await cookieContract.isAllowList(); // todo: check if user is on isAllowList(userAddress)
 
+    //TODO not all variables apply to the cookie jar
+    // const target = await cookieContract.target(); // get the target safe address
+    // const isAllowList = await cookieContract.isAllowList(); // todo: check if user is on isAllowList(userAddress)
 
     return {
       lastClaimed: lastClaimed.toString() as string,
       claimAmt: claimAmt.toString() as string,
       claimPeriod: claimPeriod.toString() as string,
       cookieToken: cookieToken.toString() as string,
-      target: target.toString() as string,
-      // isAllowList: isAllowList as boolean, 
+      // target: target.toString() as string,
+      // isAllowList: isAllowList as boolean,
     };
   } catch (error: any) {
     console.error(error);
@@ -64,7 +65,7 @@ export const useCookieJar = ({
   rpcs?: Keychain;
 }) => {
   const { data, ...rest } = useQuery(
-    ['claimData', { userAddress }],
+    ["claimData", { userAddress }],
     () =>
       fetchUserClaim({
         cookieJarAddress,
@@ -78,15 +79,16 @@ export const useCookieJar = ({
   const hasClaimed = data?.lastClaimed && Number(data.lastClaimed) > 0;
   // determine if user can claim based on last claim time and claim period
   const canClaim =
-  nowInSeconds() - Number(data?.lastClaimed) >= Number(data?.claimPeriod) ||
+    nowInSeconds() - Number(data?.lastClaimed) >= Number(data?.claimPeriod) ||
     !hasClaimed;
   // const isMember = data?.canClaim;
 
   // return user claim data along with helper variables and the query status
-  return { 
-    data, 
-    hasClaimed, 
-    canClaim, 
+  return {
+    data,
+    hasClaimed,
+    canClaim,
     // isMember,
-    ...rest };
+    ...rest,
+  };
 };
