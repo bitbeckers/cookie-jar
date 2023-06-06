@@ -10,7 +10,7 @@ export type SummonEvent = {
   initializer?: Initializer;
 };
 
-export type DetailsSchema = {
+export type CookieJarDetailsSchema = {
   type: string;
   name: string;
   description?: string;
@@ -19,88 +19,55 @@ export type DetailsSchema = {
 
 export type GiveCookieEvent = {
   cookieMonster: string;
-  _uid: string;
+  cookieUid: string;
   amount?: string;
   reason?: string;
 };
 
-// From contract docs
-// The post claim reason event is used to store a reason for a claim made by a user. The event has the following schema:
-
-// ```json
-// {
-//   "tag": "CookieJar.<jar_uid>.reason.<cookie_uid>",
-//   "content": "...reason..."
-// }
-// ```
-
-type PosterTags = {
+interface Tag {
+  jarUid: string;
+  cookieUid: string;
   type: string;
-  link?: string;
+}
+
+type ReasonTag = Tag & {
+  type: "reason";
 };
 
-export type GiveCookieReason = PosterTags & {
-  jarUid: string;
-  cookieUid: string;
-  reason?: string;
+type AssessTag = Tag & {
+  type: "assess";
 };
 
-export type AssessCookieReason = PosterTags & {
-  jarUid: string;
-  cookieUid: string;
-  description: string;
+type ReasonSchema = {
+  reason: string;
+  link: string;
 };
 
-const processPosterTag = (tag: string) => {
-  const parts = tag.split(".");
-  if (parts.length !== 4) {
-    return undefined;
-  }
-  const [startTag, jarUid, type, cookieUid] = parts;
-  if (
-    startTag !== COOKIE_JAR_TAG ||
-    !jarUid ||
-    !type ||
-    !cookieUid ||
-    type !== "reason"
-  ) {
-    return undefined;
-  }
-
-  return {
-    type,
-    jarUid,
-    cookieUid,
-  } as Partial<GiveCookieReason>;
+type AssessSchema = {
+  rating: "UP" | "DOWN";
+  sender: `0x${string}`;
 };
 
-const parseReasonEvent = (event: Event) => {
-  const { content } = event.args;
+export interface ReasonEvent extends ReasonTag, ReasonSchema {
+  user: string;
+}
 
-  //try to parse content to ReasonSchema
-  let _content: Partial<GiveCookieReason>;
-  try {
-    _content = JSON.parse(content);
-  } catch (e) {
-    console.warn("Could not parse content from event.");
-    console.log(content);
-    return;
-  }
-
-  return _content;
-};
+export interface AssessEvent extends AssessTag, AssessSchema {
+  user: string;
+}
 
 export const parseNewPostEvent = (event: Event) => {
   // NewPost (index_topic_1 address user, string content, index_topic_2 string tag)
-  const { tag } = event.args;
+  const { tag, content, user } = event.args;
   console.log("Event: ", event);
+
   if (!isText(tag)) {
-    console.log("Not a text tag.");
+    console.log("Not a valid tag.");
     return undefined;
   }
 
-  if (!tag.indexOf(COOKIE_JAR_TAG)) {
-    console.log("Not a cookie jar tag.");
+  if (tag.startsWith(COOKIE_JAR_TAG) || !isText(tag)) {
+    console.log("Not a valid tag.");
     return undefined;
   }
 
@@ -110,14 +77,132 @@ export const parseNewPostEvent = (event: Event) => {
     return undefined;
   }
 
-  if (parsedTag.type === "reason") {
-    const reason = parseReasonEvent(event);
-    if (reason?.cookieUid && reason?.jarUid && parsedTag?.type) {
-      return { ...parsedTag, ...reason } as Partial<GiveCookieReason>;
-    }
+  const parsedContent = processPosterContent(content, parsedTag);
+
+  if (!parsedContent) {
+    return undefined;
+  }
+
+  if (parsedTag.type === "reason" && isReasonContent(parsedContent)) {
+    return {
+      user,
+      ...parsedTag,
+      ...parsedContent,
+    } as ReasonEvent;
+  }
+
+  if (parsedTag.type === "assess" && isAssessContent(parsedContent)) {
+    return {
+      user,
+      ...parsedTag,
+      ...parsedContent,
+    } as AssessEvent;
   }
 
   return undefined;
+};
+
+const isReasonContent = (content: any): content is ReasonSchema =>
+  content.reason && content.link;
+
+const isAssessContent = (content: any): content is AssessSchema =>
+  content.rating && content.sender;
+
+const isReasonTag = (tag: any): tag is ReasonTag => {
+  const parts = tag.split(".");
+  if (parts.length !== 4) {
+    return false;
+  }
+  const [_, jarUid, type, cookieUid] = parts;
+
+  if (type !== "reason") {
+    return false;
+  }
+
+  return jarUid && type && cookieUid;
+};
+
+const isAssessTag = (tag: any): tag is AssessTag => {
+  const parts = tag.split(".");
+  if (parts.length !== 4) {
+    return false;
+  }
+
+  const [_, jarUid, type, cookieUid] = parts;
+
+  if (type !== "assess") {
+    return false;
+  }
+
+  return jarUid && type && cookieUid;
+};
+
+const processPosterTag = (tag: string) => {
+  const parts = tag.split(".");
+  if (parts.length !== 4) {
+    return undefined;
+  }
+  const [startTag, jarUid, type, cookieUid] = parts;
+
+  if (startTag !== COOKIE_JAR_TAG) {
+    return undefined;
+  }
+
+  if (isReasonTag(tag)) {
+    return {
+      type,
+      jarUid,
+      cookieUid,
+    } as ReasonTag;
+  }
+
+  if (isAssessTag(tag)) {
+    return {
+      type,
+      jarUid,
+      cookieUid,
+    } as AssessTag;
+  }
+
+  return undefined;
+};
+
+const processPosterContent = (content: string, tag: Tag) => {
+  switch (tag.type) {
+    case "reason":
+      return processReasonContent(content);
+    case "assess":
+      return processAssessContent(content);
+    default:
+      return undefined;
+  }
+};
+
+const processReasonContent = (content: string) => {
+  let reasonDetails: { reason: string; link: string };
+
+  try {
+    reasonDetails = JSON.parse(content);
+    return reasonDetails as ReasonSchema;
+  } catch (e) {
+    console.warn("Could not reason details from event.");
+    console.log(content);
+    return undefined;
+  }
+};
+
+const processAssessContent = (content: string) => {
+  const parts = content.split(" ");
+  if (parts.length !== 2) {
+    return undefined;
+  }
+
+  const [rating, sender] = parts as ["UP" | "DOWN", `0x${string}`];
+
+  return {
+    rating,
+    sender,
+  } as AssessSchema;
 };
 
 function isText(data: any): data is string {

@@ -56,9 +56,9 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
         />
 
         <Label>Type: </Label>
-        <ParMd style={{ marginBottom: ".4rem" }}>{record.type}</ParMd>
+        <ParMd style={{ marginBottom: ".4rem" }}>{record.details.type}</ParMd>
         <Label>Title: </Label>
-        <ParMd style={{ marginBottom: ".4rem" }}>{record.type}</ParMd>
+        <ParMd style={{ marginBottom: ".4rem" }}>{record.details.type}</ParMd>
         <Label>Description: </Label>
         <ParMd style={{ marginBottom: ".4rem" }}>...</ParMd>
 

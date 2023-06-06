@@ -34,17 +34,16 @@ const fetchUserClaim = async ({
     const claimPeriod = await cookieContract.periodLength(); // get the period length for claims
     const cookieToken = await cookieContract.cookieToken(); // get the cookie token address
 
-    //TODO not all variables apply to the cookie jar
-    // const target = await cookieContract.target(); // get the target safe address
-    // const isAllowList = await cookieContract.isAllowList(); // todo: check if user is on isAllowList(userAddress)
+    const target = await cookieContract.target(); // get the target safe address
+    const isAllowList = await cookieContract.isAllowList(); // todo: check if user is on isAllowList(userAddress)
 
     return {
       lastClaimed: lastClaimed.toString() as string,
       claimAmt: claimAmt.toString() as string,
       claimPeriod: claimPeriod.toString() as string,
       cookieToken: cookieToken.toString() as string,
-      // target: target.toString() as string,
-      // isAllowList: isAllowList as boolean,
+      target: target.toString() as string,
+      isAllowList: isAllowList as boolean,
     };
   } catch (error: any) {
     console.error(error);

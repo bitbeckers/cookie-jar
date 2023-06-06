@@ -17,8 +17,9 @@ export type DetailsSchema = {
 };
 
 export type GiveCookieEvent = {
+  cookieGiver: string;
   cookieMonster: string;
-  uid: string;
+  cookieUid: string;
   amount?: string;
   reason?: string;
   link?: string;
@@ -42,7 +43,7 @@ export const parseGiveCookieEvent = (event: Event) => {
   return {
     cookieMonster,
     amount,
-    uid: _uid,
+    cookieUid: _uid,
   } as GiveCookieEvent;
 };
 

@@ -1,37 +1,30 @@
 import { H2, SingleColumnLayout } from "@daohaus/ui";
 import { HausAnimated } from "../components/HausAnimated";
-import { useDHConnect } from "@daohaus/connect";
 
 import { JarCard } from "../components/JarCard";
-import { CookieJarEntry, useIndexer } from "../hooks/useIndexer";
-import { useEffect, useState } from "react";
+import { useIndexer } from "../hooks/useIndexer";
+import { useQuery } from "react-query";
 
 export const Jars = () => {
-  const { address } = useDHConnect();
-  const { indexer, getJars } = useIndexer();
+  const { getJars } = useIndexer();
 
-  const [jars, setJars] = useState<CookieJarEntry[]>();
+  const { data, isLoading } = useQuery({
+    queryKey: "jars",
+    queryFn: () => getJars(),
+    refetchInterval: 5000,
+  });
 
-  // TODO: filter on only jars user is on allow list of
-  useEffect(() => {
-    const getAllCookieJars = async () => {
-      if (indexer) {
-        const jars = await getJars();
-        setJars(jars);
-      }
-    };
-
-    getAllCookieJars();
-  }, [indexer]);
-
-  console.log("jars", jars);
   return (
     <SingleColumnLayout>
       <H2>Jars</H2>
 
-      {!jars && <HausAnimated />}
+      {!data && isLoading && <HausAnimated />}
 
-      {jars && jars.map((jar) => <JarCard record={jar} key={jar.id} />)}
+      {!data && !isLoading && <H2>No Jars found</H2>}
+
+      {data &&
+        data.length > 0 &&
+        data.map((jar) => <JarCard record={jar} key={jar.id} />)}
     </SingleColumnLayout>
   );
 };
