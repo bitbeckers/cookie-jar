@@ -43,6 +43,7 @@ export const ClaimForm = ({
           receiver: user,
           user: user,
           targetAddress: cookieAddress,
+          link: "",
         }}
         customFields={AppFieldLookup}
         lifeCycleFns={{

@@ -56,6 +56,14 @@ export const APP_FIELD: Record<string, CustomFieldLego> = {
       },
     ],
   },
+  LINK: {
+    id: "link",
+    type: "input",
+    label: "link",
+    defaultValue: "",
+    expectType: "url",
+    placeholder: "http://example.com",
+  },
   RECEIVER: {
     id: "checkRenderReceiver",
     type: "checkRender",
