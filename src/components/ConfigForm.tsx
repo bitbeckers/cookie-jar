@@ -71,7 +71,7 @@ export const ConfigForm = () => {
 
     // setConfig
     const encodedFunction = encodeFunction(
-      COOKIEJAR_CORE_ABI.abi,
+      COOKIEJAR_CORE_ABI,
       "setConfig",
       [formValues.cookiePeriod, formValues.cookieAmount, formValues.cookieToken]
     );

@@ -32,7 +32,7 @@ const useIndexer = () => {
   if (addresses && indexer) {
     indexer.subscribe(
       addresses?.COOKIEJAR_FACTORY_ADDRESS,
-      FactoryABI.abi,
+      FactoryABI,
       28000000
     );
 

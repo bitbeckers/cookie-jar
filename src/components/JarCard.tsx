@@ -25,7 +25,7 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
       if (provider) {
         const cookieJarContract = new ethers.Contract(
           record.address,
-          COOKIEJAR_CORE_ABI.abi,
+          COOKIEJAR_CORE_ABI,
           provider
         );
 
