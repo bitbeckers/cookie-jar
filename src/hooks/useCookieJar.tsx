@@ -23,7 +23,7 @@ const fetchUserClaim = async ({
   }
   const cookieContract = createContract({
     address: cookieJarAddress,
-    abi: CookieJarAbi.abi,
+    abi: CookieJarAbi,
     chainId,
     rpcs,
   });

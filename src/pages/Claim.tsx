@@ -167,25 +167,7 @@ export const Claims = () => {
       />
     );
   // Has not claimed
-  if (data && !hasClaimed)
-    return (
-      <SingleColumnLayout>
-        <ClaimDetails
-          claimAmt={data.claimAmt}
-          claimPeriod={data.claimPeriod}
-          unit={target ? HAUS_NETWORK_DATA[target.CHAIN_ID]?.symbol || "" : ""}
-        />
-        <ClaimForm
-          user={address}
-          cookieAddress={cookieAddress}
-          onSuccess={() => {
-            refetch();
-            setShowConfetti(true);
-          }}
-        />
-      </SingleColumnLayout>
-    );
-  if (data && canClaim)
+  if (data && (!hasClaimed || canClaim))
     return (
       <SingleColumnLayout>
         <ClaimDetails
