@@ -1,4 +1,4 @@
-import { Initializer } from "../hooks/useCookieJarFactory";
+import { Initializer, ListInitializer } from "../hooks/useCookieJarFactory";
 import { ethers } from "ethers";
 import { Event } from "chainsauce-web";
 
@@ -63,7 +63,6 @@ export const parseSummonEvent = (event: Event) => {
   }
 
   let initParams: Initializer;
-  let decoded: ethers.utils.Result;
 
   console.log("Found  details: ", _details);
   console.log("Found initializer: ", initializer);
@@ -72,81 +71,38 @@ export const parseSummonEvent = (event: Event) => {
   switch (_details.type) {
     case "6551":
       console.log("Found 6551 initializer");
-      // decoded = ethers.utils.defaultAbiCoder.decode(
-      //   ["address", "uint256", "uint256", "address", "address[]"],
-      //   initializer
-      // );
-      // console.log("Decoded");
-      // initParams = {
-      //   safeTarget: decoded[0],
-      //   periodLength: decoded[1],
-      //   cookieAmount: decoded[2],
-      //   allowList: decoded[3],
-      // } as ListInitializer;
-      break;
+      const iface = new ethers.utils.Interface(["function setUp(bytes)"]);
+      const decoded = iface.decodeFunctionData("setUp(bytes)", initializer);
+      const decodedSetUp = ethers.utils.defaultAbiCoder.decode(
+        ["address", "uint256", "uint256", "address", "address[]"],
+        decoded[0]
+      );
+
+      console.log("Decoded", decodedSetUp);
+      initParams = {
+        safeTarget: decodedSetUp[0],
+        periodLength: decodedSetUp[1],
+        cookieAmount: decodedSetUp[2],
+        cookieToken: decodedSetUp[3],
+        allowList: decodedSetUp[4],
+      } as ListInitializer;
+
+      return {
+        id: uid,
+        details: _details,
+        address: cookieJar,
+        initializer: initParams ?? undefined,
+      } as CookieJar;
     case "BAAL":
       console.log("Found BAAL initializer");
-      // decoded = ethers.utils.defaultAbiCoder.decode(
-      //   [
-      //     "address",
-      //     "uint256",
-      //     "uint256",
-      //     "address",
-      //     "address",
-      //     "uint256",
-      //     "bool",
-      //     "bool",
-      //   ],
-      //   initializer
-      // );
-      // console.log(decoded);
-      // initParams = {
-      //   safeTarget: decoded[0],
-      //   cookieAmount: decoded[1],
-      //   periodLength: decoded[2],
-      //   cookieToken: decoded[3],
-      //   dao: decoded[4],
-      //   threshold: decoded[5],
-      //   useShares: decoded[6],
-      //   useLoot: decoded[7],
-      // } as BaalInitializer;
+
       break;
     case "ERC20":
       console.log("Found ERC20 initializer");
-      // decoded = ethers.utils.defaultAbiCoder.decode(
-      //   ["address", "uint256", "uint256", "address", "address", "uint256"],
-      //   initializer
-      // );
-      // console.log(decoded);
-
-      // initParams = {
-      //   safeTarget: decoded[0],
-      //   cookieAmount: decoded[1],
-      //   periodLength: decoded[2],
-      //   cookieToken: decoded[3],
-      //   erc20Addr: decoded[4],
-      //   threshold: decoded[5],
-      // } as Erc20Initializer;
 
       break;
     default:
       console.log("Unknown jar type");
-    // decoded = ethers.utils.defaultAbiCoder.decode(
-    //   ["address", "uint256", "uint256", "address"],
-    //   initializer
-    // );
-    // console.log(decoded);
-    // initParams = {
-    //   safeTarget: decoded[0],
-    //   cookieAmount: decoded[1],
-    //   periodLength: decoded[2],
-    //   cookieToken: decoded[3],
-    // } as CookieJarInitializer;
+      return undefined;
   }
-
-  return {
-    id: uid,
-    details: _details,
-    address: cookieJar,
-  } as CookieJar;
 };

@@ -3,10 +3,7 @@ import { TARGETS } from "../targetDao";
 export const useTargets = () => {
   const { chainId } = useDHConnect();
 
-  console.log(process.env.NODE_ENV);
-
   if (process.env.NODE_ENV === "development") {
-    console.log("Development mode.");
     return TARGETS["development"];
   }
 
