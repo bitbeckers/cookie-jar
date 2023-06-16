@@ -7,13 +7,13 @@ import {
 } from "./cookieJarHandlers";
 import { ReasonEvent, parseNewPostEvent } from "./posterHandlers";
 
-type Cookie = {
+export type Cookie = {
   cookieGiver: string;
   cookieMonster: string;
   jarUid: string;
   cookieUid: string;
   amount: string;
-  reason?: string;
+  reason: string;
 };
 
 const storeOrUpdateCookie = async (
@@ -25,7 +25,10 @@ const storeOrUpdateCookie = async (
     return;
   }
 
-  const _cookie = await storage.db.get("cookies", event.cookieUid);
+  const _cookie = (await storage.db.get(
+    "cookies",
+    event.cookieUid
+  )) as Partial<Cookie>;
 
   try {
     if (!_cookie) {
@@ -33,7 +36,7 @@ const storeOrUpdateCookie = async (
     } else {
       await storage.db.add(
         "cookies",
-        { ..._cookie, ...event },
+        { ..._cookie, ...event } as Partial<Cookie>,
         event.cookieUid
       );
     }

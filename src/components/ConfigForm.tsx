@@ -23,28 +23,33 @@ import { useTargets } from "../hooks/useTargets";
 export type SummonStates = "idle" | "loading" | "success" | "error";
 
 export const ConfigForm = () => {
-  const { cookieAddress, cookieChain } = useParams();
+  const { cookieJarId } = useParams();
   const { address } = useDHConnect();
   const { fireTransaction } = useTxBuilder();
   const target = useTargets();
 
-  const [summonState, setSummonState] = useState<SummonStates>("idle");
   const [txHash, setTxHash] = useState<string>("");
-  const [daoAddress, setDaoAddress] = useState<string>("");
-  const [errMsg, setErrMsg] = useState<string>("");
 
-  const { defaultToast, errorToast, successToast } = useToast();
+  const { errorToast } = useToast();
   const [isLoading2, setIsLoading] = useState(false);
   const [status, setStatus] = useState<null | StatusMsg>(null);
 
   if (!target) return null;
 
-  const { isIdle, isLoading, error, data, hasClaimed, canClaim, refetch } =
-    useCookieJar({
-      cookieJarAddress: cookieAddress,
-      userAddress: address,
-      chainId: target.CHAIN_ID, // todo: use cookieChain
-    });
+  const {
+    cookieJar,
+    isIdle,
+    isLoading,
+    error,
+    data,
+    hasClaimed,
+    canClaim,
+    refetch,
+  } = useCookieJar({
+    cookieJarId: cookieJarId,
+    userAddress: address,
+    chainId: target.CHAIN_ID, // todo: use cookieChain
+  });
 
   console.log("***************", data);
 
@@ -54,10 +59,10 @@ export const ConfigForm = () => {
         currentUser: address,
         target: data?.target,
         cookieToken: ZERO_ADDRESS,
-        cookieAddress: cookieAddress,
+        cookieAddress: cookieJar?.address,
       };
     }
-  }, [address, cookieAddress, data]);
+  }, [address, cookieJar, data]);
 
   if (!address || !data?.target) return null;
 
@@ -70,11 +75,11 @@ export const ConfigForm = () => {
     );
 
     // setConfig
-    const encodedFunction = encodeFunction(
-      COOKIEJAR_CORE_ABI,
-      "setConfig",
-      [formValues.cookiePeriod, formValues.cookieAmount, formValues.cookieToken]
-    );
+    const encodedFunction = encodeFunction(COOKIEJAR_CORE_ABI, "setConfig", [
+      formValues.cookiePeriod,
+      formValues.cookieAmount,
+      formValues.cookieToken,
+    ]);
 
     console.log("encoded function", encodedFunction);
 

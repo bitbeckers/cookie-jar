@@ -25,10 +25,9 @@ export type GiveCookieEvent = {
   link?: string;
 };
 
-export type CookieJar = {
+export type CookieJar = DetailsSchema & {
   id: string;
   address: string;
-  details: DetailsSchema;
   initializer?: Initializer;
 };
 
@@ -88,10 +87,10 @@ export const parseSummonEvent = (event: Event) => {
       } as ListInitializer;
 
       return {
+        ..._details,
         id: uid,
-        details: _details,
         address: cookieJar,
-        initializer: initParams ?? undefined,
+        initializer: initParams,
       } as CookieJar;
     case "BAAL":
       console.log("Found BAAL initializer");

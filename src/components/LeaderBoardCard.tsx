@@ -1,7 +1,7 @@
-
 import { Avatar, Card, ParMd } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";
 import { useProfile } from "@daohaus/moloch-v3-hooks";
+import { Cookie } from "../utils/eventHandler";
 
 /**
  * Represents a leaderboard record.
@@ -10,7 +10,7 @@ import { useProfile } from "@daohaus/moloch-v3-hooks";
  * @property {string} user - The user's address.
  * @property {number} count - The user's cookie count.
  */
-interface LBRecord {
+export interface LBRecord {
   user: string;
   count: number;
 }
@@ -25,11 +25,9 @@ interface LBRecord {
  * @returns {JSX.Element} A leaderboard card.
  */
 export const LeaderBoardCard = ({ record }: { record: LBRecord }) => {
-  /**
-   * Gets the user's profile information from the Moloch v3 contract.
-   * @returns {Object} The user's profile information.
-   */
-  const { profile } = useProfile({ address: record?.user });
+  const { profile } = useProfile({
+    address: record.user,
+  });
 
   return (
     <div style={{ marginBottom: "3rem", width: "50%" }}>

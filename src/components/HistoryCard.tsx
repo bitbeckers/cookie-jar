@@ -3,19 +3,13 @@ import styled from "styled-components";
 import { Avatar, Badge, Card, Link, ParMd } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";
 import { useProfile } from "@daohaus/moloch-v3-hooks";
+import { Cookie } from "../utils/eventHandler";
 
 const DootBox = styled.div`
   display: flex;
   width: 100%;
   justify-content: center;
 `;
-
-interface HistoryRecord {
-  user: string;
-  title: string;
-  description: string;
-  link: string;
-}
 
 /**
  * Renders a card displaying a history record, including the user's profile picture,
@@ -27,25 +21,43 @@ interface HistoryRecord {
  * @param {string} props.record.description - The description of the history record.
  * @param {string} props.record.link - The link to the history record.
  */
-export const HistoryCard = ({ record }: { record: HistoryRecord }) => {
-  const { profile } = useProfile({ address: record?.user });
+export const HistoryCard = ({ record }: { record: Partial<Cookie> }) => {
+  const { profile: cookieGiver } = useProfile({
+    address: record?.cookieGiver ?? "",
+  });
+
+  const { profile: cookieMonster } = useProfile({
+    address: record?.cookieMonster ?? "",
+  });
 
   return (
     <div style={{ marginBottom: "3rem", width: "50%" }}>
       <Card>
-        {profile && <ParMd style={{ marginBottom: ".4rem" }}>
-          {profile?.image && !profile.image.includes("null") && (
-            <Avatar alt={profile.ens} size="sm" src={profile.image} />
-          )}{" "}
-          {profile.ens}
-        </ParMd>}
-        <ParMd style={{ marginBottom: "2rem" }}>{record?.user}</ParMd>
+        {cookieGiver && (
+          <ParMd style={{ marginBottom: ".4rem" }}>
+            {cookieGiver?.image && !cookieGiver.image.includes("null") && (
+              <Avatar alt={cookieGiver.ens} size="sm" src={cookieGiver.image} />
+            )}{" "}
+            {cookieGiver.ens}
+          </ParMd>
+        )}
+        {cookieMonster && (
+          <ParMd style={{ marginBottom: ".4rem" }}>
+            {cookieMonster?.image && !cookieMonster.image.includes("null") && (
+              <Avatar
+                alt={cookieMonster.ens}
+                size="sm"
+                src={cookieMonster.image}
+              />
+            )}{" "}
+            {cookieMonster.ens}
+          </ParMd>
+        )}
         <ParMd style={{ marginBottom: "1rem" }}>
           <img src={cookie} alt="cookie" height={"20px"} />{" "}
-          {record?.description}
+          {record?.reason ?? "No reason provided."}
         </ParMd>
 
-        <Link href={record?.link}>link</Link>
         <DootBox style={{ fontSize: "2rem", marginTop: "1rem" }}>
           <div>
             👍

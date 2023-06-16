@@ -16,7 +16,7 @@ import { CookieJar } from "../utils/cookieJarHandlers";
  */
 export const JarCard = ({ record }: { record: CookieJar }) => {
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
-  const { provider } = useDHConnect();
+  const { provider, address } = useDHConnect();
 
   const target = useTargets();
 
@@ -29,13 +29,13 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
           provider
         );
 
-        const isAllowed = await cookieJarContract.canClaim();
+        const isAllowed = await cookieJarContract.canClaim(address);
         setIsAllowed(isAllowed);
       }
     };
 
     getIsAllowed();
-  }, []);
+  }, [address, provider, record.address]);
 
   return (
     <div style={{ marginBottom: "3rem" }}>
@@ -56,11 +56,11 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
         />
 
         <Label>Type: </Label>
-        <ParMd style={{ marginBottom: ".4rem" }}>{record.details.type}</ParMd>
+        <ParMd style={{ marginBottom: ".4rem" }}>{record.type}</ParMd>
         <Label>Title: </Label>
-        <ParMd style={{ marginBottom: ".4rem" }}>{record.details.type}</ParMd>
+        <ParMd style={{ marginBottom: ".4rem" }}>{record.name}</ParMd>
         <Label>Description: </Label>
-        <ParMd style={{ marginBottom: ".4rem" }}>...</ParMd>
+        <ParMd style={{ marginBottom: ".4rem" }}>{record.description}</ParMd>
 
         <Label>Period: </Label>
         <ParMd style={{ marginBottom: ".4rem" }}>
@@ -84,12 +84,15 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
         </ParMd>
         <ParMd style={{ marginBottom: ".4rem" }}>
           Go to{" "}
-          <StyledRouterLink
-            to={`/claims/${target?.CHAIN_ID}/${record.address}`}
-          >
-            Claim
-          </StyledRouterLink>{" "}
+          <StyledRouterLink to={`/claims/${record.id}`}>Claim</StyledRouterLink>{" "}
           to claim your tokens.
+        </ParMd>
+        <ParMd style={{ marginBottom: ".4rem" }}>
+          Go to{" "}
+          <StyledRouterLink to={`/history/${record.id}`}>
+            History
+          </StyledRouterLink>{" "}
+          to inspect the crumbles.
         </ParMd>
       </Card>
     </div>
