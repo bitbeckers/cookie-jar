@@ -6,6 +6,7 @@ import {
   CookieJar,
 } from "./cookieJarHandlers";
 import { ReasonEvent, parseNewPostEvent } from "./posterHandlers";
+import COOKIEJAR_CORE_ABI from "../abis/CookieJarCore.json";
 
 export type Cookie = {
   cookieGiver: string;
@@ -47,16 +48,26 @@ const storeOrUpdateCookie = async (
   }
 };
 
-const storeCookieJar = async (storage: IdbStorage, cookieJar: CookieJar) => {
-  if (!storage.db) {
+const storeCookieJar = async (
+  indexer: Indexer<IdbStorage>,
+  cookieJar: CookieJar,
+  blockNumber: number
+) => {
+  if (!indexer.storage.db) {
     console.error("No storage");
     return;
   }
 
-  // address, details, initializer
-  // TODO ID mix of chain + uid
+  const {
+    storage: { db },
+  } = indexer;
+
   try {
-    await storage.db.add("cookieJars", cookieJar, cookieJar.id);
+    await db
+      .add("cookieJars", cookieJar, cookieJar.id)
+      .then(() =>
+        indexer.subscribe(cookieJar.address, COOKIEJAR_CORE_ABI, blockNumber)
+      );
 
     console.log(`Stored cookieJar ${cookieJar.id}`);
   } catch (e) {
@@ -76,7 +87,7 @@ const handleEvent = async (indexer: Indexer<IdbStorage>, event: Event) => {
         break;
       }
 
-      storeCookieJar(indexer.storage, parsedEvent);
+      storeCookieJar(indexer, parsedEvent, event.blockNumber);
 
       break;
     case "GiveCookies":

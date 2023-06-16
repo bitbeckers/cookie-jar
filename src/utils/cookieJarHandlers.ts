@@ -63,10 +63,6 @@ export const parseSummonEvent = (event: Event) => {
 
   let initParams: Initializer;
 
-  console.log("Found  details: ", _details);
-  console.log("Found initializer: ", initializer);
-  console.log("Found uid: ", uid);
-  console.log("Found cookieJar: ", cookieJar);
   switch (_details.type) {
     case "6551":
       console.log("Found 6551 initializer");
