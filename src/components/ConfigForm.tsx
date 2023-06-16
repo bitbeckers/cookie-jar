@@ -36,19 +36,8 @@ export const ConfigForm = () => {
 
   if (!target) return null;
 
-  const {
-    cookieJar,
-    isIdle,
-    isLoading,
-    error,
-    data,
-    hasClaimed,
-    canClaim,
-    refetch,
-  } = useCookieJar({
+  const { cookieJar, data } = useCookieJar({
     cookieJarId: cookieJarId,
-    userAddress: address,
-    chainId: target.CHAIN_ID, // todo: use cookieChain
   });
 
   console.log("***************", data);
