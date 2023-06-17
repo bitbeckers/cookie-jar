@@ -4,10 +4,8 @@ import { useDHConnect } from "@daohaus/connect";
 import { HistoryCard } from "../components/HistoryCard";
 import { LeaderBoardCard } from "../components/LeaderBoardCard";
 import { useParams } from "react-router-dom";
-import { useTargets } from "../hooks/useTargets";
 import { useIndexer } from "../hooks/useIndexer";
-import { Cookie } from "../utils/eventHandler";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { groupBy, sumBy } from "lodash";
 import { useQuery } from "react-query";
 
