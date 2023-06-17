@@ -9,26 +9,19 @@ import { useIndexer } from "../hooks/useIndexer";
 import { Cookie } from "../utils/eventHandler";
 import { useEffect, useMemo, useState } from "react";
 import { groupBy, sumBy } from "lodash";
+import { useQuery } from "react-query";
 
 export const History = () => {
   const { address } = useDHConnect();
   const { cookieJarId } = useParams();
-  const target = useTargets();
-  const [cookies, setCookies] = useState<Partial<Cookie>[]>([]);
   const { getCookiesByJarId } = useIndexer();
 
-  useEffect(() => {
-    const fetchCookies = async () => {
-      if (!cookieJarId) return;
-      const cookies = await getCookiesByJarId(cookieJarId);
-
-      if (!cookies) return;
-
-      setCookies(cookies);
-    };
-
-    fetchCookies();
-  }, [cookieJarId]);
+  const { data: cookies, isLoading } = useQuery({
+    queryKey: ["cookies", cookieJarId],
+    queryFn: () => getCookiesByJarId(cookieJarId || ""),
+    enabled: !!cookieJarId,
+    refetchInterval: 3000,
+  });
 
   const leaderBoardCards = useMemo(() => {
     if (!cookies) return [];
@@ -41,6 +34,8 @@ export const History = () => {
         count: sumBy(monsterCookies, "amount"),
       }))
       .sort((a, b) => b.count - a.count);
+
+    console.log({ leaderboard });
 
     return leaderboard.map((record, idx) => (
       <LeaderBoardCard record={record} key={idx} />

@@ -36,6 +36,7 @@ const fetchUserClaim = async ({
     const claimAmt = await cookieContract.cookieAmount(); // get amount of cookie token to claim
     const claimPeriod = await cookieContract.periodLength(); // get the period length for claims
     const cookieToken = await cookieContract.cookieToken(); // get the cookie token address
+    const isMember = await cookieContract.isAllowList(userAddress); // get the cookie token address
 
     const target = await cookieContract.owner(); // get the target safe address
     const canClaim = await cookieContract.canClaim(userAddress); // todo: check if user is on isAllowList(userAddress)
@@ -47,6 +48,7 @@ const fetchUserClaim = async ({
       cookieToken: cookieToken.toString() as string,
       target: target.toString() as string,
       canClaim: canClaim as boolean,
+      isMember: isMember as boolean,
     };
   } catch (error: any) {
     console.error(error);
@@ -110,7 +112,7 @@ export const useCookieJar = ({
   const hasClaimed = data?.lastClaimed && Number(data.lastClaimed) > 0;
   // determine if user can claim based on last claim time and claim period
   const canClaim = data?.canClaim || !hasClaimed;
-  // const isMember = data?.canClaim;
+  const isMember = data?.canClaim;
 
   // return user claim data along with helper variables and the query status
   return {
@@ -118,7 +120,7 @@ export const useCookieJar = ({
     data,
     hasClaimed,
     canClaim,
-    // isMember,
+    isMember,
     ...rest,
   };
 };

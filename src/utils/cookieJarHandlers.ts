@@ -38,7 +38,7 @@ export const parseGiveCookieEvent = (event: Event) => {
   console.log("Found cookieMonster: ", cookieMonster);
   console.log("Found amount: ", amount);
   console.log("Found _uid: ", _uid);
-
+  
   return {
     cookieMonster,
     amount,

@@ -45,7 +45,8 @@ export const LeaderBoardCard = ({ record }: { record: LBRecord }) => {
         <ParMd style={{ marginBottom: "2rem" }}>{record?.user}</ParMd>
         {/* Display the user's cookie count */}
         <ParMd style={{ marginBottom: "1rem" }}>
-          <img src={cookie} alt="cookie" height={"20px"} /> {record?.count}
+          <img src={cookie} alt="cookie" height={"20px"} />{" "}
+          {`Count: ${record?.count.toString()}`}
         </ParMd>
       </Card>
     </div>

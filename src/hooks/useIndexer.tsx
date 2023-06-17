@@ -9,12 +9,16 @@ import { useTargets } from "./useTargets";
 import { CookieJar } from "../utils/cookieJarHandlers";
 import { Cookie, handleEvent } from "../utils/eventHandler";
 
+
+// TODO Make Indexer a class
 const useIndexer = () => {
   const { provider } = useDHConnect();
   const [indexer, setIndexer] = useState<Indexer<IdbStorage> | undefined>();
   const addresses = useTargets();
 
-  const storage = useMemo(() => new IdbStorage(["cookieJars", "cookies"]), []);
+  const storageEntities = ["cookieJars", "cookies"];
+
+  const storage = useMemo(() => new IdbStorage(storageEntities), []);
 
   const createIndexerMemoized = useMemo(() => {
     if (!provider || !storage) return;
@@ -22,7 +26,7 @@ const useIndexer = () => {
       const indexer = await createIndexer(provider, storage, handleEvent);
       setIndexer(indexer);
     };
-  }, [provider, storage]);
+  }, []);
 
   // Effect hook to create indexer
   useEffect(() => {
@@ -30,16 +34,17 @@ const useIndexer = () => {
     createIndexerMemoized();
   }, [createIndexerMemoized]);
 
-  console.log(indexer);
-
   if (addresses && indexer) {
+    // Subscribe to Cookie Jar Factory
     indexer.subscribe(
       addresses?.COOKIEJAR_FACTORY_ADDRESS,
       FactoryABI,
+      "gnosis",
       28000000
     );
 
-    indexer.subscribe(addresses?.POSTER_ADDRESS, PosterABI, 28000000);
+    // Subscribe to Poster
+    indexer.subscribe(addresses?.POSTER_ADDRESS, PosterABI, "gnosis", 28000000);
   }
 
   const getJars = async () => {
@@ -55,6 +60,15 @@ const useIndexer = () => {
     return jars?.filter((jar) => jar?.id === jarId);
   };
 
+  const getJarByAddress = async (address: string) => {
+    if (!indexer) return;
+    const db = indexer.storage.db;
+    const jars: CookieJar[] | undefined = await db?.getAll("cookieJars");
+    return jars?.filter(
+      (jar) => jar?.address.toLowerCase() === address.toLowerCase()
+    );
+  };
+
   const getCookies = async () => {
     if (!indexer) return;
     const db = indexer.storage.db;
@@ -65,6 +79,7 @@ const useIndexer = () => {
     if (!indexer) return undefined;
     const db = indexer.storage.db;
     const cookies: Partial<Cookie>[] | undefined = await db?.getAll("cookies");
+    console.log("ALL COOKIES: ", cookies);
     return cookies?.filter((cookie) => cookie?.jarUid === jarId);
   };
 
@@ -72,6 +87,7 @@ const useIndexer = () => {
     indexer,
     getJars,
     getJarById,
+    getJarByAddress,
     getCookies,
     getCookiesByJarId,
   };

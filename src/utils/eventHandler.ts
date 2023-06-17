@@ -42,7 +42,7 @@ const storeOrUpdateCookie = async (
       );
     }
 
-    console.log(`Stored cookie ${event.cookieUid}`);
+    console.log(`Stored cookie ${event}`);
   } catch (e) {
     console.error("Failed to store cookie", e);
   }
@@ -66,7 +66,12 @@ const storeCookieJar = async (
     await db
       .add("cookieJars", cookieJar, cookieJar.id)
       .then(() =>
-        indexer.subscribe(cookieJar.address, COOKIEJAR_CORE_ABI, blockNumber)
+        indexer.subscribe(
+          cookieJar.address,
+          COOKIEJAR_CORE_ABI,
+          "gnosis",
+          blockNumber
+        )
       );
 
     console.log(`Stored cookieJar ${cookieJar.id}`);
@@ -90,7 +95,7 @@ const handleEvent = async (indexer: Indexer<IdbStorage>, event: Event) => {
       storeCookieJar(indexer, parsedEvent, event.blockNumber);
 
       break;
-    case "GiveCookies":
+    case "GiveCookie":
       parsedEvent = parseGiveCookieEvent(event);
 
       if (!parsedEvent || !parsedEvent.cookieUid) {
@@ -98,7 +103,19 @@ const handleEvent = async (indexer: Indexer<IdbStorage>, event: Event) => {
         break;
       }
 
-      storeOrUpdateCookie(indexer.storage, parsedEvent);
+      const db = indexer.storage.db;
+      const jar = await db
+        ?.getAll("cookieJars")
+        ?.then((jars) =>
+          jars.filter(
+            (jar) => jar?.address.toLowerCase() === event.address.toLowerCase()
+          )
+        );
+
+      storeOrUpdateCookie(indexer.storage, {
+        ...parsedEvent,
+        jarUid: jar?.[0]?.id,
+      });
       break;
 
     case "NewPost":

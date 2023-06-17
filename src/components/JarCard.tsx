@@ -11,31 +11,13 @@ import { useEffect, useState } from "react";
 import { useDHConnect } from "@daohaus/connect";
 import { useTargets } from "../hooks/useTargets";
 import { CookieJar } from "../utils/cookieJarHandlers";
+import { useCookieJar } from "../hooks/useCookieJar";
 /**
 
  */
 export const JarCard = ({ record }: { record: CookieJar }) => {
-  const [isAllowed, setIsAllowed] = useState<boolean>(false);
-  const { provider, address } = useDHConnect();
-
   const target = useTargets();
-
-  useEffect(() => {
-    const getIsAllowed = async () => {
-      if (provider) {
-        const cookieJarContract = new ethers.Contract(
-          record.address,
-          COOKIEJAR_CORE_ABI,
-          provider
-        );
-
-        const isAllowed = await cookieJarContract.canClaim(address);
-        setIsAllowed(isAllowed);
-      }
-    };
-
-    getIsAllowed();
-  }, [address, provider, record.address]);
+  const { cookieJar, isMember } = useCookieJar({ cookieJarId: record.id });
 
   return (
     <div style={{ marginBottom: "3rem" }}>
@@ -78,9 +60,13 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
             ? "Native Token"
             : record?.initializer?.cookieToken}
         </ParMd>
-        <Label>on allowlist: </Label>
+        <Label>On allowlist: </Label>
         <ParMd style={{ marginBottom: ".4rem" }}>
-          {isAllowed ? "Yes" : "No"}
+          {isMember ? (
+            <span style={{ color: "green" }}>Yes</span>
+          ) : (
+            <span style={{ color: "red" }}>No</span>
+          )}
         </ParMd>
         <ParMd style={{ marginBottom: ".4rem" }}>
           Go to{" "}
