@@ -1,43 +1,58 @@
-import { createIndexer, IdbStorage } from "chainsauce-web";
-import type { Indexer } from "chainsauce-web";
-
 import FactoryABI from "../abis/CookieJarFactory.json";
 import PosterABI from "../abis/Poster.json";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDHConnect } from "@daohaus/connect";
 import { useTargets } from "./useTargets";
 import { CookieJar } from "../utils/cookieJarHandlers";
-import { handleEvent } from "../utils/eventHandler";
+import { Cookie, handleEvent } from "../utils/eventHandler";
+import CookieJarIndexer from "../utils/CookieJarIndexer";
+import { PosterSchema } from "../utils/posterHandlers";
 
 const useIndexer = () => {
   const { provider } = useDHConnect();
-  const [indexer, setIndexer] = useState<Indexer<IdbStorage> | undefined>();
+  const [indexer, setIndexer] = useState<CookieJarIndexer | undefined>();
   const addresses = useTargets();
+  const initialized = useRef(false); // add a useRef hook to keep track of whether the indexer has been initialized
 
-  const storage = new IdbStorage(["cookieJars", "cookies"]);
+  const storageEntities = ["cookieJars", "cookies", "reasons"];
 
-  // Effect hook to create indexer
   useEffect(() => {
-    if (!provider || !storage) return;
-    const init = async () => {
-      const indexer = await createIndexer(provider, storage, handleEvent);
-      setIndexer(indexer);
+    const initIndexer = async () => {
+      if (provider && !initialized.current) {
+        // check if the indexer has not been initialized
+        const indexer = new CookieJarIndexer(
+          storageEntities,
+          provider,
+          handleEvent
+        );
+        await indexer.init();
+        setIndexer(indexer);
+        initialized.current = true; // set initialized to true
+      }
     };
 
-    init();
+    initIndexer();
   }, [provider]);
 
-  console.log(indexer);
+  useEffect(() => {
+    if (addresses && indexer) {
+      // Subscribe to Cookie Jar Factory
+      indexer.subscribe(
+        addresses?.COOKIEJAR_FACTORY_ADDRESS,
+        FactoryABI,
+        "gnosis",
+        28498500
+      );
 
-  if (addresses && indexer) {
-    indexer.subscribe(
-      addresses?.COOKIEJAR_FACTORY_ADDRESS,
-      FactoryABI.abi,
-      28000000
-    );
-
-    indexer.subscribe(addresses?.POSTER_ADDRESS, PosterABI, 28000000);
-  }
+      // Subscribe to Poster
+      indexer.subscribe(
+        addresses?.POSTER_ADDRESS,
+        PosterABI,
+        "gnosis",
+        28498500
+      );
+    }
+  }, [addresses, indexer]);
 
   const getJars = async () => {
     if (!indexer) return;
@@ -45,10 +60,65 @@ const useIndexer = () => {
     return db?.getAll("cookieJars") as Promise<CookieJar[]>;
   };
 
-  // Susbscribe to events with the contract address and ABI
-  //TODO dynamic config loading
+  const getJarById = async (jarId: string) => {
+    if (!indexer) return;
+    const db = indexer.storage.db;
+    const jars: CookieJar[] | undefined = await db?.getAll("cookieJars");
+    return jars?.filter((jar) => jar?.id === jarId);
+  };
 
-  return { indexer: indexer, getJars };
+  const getJarByAddress = async (address: string) => {
+    if (!indexer) return;
+    const db = indexer.storage.db;
+    const jars: CookieJar[] | undefined = await db?.getAll("cookieJars");
+    return jars?.filter(
+      (jar) => jar?.address.toLowerCase() === address.toLowerCase()
+    );
+  };
+
+  const getCookies = async () => {
+    if (!indexer) return;
+    const db = indexer.storage.db;
+    return db?.getAll("cookies") as Promise<Partial<Cookie>[]>;
+  };
+
+  const getCookiesByJarId = async (jarId: string) => {
+    if (!indexer) return undefined;
+    const db = indexer.storage.db;
+    const cookies: Partial<Cookie>[] | undefined = await db?.getAll("cookies");
+    return cookies?.filter((cookie) => cookie?.jarUid === jarId);
+  };
+
+  const getCookiesByJarReasontag = async (reasonTag: string) => {
+    if (!indexer) return undefined;
+    const db = indexer.storage.db;
+    const cookies: Partial<Cookie>[] | undefined = await db?.getAll("cookies");
+    const filteredCookies = cookies?.filter(
+      (cookie) => cookie?.reasonTag === reasonTag
+    );
+    console.log("FILTERED COOKIES: ", filteredCookies);
+    return filteredCookies;
+  };
+
+  const getReasonByTag = async (tag: string) => {
+    if (!indexer) return undefined;
+    const db = indexer.storage.db;
+    const cookies: Partial<PosterSchema>[] | undefined = await db?.getAll(
+      "reasons"
+    );
+    return cookies?.filter((reason) => reason?.tag === tag);
+  };
+
+  return {
+    indexer,
+    getJars,
+    getJarById,
+    getJarByAddress,
+    getCookies,
+    getCookiesByJarId,
+    getCookiesByJarReasontag,
+    getReasonByTag,
+  };
 };
 
 export { useIndexer };

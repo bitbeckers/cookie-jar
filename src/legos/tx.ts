@@ -5,13 +5,13 @@ export const APP_TX = {
   COOKIEJAR: {
     id: "COOKIEJAR",
     contract: APP_CONTRACT.COOKIEJAR,
-    method: "reachInJar",
+    method: "reachInJar(address,string)",
     args: [
       ".formValues.receiver",
       {
         type: "JSONDetails",
         jsonSchema: {
-          title: { type: "static", value: "to eat a cookie" },
+          title: { type: "static", value: "CookieJar" },
           user: ".formValues.user",
           receiver: ".formValues.receiver",
           description: ".formValues.description",

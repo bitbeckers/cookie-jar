@@ -17,22 +17,10 @@ export const Routes = () => {
 
         {/* <Route path={`${routePath}/safes`} element={<Safes />} /> */}
 
-        <Route
-          path={`/claims/:cookieChain/:cookieAddress`}
-          element={<Claims />}
-        />
-        <Route
-          path={`/history/:cookieChain/:cookieAddress`}
-          element={<History />}
-        />
-        <Route
-          path={`/config/:cookieChain/:cookieAddress`}
-          element={<ConfigForm />}
-        />
-        <Route
-          path={`/manage/:cookieChain/:cookieAddress`}
-          element={<ManageForm />}
-        />
+        <Route path={`/claims/:cookieJarId`} element={<Claims />} />
+        <Route path={`/history/:cookieJarId`} element={<History />} />
+        <Route path={`/config/:cookieJarId`} element={<ConfigForm />} />
+        <Route path={`/manage/:cookieJarId`} element={<ManageForm />} />
         <Route path={`/jars`} element={<Jars />} />
         <Route path={`/create`} element={<CreateJar />} />
         <Route path={`/mint`} element={<CreateNFTJar />} />

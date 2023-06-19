@@ -5,55 +5,62 @@ import {
   GiveCookieEvent,
   CookieJar,
 } from "./cookieJarHandlers";
-import { ReasonEvent, parseNewPostEvent } from "./posterHandlers";
+import { PosterSchema, parseNewPostEvent } from "./posterHandlers";
+import COOKIEJAR_CORE_ABI from "../abis/CookieJarCore.json";
 
-type Cookie = {
+export type Cookie = {
   cookieGiver: string;
   cookieMonster: string;
   jarUid: string;
   cookieUid: string;
+  reasonTag: string;
   amount: string;
-  reason?: string;
 };
 
 const storeOrUpdateCookie = async (
   storage: IdbStorage,
-  event: GiveCookieEvent | ReasonEvent
+  event: GiveCookieEvent
 ) => {
   if (!storage.db) {
     console.error("No storage");
     return;
   }
 
-  const _cookie = await storage.db.get("cookies", event.cookieUid);
-
   try {
-    if (!_cookie) {
-      await storage.db.add("cookies", event, event.cookieUid);
-    } else {
-      await storage.db.add(
-        "cookies",
-        { ..._cookie, ...event },
-        event.cookieUid
-      );
-    }
+    console.log("Storing cookie", event);
+    await storage.db.add("cookies", event, event.cookieUid);
 
-    console.log(`Stored cookie ${event.cookieUid}`);
+    console.log(`Stored cookie ${event}`);
   } catch (e) {
     console.error("Failed to store cookie", e);
   }
 };
 
-const storeCookieJar = async (storage: IdbStorage, cookieJar: CookieJar) => {
-  if (!storage.db) {
+const storeCookieJar = async (
+  indexer: Indexer<IdbStorage>,
+  cookieJar: CookieJar,
+  blockNumber: number
+) => {
+  if (!indexer.storage.db) {
     console.error("No storage");
     return;
   }
 
-  // address, details, initializer
-  // TODO ID mix of chain + uid
+  const {
+    storage: { db },
+  } = indexer;
+
   try {
-    await storage.db.add("cookieJars", cookieJar, cookieJar.id);
+    await db
+      .add("cookieJars", cookieJar, cookieJar.id)
+      .then(() =>
+        indexer.subscribe(
+          cookieJar.address,
+          COOKIEJAR_CORE_ABI,
+          "gnosis",
+          blockNumber
+        )
+      );
 
     console.log(`Stored cookieJar ${cookieJar.id}`);
   } catch (e) {
@@ -61,45 +68,80 @@ const storeCookieJar = async (storage: IdbStorage, cookieJar: CookieJar) => {
   }
 };
 
+const storeReason = async (
+  indexer: Indexer<IdbStorage>,
+  post: PosterSchema
+) => {
+  if (!indexer.storage.db) {
+    console.error("No storage");
+    return;
+  }
+
+  const {
+    storage: { db },
+  } = indexer;
+
+  console.log("Storing reason", post);
+
+  try {
+    await db.add("reasons", post, post.tag);
+
+    console.log(`Stored reason ${post.tag}`);
+  } catch (e) {
+    console.error("Failed to store reason", e);
+  }
+};
+
 const handleEvent = async (indexer: Indexer<IdbStorage>, event: Event) => {
   console.log("Handling event");
-  let parsedEvent;
 
   switch (event.name) {
     case "SummonCookieJar":
-      parsedEvent = parseSummonEvent(event);
-      if (!parsedEvent) {
+      const parsedSummonEvent = parseSummonEvent(event);
+      if (!parsedSummonEvent) {
         console.error("Failed to parse event", event);
         break;
       }
 
-      storeCookieJar(indexer.storage, parsedEvent);
+      storeCookieJar(indexer, parsedSummonEvent, event.blockNumber);
 
       break;
-    case "GiveCookies":
-      parsedEvent = parseGiveCookieEvent(event);
+    case "GiveCookie":
+      const parsedGiveCookieEvent = await parseGiveCookieEvent(indexer, event);
 
-      if (!parsedEvent || !parsedEvent.cookieUid) {
+      if (!parsedGiveCookieEvent || !parsedGiveCookieEvent.cookieUid) {
         console.error("Failed to parse event", event);
         break;
       }
 
-      storeOrUpdateCookie(indexer.storage, parsedEvent);
+      const db = indexer.storage.db;
+      const jar = await db
+        ?.getAll("cookieJars")
+        ?.then((jars) =>
+          jars.filter(
+            (jar) => jar?.address.toLowerCase() === event.address.toLowerCase()
+          )
+        );
+
+      storeOrUpdateCookie(indexer.storage, {
+        ...parsedGiveCookieEvent,
+        jarUid: jar?.[0]?.id,
+      });
       break;
 
     case "NewPost":
-      parsedEvent = parseNewPostEvent(event);
-      if (!parsedEvent) {
+      const parsedPosterEvent = await parseNewPostEvent(indexer, event);
+      if (!parsedPosterEvent) {
         console.error("Failed to parse event", event);
         break;
       }
 
-      if (parsedEvent.type === "reason") {
-        storeOrUpdateCookie(indexer.storage, parsedEvent);
+      if (parsedPosterEvent.table === "reason") {
+        storeReason(indexer, parsedPosterEvent);
       }
 
-      if (parsedEvent.type === "assess") {
-        console.log("Received assess event", parsedEvent);
+      if (parsedPosterEvent.table === "assess") {
+        console.log("Received assess event", parsedPosterEvent);
       }
 
       break;

@@ -1,12 +1,11 @@
 import { useDHConnect } from "@daohaus/connect";
-import { SingleColumnLayout, Spinner } from "@daohaus/ui";
+import { ParMd, SingleColumnLayout, Spinner } from "@daohaus/ui";
 
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 
 import { HAUS_NETWORK_DATA } from "@daohaus/keychain-utils";
 
-import { useCookieJar } from "../hooks/useCookieJar";
 import { DisplayClaim } from "../components/DisplayClaim";
 import { Countdown } from "../components/Countdown";
 import { ClaimDetails } from "../components/DetailsBox";
@@ -14,32 +13,33 @@ import { ClaimForm } from "../components/ClaimForm";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTargets } from "../hooks/useTargets";
+import { useCookieJar } from "../hooks/useCookieJar";
+import { StyledRouterLink } from "../components/Layout";
 
 export const Claims = () => {
-  const { address, chainId } = useDHConnect();
+  const { address, chainId, isConnected } = useDHConnect();
   const [showConfetti, setShowConfetti] = useState(false);
   const { width, height } = useWindowSize();
   const target = useTargets();
 
-  const [reason, setReason] = useState<string>("");
-  const [link, setLink] = useState<string>("");
-  const [receiver, setReceiver] = useState<string>(address || "");
-  const [alternateReceiverCheck, setAlternateReceiverCheck] =
-    useState<boolean>(false);
+  const { cookieJarId } = useParams();
 
-  const { cookieAddress, cookieChain } = useParams();
+  const {
+    cookieJar,
+    isIdle,
+    isLoading,
+    error,
+    data,
+    hasClaimed,
+    canClaim,
+    refetch,
+  } = useCookieJar({
+    cookieJarId: cookieJarId,
+  });
 
-  //   const { isIdle, isLoading, error, data, hasClaimed, canClaim, isMember, refetch } =
-  const { isIdle, isLoading, error, data, hasClaimed, canClaim, refetch } =
-    useCookieJar({
-      cookieJarAddress: cookieAddress,
-      userAddress: address,
-      chainId: target?.CHAIN_ID,
-    });
+  const isGnosis = chainId === "0x64";
 
-  const isGnosis = chainId === target?.CHAIN_ID;
-
-  if (isIdle)
+  if (!isConnected)
     return (
       <DisplayClaim
         heading="Connect Your Wallet"
@@ -70,13 +70,7 @@ export const Claims = () => {
         description={"Error fetching claim data from network RPC"}
       />
     );
-  //   if (!isMember)
-  //     return (
-  //       <DisplayClaim
-  //         heading="You must be a member"
-  //         description={'Your are not a member or do not have enough cookie to meet the claim threshold.'}
-  //       />
-  //     );
+
   // Has Claimed, but needs to wait for the next claim period
   if (data && hasClaimed && !canClaim)
     return (
@@ -162,29 +156,18 @@ export const Claims = () => {
                 target ? HAUS_NETWORK_DATA[target.CHAIN_ID]?.symbol || "" : ""
               }
             />
+            <ParMd style={{ marginBottom: ".4rem" }}>
+              Go to{" "}
+              <StyledRouterLink to={`/history/${cookieJar?.id}`}>
+                History
+              </StyledRouterLink>{" "}
+              to inspect the crumbles.
+            </ParMd>
           </>
         }
       />
     );
   // Has not claimed
-  if (data && !hasClaimed)
-    return (
-      <SingleColumnLayout>
-        <ClaimDetails
-          claimAmt={data.claimAmt}
-          claimPeriod={data.claimPeriod}
-          unit={target ? HAUS_NETWORK_DATA[target.CHAIN_ID]?.symbol || "" : ""}
-        />
-        <ClaimForm
-          user={address}
-          cookieAddress={cookieAddress}
-          onSuccess={() => {
-            refetch();
-            setShowConfetti(true);
-          }}
-        />
-      </SingleColumnLayout>
-    );
   if (data && canClaim)
     return (
       <SingleColumnLayout>
@@ -195,7 +178,7 @@ export const Claims = () => {
         />
         <ClaimForm
           user={address}
-          cookieAddress={cookieAddress}
+          cookieAddress={cookieJar?.address}
           onSuccess={() => {
             refetch();
             setShowConfetti(true);

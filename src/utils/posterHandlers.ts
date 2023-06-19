@@ -1,7 +1,5 @@
 import { Initializer } from "../hooks/useCookieJarFactory";
-import { Event } from "chainsauce-web";
-
-const COOKIE_JAR_TAG = "CookieJar";
+import { Event, IdbStorage, Indexer } from "chainsauce-web";
 
 export type SummonEvent = {
   id: string;
@@ -10,201 +8,117 @@ export type SummonEvent = {
   initializer?: Initializer;
 };
 
-export type CookieJarDetailsSchema = {
-  type: string;
+type EventContent = {
+  title: string;
+  user: string;
+  receiver: string;
+  description: string;
+  link: string;
+  table: string;
+  queryType: string;
+};
+
+export type PosterSchema = {
+  table: "reason" | "assess";
   name: string;
   description?: string;
   link?: string;
+  user?: string;
+  receiver?: string;
+  tag: string;
 };
 
-export type GiveCookieEvent = {
-  cookieMonster: string;
-  cookieUid: string;
-  amount?: string;
-  reason?: string;
-};
-
-interface Tag {
-  jarUid: string;
-  cookieUid: string;
-  type: string;
-}
-
-type ReasonTag = Tag & {
-  type: "reason";
-};
-
-type AssessTag = Tag & {
-  type: "assess";
-};
-
-type ReasonSchema = {
-  reason: string;
-  link: string;
-};
-
-type AssessSchema = {
-  rating: "UP" | "DOWN";
-  sender: `0x${string}`;
-};
-
-export interface ReasonEvent extends ReasonTag, ReasonSchema {
-  user: string;
-}
-
-export interface AssessEvent extends AssessTag, AssessSchema {
-  user: string;
-}
-
-export const parseNewPostEvent = (event: Event) => {
+export const parseNewPostEvent = async (
+  indexer: Indexer<IdbStorage>,
+  event: Event
+) => {
   // NewPost (index_topic_1 address user, string content, index_topic_2 string tag)
-  const { tag, content, user } = event.args;
+  const { tag, content } = event.args;
   console.log("Event: ", event);
 
-  if (!isText(tag)) {
-    console.log("Not a valid tag.");
+  const cookieJar = await indexer.storage.db
+    ?.getAll("cookieJars")
+    ?.then((jars) =>
+      jars.filter(
+        (jar) => jar?.address.toLowerCase() === event.address.toLowerCase()
+      )
+    );
+
+  if (!cookieJar) {
+    console.log("CookieJar for event not found.");
     return undefined;
   }
 
-  if (tag.startsWith(COOKIE_JAR_TAG) || !isText(tag)) {
-    console.log("Not a valid tag.");
-    return undefined;
-  }
-
-  const parsedTag = processPosterTag(tag);
-
-  if (!parsedTag) {
-    return undefined;
-  }
-
-  const parsedContent = processPosterContent(content, parsedTag);
+  const parsedContent = processPosterContent(content, tag.hash);
 
   if (!parsedContent) {
     return undefined;
   }
 
-  if (parsedTag.type === "reason" && isReasonContent(parsedContent)) {
-    return {
-      user,
-      ...parsedTag,
-      ...parsedContent,
-    } as ReasonEvent;
-  }
-
-  if (parsedTag.type === "assess" && isAssessContent(parsedContent)) {
-    return {
-      user,
-      ...parsedTag,
-      ...parsedContent,
-    } as AssessEvent;
-  }
-
-  return undefined;
+  console.log("Parsed Content: ", parsedContent);
+  return parsedContent;
 };
 
-const isReasonContent = (content: any): content is ReasonSchema =>
-  content.reason && content.link;
+// emit NewPost(msg.sender, content, tag);
+const processPosterContent = (content: string, tag: string) => {
+  if (isReason(content)) {
+    return processReasonContent(content, tag);
+  }
 
-const isAssessContent = (content: any): content is AssessSchema =>
-  content.rating && content.sender;
+  if (isAssessment(content)) {
+    return processAssessContent(content, tag);
+  }
+};
 
-const isReasonTag = (tag: any): tag is ReasonTag => {
-  const parts = tag.split(".");
-  if (parts.length !== 4) {
+const processReasonContent = (content: string, tag: string) => {
+  const parsedContent: EventContent = JSON.parse(content);
+
+  const posterData: PosterSchema = {
+    table: "reason",
+    name: parsedContent.title,
+    description: parsedContent.description,
+    link: parsedContent.link,
+    user: parsedContent.user,
+    receiver: parsedContent.receiver,
+    tag: tag,
+  };
+
+  return posterData;
+};
+
+const processAssessContent = (content: string, tag: string) => {
+  const parsedContent: EventContent = JSON.parse(content);
+
+  const posterData: PosterSchema = {
+    table: "assess",
+    name: parsedContent.title,
+    description: parsedContent.description,
+    link: parsedContent.link,
+    user: parsedContent.user,
+    receiver: parsedContent.receiver,
+    tag: tag,
+  };
+
+  return posterData;
+};
+
+const isReason = (content: any): content is PosterSchema => {
+  console.log("Content: ", content);
+  const parsedContent: EventContent = JSON.parse(content);
+
+  if (parsedContent.table !== "reason") {
     return false;
   }
-  const [_, jarUid, type, cookieUid] = parts;
 
-  if (type !== "reason") {
+  return true;
+};
+
+const isAssessment = (content: any): content is PosterSchema => {
+  const parsedContent: EventContent = JSON.parse(content);
+
+  if (parsedContent.table !== "assess") {
     return false;
   }
 
-  return jarUid && type && cookieUid;
+  return true;
 };
-
-const isAssessTag = (tag: any): tag is AssessTag => {
-  const parts = tag.split(".");
-  if (parts.length !== 4) {
-    return false;
-  }
-
-  const [_, jarUid, type, cookieUid] = parts;
-
-  if (type !== "assess") {
-    return false;
-  }
-
-  return jarUid && type && cookieUid;
-};
-
-const processPosterTag = (tag: string) => {
-  const parts = tag.split(".");
-  if (parts.length !== 4) {
-    return undefined;
-  }
-  const [startTag, jarUid, type, cookieUid] = parts;
-
-  if (startTag !== COOKIE_JAR_TAG) {
-    return undefined;
-  }
-
-  if (isReasonTag(tag)) {
-    return {
-      type,
-      jarUid,
-      cookieUid,
-    } as ReasonTag;
-  }
-
-  if (isAssessTag(tag)) {
-    return {
-      type,
-      jarUid,
-      cookieUid,
-    } as AssessTag;
-  }
-
-  return undefined;
-};
-
-const processPosterContent = (content: string, tag: Tag) => {
-  switch (tag.type) {
-    case "reason":
-      return processReasonContent(content);
-    case "assess":
-      return processAssessContent(content);
-    default:
-      return undefined;
-  }
-};
-
-const processReasonContent = (content: string) => {
-  let reasonDetails: { reason: string; link: string };
-
-  try {
-    reasonDetails = JSON.parse(content);
-    return reasonDetails as ReasonSchema;
-  } catch (e) {
-    console.warn("Could not reason details from event.");
-    console.log(content);
-    return undefined;
-  }
-};
-
-const processAssessContent = (content: string) => {
-  const parts = content.split(" ");
-  if (parts.length !== 2) {
-    return undefined;
-  }
-
-  const [rating, sender] = parts as ["UP" | "DOWN", `0x${string}`];
-
-  return {
-    rating,
-    sender,
-  } as AssessSchema;
-};
-
-function isText(data: any): data is string {
-  return typeof data === "string";
-}

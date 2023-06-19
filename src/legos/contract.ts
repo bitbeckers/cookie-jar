@@ -9,15 +9,9 @@ export const APP_CONTRACT: Record<string, ContractLego> = {
   COOKIEJAR: {
     type: "static",
     contractName: "COOKIEJAR",
-    abi: COOKIEJAR_ABI.abi,
+    abi: COOKIEJAR_ABI,
     targetAddress: ".formValues.targetAddress",
   },
-  // COOKIEJARTARGET: {
-  //   type: "static",
-  //   contractName: "COOKIEJARTARGET",
-  //   abi: COOKIEJARTARGET_ABI,
-  //   targetAddress: ".formValues.target",
-  // },
   COOKIENFT: {
     type: "static",
     contractName: "COOKIENFT",
@@ -75,7 +69,7 @@ export const APP_CONTRACT: Record<string, ContractLego> = {
   SUMMON_JAR: {
     type: "static",
     contractName: "SUMMON_JAR",
-    abi: JAR_FACTORY_ABI.abi,
+    abi: JAR_FACTORY_ABI,
     targetAddress: {
       [TARGET_GNOSIS.CHAIN_ID]: TARGET_GNOSIS.COOKIEJAR_FACTORY_ADDRESS,
     },

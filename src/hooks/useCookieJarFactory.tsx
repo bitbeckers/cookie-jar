@@ -56,7 +56,7 @@ export const useCookieJarFactory = () => {
 
   const factoryContract = new ethers.Contract(
     addresses.COOKIEJAR_FACTORY_ADDRESS,
-    CookieJarFactory.abi,
+    CookieJarFactory,
     provider?.getSigner()
   );
 
@@ -84,10 +84,6 @@ const _summonCookieJar = async (
       type: "BAAL",
     };
 
-    console.log("_details: ", _details);
-    console.log("_initializer: ", initializer);
-    console.log("address: ", addresses?.BAAL_COOKIEJAR_ADDRESS);
-
     const detailString = JSON.stringify(_details);
 
     console.log("detailsString: ", JSON.stringify(_details));
@@ -106,10 +102,6 @@ const _summonCookieJar = async (
       ...details,
       type: "ERC20",
     };
-
-    console.log("_details: ", _details);
-    console.log("_initializer: ", _initializer);
-    console.log("address: ", addresses?.ERC20_COOKIEJAR_ADDRESS);
 
     const detailString = JSON.stringify(_details);
 

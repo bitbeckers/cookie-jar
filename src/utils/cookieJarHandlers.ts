@@ -1,6 +1,8 @@
-import { Initializer } from "../hooks/useCookieJarFactory";
-import { ethers } from "ethers";
-import { Event } from "chainsauce-web";
+import { Initializer, ListInitializer } from "../hooks/useCookieJarFactory";
+import { ethers, utils } from "ethers";
+import { Event, IdbStorage, Indexer } from "chainsauce-web";
+import { useIndexer } from "../hooks/useIndexer";
+import { useDHConnect } from "@daohaus/connect";
 
 export type SummonEvent = {
   id: string;
@@ -20,19 +22,50 @@ export type GiveCookieEvent = {
   cookieGiver: string;
   cookieMonster: string;
   cookieUid: string;
+  jarUid: string;
+  reasonTag?: string;
   amount?: string;
   reason?: string;
   link?: string;
 };
 
-export type CookieJar = {
+export type CookieJar = DetailsSchema & {
   id: string;
   address: string;
-  details: DetailsSchema;
   initializer?: Initializer;
 };
 
-export const parseGiveCookieEvent = (event: Event) => {
+const calculateReasonTag = async (
+  indexer: Indexer<IdbStorage>,
+  event: Event
+) => {
+  const cookieJar = await indexer.storage.db
+    ?.getAll("cookieJars")
+    ?.then((jars) =>
+      jars.filter(
+        (jar) => jar?.address.toLowerCase() === event.address.toLowerCase()
+      )
+    );
+
+  if (!cookieJar) {
+    console.error("Could not find cookieJar for event", event);
+    return "";
+  }
+
+  const reasonTag = ethers.utils.keccak256(
+    utils.toUtf8Bytes(`CookieJar.${cookieJar[0].id}.reason.${event.args._uid}`)
+  );
+
+  console.log(
+    `Calculated reasonTag: ${reasonTag} for cookie ${event.args._uid}`
+  );
+  return reasonTag;
+};
+
+export const parseGiveCookieEvent = async (
+  indexer: Indexer<IdbStorage>,
+  event: Event
+) => {
   // event GiveCookie(address indexed cookieMonster, uint256 amount, string _uid);
   const { cookieMonster, amount, _uid } = event.args;
   console.log("Event: ", event);
@@ -40,8 +73,14 @@ export const parseGiveCookieEvent = (event: Event) => {
   console.log("Found amount: ", amount);
   console.log("Found _uid: ", _uid);
 
+  const { provider } = indexer;
+
+  const tx = await provider.getTransaction(event.transactionHash);
+
   return {
+    cookieGiver: tx.from,
     cookieMonster,
+    reasonTag: await calculateReasonTag(indexer, event),
     amount,
     cookieUid: _uid,
   } as GiveCookieEvent;
@@ -63,90 +102,42 @@ export const parseSummonEvent = (event: Event) => {
   }
 
   let initParams: Initializer;
-  let decoded: ethers.utils.Result;
 
-  console.log("Found  details: ", _details);
-  console.log("Found initializer: ", initializer);
-  console.log("Found uid: ", uid);
-  console.log("Found cookieJar: ", cookieJar);
   switch (_details.type) {
     case "6551":
       console.log("Found 6551 initializer");
-      // decoded = ethers.utils.defaultAbiCoder.decode(
-      //   ["address", "uint256", "uint256", "address", "address[]"],
-      //   initializer
-      // );
-      // console.log("Decoded");
-      // initParams = {
-      //   safeTarget: decoded[0],
-      //   periodLength: decoded[1],
-      //   cookieAmount: decoded[2],
-      //   allowList: decoded[3],
-      // } as ListInitializer;
-      break;
+      const iface = new ethers.utils.Interface(["function setUp(bytes)"]);
+      const decoded = iface.decodeFunctionData("setUp(bytes)", initializer);
+      const decodedSetUp = ethers.utils.defaultAbiCoder.decode(
+        ["address", "uint256", "uint256", "address", "address[]"],
+        decoded[0]
+      );
+
+      console.log("Decoded", decodedSetUp);
+      initParams = {
+        safeTarget: decodedSetUp[0],
+        periodLength: decodedSetUp[1],
+        cookieAmount: decodedSetUp[2],
+        cookieToken: decodedSetUp[3],
+        allowList: decodedSetUp[4],
+      } as ListInitializer;
+
+      return {
+        ..._details,
+        id: uid,
+        address: cookieJar,
+        initializer: initParams,
+      } as CookieJar;
     case "BAAL":
       console.log("Found BAAL initializer");
-      // decoded = ethers.utils.defaultAbiCoder.decode(
-      //   [
-      //     "address",
-      //     "uint256",
-      //     "uint256",
-      //     "address",
-      //     "address",
-      //     "uint256",
-      //     "bool",
-      //     "bool",
-      //   ],
-      //   initializer
-      // );
-      // console.log(decoded);
-      // initParams = {
-      //   safeTarget: decoded[0],
-      //   cookieAmount: decoded[1],
-      //   periodLength: decoded[2],
-      //   cookieToken: decoded[3],
-      //   dao: decoded[4],
-      //   threshold: decoded[5],
-      //   useShares: decoded[6],
-      //   useLoot: decoded[7],
-      // } as BaalInitializer;
+
       break;
     case "ERC20":
       console.log("Found ERC20 initializer");
-      // decoded = ethers.utils.defaultAbiCoder.decode(
-      //   ["address", "uint256", "uint256", "address", "address", "uint256"],
-      //   initializer
-      // );
-      // console.log(decoded);
-
-      // initParams = {
-      //   safeTarget: decoded[0],
-      //   cookieAmount: decoded[1],
-      //   periodLength: decoded[2],
-      //   cookieToken: decoded[3],
-      //   erc20Addr: decoded[4],
-      //   threshold: decoded[5],
-      // } as Erc20Initializer;
 
       break;
     default:
       console.log("Unknown jar type");
-    // decoded = ethers.utils.defaultAbiCoder.decode(
-    //   ["address", "uint256", "uint256", "address"],
-    //   initializer
-    // );
-    // console.log(decoded);
-    // initParams = {
-    //   safeTarget: decoded[0],
-    //   cookieAmount: decoded[1],
-    //   periodLength: decoded[2],
-    //   cookieToken: decoded[3],
-    // } as CookieJarInitializer;
+      return undefined;
   }
-
-  return {
-    id: uid,
-    details: _details,
-    address: cookieJar,
-  } as CookieJar;
 };

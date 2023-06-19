@@ -11,31 +11,13 @@ import { useEffect, useState } from "react";
 import { useDHConnect } from "@daohaus/connect";
 import { useTargets } from "../hooks/useTargets";
 import { CookieJar } from "../utils/cookieJarHandlers";
+import { useCookieJar } from "../hooks/useCookieJar";
 /**
 
  */
 export const JarCard = ({ record }: { record: CookieJar }) => {
-  const [isAllowed, setIsAllowed] = useState<boolean>(false);
-  const { provider } = useDHConnect();
-
   const target = useTargets();
-
-  useEffect(() => {
-    const getIsAllowed = async () => {
-      if (provider) {
-        const cookieJarContract = new ethers.Contract(
-          record.address,
-          COOKIEJAR_CORE_ABI.abi,
-          provider
-        );
-
-        const isAllowed = await cookieJarContract.canClaim();
-        setIsAllowed(isAllowed);
-      }
-    };
-
-    getIsAllowed();
-  }, []);
+  const { cookieJar, isMember } = useCookieJar({ cookieJarId: record.id });
 
   return (
     <div style={{ marginBottom: "3rem" }}>
@@ -56,11 +38,11 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
         />
 
         <Label>Type: </Label>
-        <ParMd style={{ marginBottom: ".4rem" }}>{record.details.type}</ParMd>
+        <ParMd style={{ marginBottom: ".4rem" }}>{record.type}</ParMd>
         <Label>Title: </Label>
-        <ParMd style={{ marginBottom: ".4rem" }}>{record.details.type}</ParMd>
+        <ParMd style={{ marginBottom: ".4rem" }}>{record.name}</ParMd>
         <Label>Description: </Label>
-        <ParMd style={{ marginBottom: ".4rem" }}>...</ParMd>
+        <ParMd style={{ marginBottom: ".4rem" }}>{record.description}</ParMd>
 
         <Label>Period: </Label>
         <ParMd style={{ marginBottom: ".4rem" }}>
@@ -78,18 +60,25 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
             ? "Native Token"
             : record?.initializer?.cookieToken}
         </ParMd>
-        <Label>on allowlist: </Label>
+        <Label>On allowlist: </Label>
         <ParMd style={{ marginBottom: ".4rem" }}>
-          {isAllowed ? "Yes" : "No"}
+          {isMember ? (
+            <span style={{ color: "green" }}>Yes</span>
+          ) : (
+            <span style={{ color: "red" }}>No</span>
+          )}
         </ParMd>
         <ParMd style={{ marginBottom: ".4rem" }}>
           Go to{" "}
-          <StyledRouterLink
-            to={`/claims/${target?.CHAIN_ID}/${record.address}`}
-          >
-            Claim
-          </StyledRouterLink>{" "}
+          <StyledRouterLink to={`/claims/${record.id}`}>Claim</StyledRouterLink>{" "}
           to claim your tokens.
+        </ParMd>
+        <ParMd style={{ marginBottom: ".4rem" }}>
+          Go to{" "}
+          <StyledRouterLink to={`/history/${record.id}`}>
+            History
+          </StyledRouterLink>{" "}
+          to inspect the crumbles.
         </ParMd>
       </Card>
     </div>
