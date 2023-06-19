@@ -2,25 +2,13 @@ import { IdbStorage, Event, Indexer } from "chainsauce-web";
 import {
   parseSummonEvent,
   parseGiveCookieEvent,
-  GiveCookieEvent,
   CookieJar,
+  Cookie,
 } from "./cookieJarHandlers";
 import { PosterSchema, parseNewPostEvent } from "./posterHandlers";
 import COOKIEJAR_CORE_ABI from "../abis/CookieJarCore.json";
 
-export type Cookie = {
-  cookieGiver: string;
-  cookieMonster: string;
-  jarUid: string;
-  cookieUid: string;
-  reasonTag: string;
-  amount: string;
-};
-
-const storeOrUpdateCookie = async (
-  storage: IdbStorage,
-  event: GiveCookieEvent
-) => {
+const storeOrUpdateCookie = async (storage: IdbStorage, event: Cookie) => {
   if (!storage.db) {
     console.error("No storage");
     return;
@@ -51,6 +39,8 @@ const storeCookieJar = async (
   } = indexer;
 
   try {
+    console.log(`Storing cookieJar ${cookieJar.id}`);
+
     await db
       .add("cookieJars", cookieJar, cookieJar.id)
       .then(() =>
@@ -81,9 +71,9 @@ const storeReason = async (
     storage: { db },
   } = indexer;
 
-  console.log("Storing reason", post);
-
   try {
+    console.log("Storing reason", post);
+
     await db.add("reasons", post, post.tag);
 
     console.log(`Stored reason ${post.tag}`);
@@ -99,7 +89,7 @@ const handleEvent = async (indexer: Indexer<IdbStorage>, event: Event) => {
     case "SummonCookieJar":
       const parsedSummonEvent = parseSummonEvent(event);
       if (!parsedSummonEvent) {
-        console.error("Failed to parse event", event);
+        console.error("Failed to parse Summon event", event);
         break;
       }
 
@@ -109,30 +99,18 @@ const handleEvent = async (indexer: Indexer<IdbStorage>, event: Event) => {
     case "GiveCookie":
       const parsedGiveCookieEvent = await parseGiveCookieEvent(indexer, event);
 
-      if (!parsedGiveCookieEvent || !parsedGiveCookieEvent.cookieUid) {
-        console.error("Failed to parse event", event);
+      if (!parsedGiveCookieEvent) {
+        console.error("Failed to parse GiveCookie event", event);
         break;
       }
 
-      const db = indexer.storage.db;
-      const jar = await db
-        ?.getAll("cookieJars")
-        ?.then((jars) =>
-          jars.filter(
-            (jar) => jar?.address.toLowerCase() === event.address.toLowerCase()
-          )
-        );
-
-      storeOrUpdateCookie(indexer.storage, {
-        ...parsedGiveCookieEvent,
-        jarUid: jar?.[0]?.id,
-      });
+      storeOrUpdateCookie(indexer.storage, parsedGiveCookieEvent);
       break;
 
     case "NewPost":
       const parsedPosterEvent = await parseNewPostEvent(indexer, event);
       if (!parsedPosterEvent) {
-        console.error("Failed to parse event", event);
+        console.error("Failed to parse NewPost event", event);
         break;
       }
 

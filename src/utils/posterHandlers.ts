@@ -1,14 +1,6 @@
-import { Initializer } from "../hooks/useCookieJarFactory";
 import { Event, IdbStorage, Indexer } from "chainsauce-web";
 
-export type SummonEvent = {
-  id: string;
-  type: string;
-  address: string;
-  initializer?: Initializer;
-};
-
-type EventContent = {
+type PosterEventContent = {
   title: string;
   user: string;
   receiver: string;
@@ -71,7 +63,7 @@ const processPosterContent = (content: string, tag: string) => {
 };
 
 const processReasonContent = (content: string, tag: string) => {
-  const parsedContent: EventContent = JSON.parse(content);
+  const parsedContent: PosterEventContent = JSON.parse(content);
 
   const posterData: PosterSchema = {
     table: "reason",
@@ -87,7 +79,7 @@ const processReasonContent = (content: string, tag: string) => {
 };
 
 const processAssessContent = (content: string, tag: string) => {
-  const parsedContent: EventContent = JSON.parse(content);
+  const parsedContent: PosterEventContent = JSON.parse(content);
 
   const posterData: PosterSchema = {
     table: "assess",
@@ -104,7 +96,7 @@ const processAssessContent = (content: string, tag: string) => {
 
 const isReason = (content: any): content is PosterSchema => {
   console.log("Content: ", content);
-  const parsedContent: EventContent = JSON.parse(content);
+  const parsedContent: PosterEventContent = JSON.parse(content);
 
   if (parsedContent.table !== "reason") {
     return false;
@@ -114,7 +106,7 @@ const isReason = (content: any): content is PosterSchema => {
 };
 
 const isAssessment = (content: any): content is PosterSchema => {
-  const parsedContent: EventContent = JSON.parse(content);
+  const parsedContent: PosterEventContent = JSON.parse(content);
 
   if (parsedContent.table !== "assess") {
     return false;

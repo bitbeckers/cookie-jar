@@ -5,7 +5,7 @@ import { LeaderBoardCard } from "../components/LeaderBoardCard";
 import { useParams } from "react-router-dom";
 import { useIndexer } from "../hooks/useIndexer";
 import { useMemo } from "react";
-import { groupBy, sumBy } from "lodash";
+import { groupBy } from "lodash";
 import { useQuery } from "react-query";
 import { BigNumber } from "ethers";
 
