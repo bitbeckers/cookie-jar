@@ -4,6 +4,8 @@ import { Avatar, Badge, Card, Link, ParMd } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";
 import { useProfile } from "@daohaus/moloch-v3-hooks";
 import { Cookie } from "../utils/eventHandler";
+import { useIndexer } from "../hooks/useIndexer";
+import { useQuery } from "react-query";
 
 const DootBox = styled.div`
   display: flex;
@@ -22,6 +24,7 @@ const DootBox = styled.div`
  * @param {string} props.record.link - The link to the history record.
  */
 export const HistoryCard = ({ record }: { record: Partial<Cookie> }) => {
+  const { getReasonByTag } = useIndexer();
   const { profile: cookieGiver } = useProfile({
     address: record?.cookieGiver ?? "",
   });
@@ -30,11 +33,19 @@ export const HistoryCard = ({ record }: { record: Partial<Cookie> }) => {
     address: record?.cookieMonster ?? "",
   });
 
+  const { data: reason } = useQuery({
+    queryKey: ["reason", record?.reasonTag],
+    queryFn: () => getReasonByTag(record?.reasonTag ?? ""),
+    enabled: !!record?.reasonTag,
+    refetchInterval: 3000,
+  });
+
   return (
-    <div style={{ marginBottom: "3rem", width: "50%" }}>
+    <div style={{ marginBottom: "3rem", width: "70%" }}>
       <Card>
         {cookieGiver && (
           <ParMd style={{ marginBottom: ".4rem" }}>
+            Giver:
             {cookieGiver?.image && !cookieGiver.image.includes("null") && (
               <Avatar alt={cookieGiver.ens} size="sm" src={cookieGiver.image} />
             )}{" "}
@@ -43,6 +54,7 @@ export const HistoryCard = ({ record }: { record: Partial<Cookie> }) => {
         )}
         {cookieMonster && (
           <ParMd style={{ marginBottom: ".4rem" }}>
+            CookieMonster:
             {cookieMonster?.image && !cookieMonster.image.includes("null") && (
               <Avatar
                 alt={cookieMonster.ens}
@@ -55,7 +67,7 @@ export const HistoryCard = ({ record }: { record: Partial<Cookie> }) => {
         )}
         <ParMd style={{ marginBottom: "1rem" }}>
           <img src={cookie} alt="cookie" height={"20px"} />{" "}
-          {record?.reason ?? "No reason provided."}
+          {reason ? reason[0]?.description : "No reason provided."}
         </ParMd>
 
         <DootBox style={{ fontSize: "2rem", marginTop: "1rem" }}>

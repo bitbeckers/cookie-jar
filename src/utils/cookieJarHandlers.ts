@@ -1,6 +1,8 @@
 import { Initializer, ListInitializer } from "../hooks/useCookieJarFactory";
-import { ethers } from "ethers";
-import { Event } from "chainsauce-web";
+import { ethers, utils } from "ethers";
+import { Event, IdbStorage, Indexer } from "chainsauce-web";
+import { useIndexer } from "../hooks/useIndexer";
+import { useDHConnect } from "@daohaus/connect";
 
 export type SummonEvent = {
   id: string;
@@ -20,6 +22,8 @@ export type GiveCookieEvent = {
   cookieGiver: string;
   cookieMonster: string;
   cookieUid: string;
+  jarUid: string;
+  reasonTag?: string;
   amount?: string;
   reason?: string;
   link?: string;
@@ -31,16 +35,52 @@ export type CookieJar = DetailsSchema & {
   initializer?: Initializer;
 };
 
-export const parseGiveCookieEvent = (event: Event) => {
+const calculateReasonTag = async (
+  indexer: Indexer<IdbStorage>,
+  event: Event
+) => {
+  const cookieJar = await indexer.storage.db
+    ?.getAll("cookieJars")
+    ?.then((jars) =>
+      jars.filter(
+        (jar) => jar?.address.toLowerCase() === event.address.toLowerCase()
+      )
+    );
+
+  if (!cookieJar) {
+    console.error("Could not find cookieJar for event", event);
+    return "";
+  }
+
+  const reasonTag = ethers.utils.keccak256(
+    utils.toUtf8Bytes(`CookieJar.${cookieJar[0].id}.reason.${event.args._uid}`)
+  );
+
+  console.log(
+    `Calculated reasonTag: ${reasonTag} for cookie ${event.args._uid}`
+  );
+  return reasonTag;
+};
+
+export const parseGiveCookieEvent = async (
+  indexer: Indexer<IdbStorage>,
+  event: Event
+) => {
   // event GiveCookie(address indexed cookieMonster, uint256 amount, string _uid);
   const { cookieMonster, amount, _uid } = event.args;
   console.log("Event: ", event);
   console.log("Found cookieMonster: ", cookieMonster);
   console.log("Found amount: ", amount);
   console.log("Found _uid: ", _uid);
-  
+
+  const { provider } = indexer;
+
+  const tx = await provider.getTransaction(event.transactionHash);
+
   return {
+    cookieGiver: tx.from,
     cookieMonster,
+    reasonTag: await calculateReasonTag(indexer, event),
     amount,
     cookieUid: _uid,
   } as GiveCookieEvent;

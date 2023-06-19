@@ -11,7 +11,7 @@ export const APP_TX = {
       {
         type: "JSONDetails",
         jsonSchema: {
-          title: { type: "static", value: "to eat a cookie" },
+          title: { type: "static", value: "CookieJar" },
           user: ".formValues.user",
           receiver: ".formValues.receiver",
           description: ".formValues.description",

@@ -1,18 +1,17 @@
 import { Avatar, Card, ParMd } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";
 import { useProfile } from "@daohaus/moloch-v3-hooks";
-import { Cookie } from "../utils/eventHandler";
-
+import { BigNumberish, ethers } from "ethers";
 /**
  * Represents a leaderboard record.
  *
  * @typedef {Object} LBRecord
  * @property {string} user - The user's address.
- * @property {number} count - The user's cookie count.
+ * @property {BigNumberish} count - The user's cookie count.
  */
 export interface LBRecord {
   user: string;
-  count: number;
+  count: BigNumberish;
 }
 
 /**
@@ -21,7 +20,7 @@ export interface LBRecord {
  * @param {Object} props - The props for the component.
  * @param {Object} props.record - The record to display on the leaderboard.
  * @param {string} props.record.user - The user's address.
- * @param {number} props.record.count - The user's cookie count.
+ * @param {BigNumberish} props.record.count - The user's cookie count.
  * @returns {JSX.Element} A leaderboard card.
  */
 export const LeaderBoardCard = ({ record }: { record: LBRecord }) => {
@@ -46,7 +45,7 @@ export const LeaderBoardCard = ({ record }: { record: LBRecord }) => {
         {/* Display the user's cookie count */}
         <ParMd style={{ marginBottom: "1rem" }}>
           <img src={cookie} alt="cookie" height={"20px"} />{" "}
-          {`Count: ${record?.count.toString()}`}
+          {`Count: ${ethers.utils.formatEther(record?.count)}`}
         </ParMd>
       </Card>
     </div>

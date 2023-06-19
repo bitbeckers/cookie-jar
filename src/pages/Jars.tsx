@@ -16,8 +16,6 @@ const LinkBox = styled.div`
 `;
 
 export const Jars = () => {
-  const { address, chainId, isConnected } = useDHConnect();
-
   const { getJars } = useIndexer();
 
   const { data, isLoading } = useQuery({

@@ -1,6 +1,5 @@
 import { BiColumnLayout, ParMd, SingleColumnLayout } from "@daohaus/ui";
 
-import { useDHConnect } from "@daohaus/connect";
 import { HistoryCard } from "../components/HistoryCard";
 import { LeaderBoardCard } from "../components/LeaderBoardCard";
 import { useParams } from "react-router-dom";
@@ -8,9 +7,9 @@ import { useIndexer } from "../hooks/useIndexer";
 import { useMemo } from "react";
 import { groupBy, sumBy } from "lodash";
 import { useQuery } from "react-query";
+import { BigNumber } from "ethers";
 
 export const History = () => {
-  const { address } = useDHConnect();
   const { cookieJarId } = useParams();
   const { getCookiesByJarId } = useIndexer();
 
@@ -29,16 +28,18 @@ export const History = () => {
     const leaderboard = Object.entries(groupedCookies)
       .map(([monster, monsterCookies]) => ({
         user: monster,
-        count: sumBy(monsterCookies, "amount"),
+        count: monsterCookies.reduce(
+          (acc, cookie) => acc.add(cookie.amount || "0"),
+          BigNumber.from(0)
+        ),
       }))
-      .sort((a, b) => b.count - a.count);
-
-    console.log({ leaderboard });
+      .sort((a, b) => (b.count.lt(a.count) ? -1 : 1));
+    console.log("Leaderboard", leaderboard);
 
     return leaderboard.map((record, idx) => (
       <LeaderBoardCard record={record} key={idx} />
     ));
-  }, [cookies]);
+  }, [cookies, isLoading]);
 
   console.log({ cookies });
 
