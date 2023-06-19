@@ -1,8 +1,6 @@
 import { Initializer, ListInitializer } from "../hooks/useCookieJarFactory";
 import { ethers, utils } from "ethers";
 import { Event, IdbStorage, Indexer } from "chainsauce-web";
-import { useIndexer } from "../hooks/useIndexer";
-import { useDHConnect } from "@daohaus/connect";
 
 export type SummonEvent = {
   id: string;
@@ -11,28 +9,23 @@ export type SummonEvent = {
   initializer?: Initializer;
 };
 
-export type DetailsSchema = {
+export type CookieJar = {
+  id: string;
+  address: string;
   type: string;
   name: string;
   description?: string;
   link?: string;
+  initializer?: Initializer;
 };
 
-export type GiveCookieEvent = {
+export type Cookie = {
   cookieGiver: string;
   cookieMonster: string;
-  cookieUid: string;
   jarUid: string;
-  reasonTag?: string;
-  amount?: string;
-  reason?: string;
-  link?: string;
-};
-
-export type CookieJar = DetailsSchema & {
-  id: string;
-  address: string;
-  initializer?: Initializer;
+  cookieUid: string;
+  reasonTag: string;
+  amount: string;
 };
 
 const calculateReasonTag = async (
@@ -40,11 +33,12 @@ const calculateReasonTag = async (
   event: Event
 ) => {
   const cookieJar = await indexer.storage.db
-    ?.getAll("cookieJars")
-    ?.then((jars) =>
-      jars.filter(
-        (jar) => jar?.address.toLowerCase() === event.address.toLowerCase()
-      )
+    ?.getAll<"cookieJars">("cookieJars")
+    ?.then(
+      (jars) =>
+        jars.filter(
+          (jar) => jar?.address.toLowerCase() === event.address.toLowerCase()
+        ) as CookieJar[]
     );
 
   if (!cookieJar) {
@@ -77,20 +71,29 @@ export const parseGiveCookieEvent = async (
 
   const tx = await provider.getTransaction(event.transactionHash);
 
+  const jar: CookieJar[] | undefined = await indexer.storage.db
+    ?.getAll("cookieJars")
+    ?.then((jars) =>
+      jars.filter(
+        (jar) => jar?.address.toLowerCase() === event.address.toLowerCase()
+      )
+    );
+
   return {
     cookieGiver: tx.from,
     cookieMonster,
     reasonTag: await calculateReasonTag(indexer, event),
-    amount,
+    amount: amount.toString(),
     cookieUid: _uid,
-  } as GiveCookieEvent;
+    jarUid: jar?.[0].id,
+  } as Cookie;
 };
 
 export const parseSummonEvent = (event: Event) => {
   // cookieJar, initializer, details, uid
   const { cookieJar, initializer, details, uid } = event.args;
   console.log("Event: ", event);
-  let _details: DetailsSchema;
+  let _details: Partial<CookieJar>;
 
   // Try to parse details from event to DetailsSchema
   try {
@@ -102,11 +105,11 @@ export const parseSummonEvent = (event: Event) => {
   }
 
   let initParams: Initializer;
+  const iface = new ethers.utils.Interface(["function setUp(bytes)"]);
 
   switch (_details.type) {
     case "6551":
       console.log("Found 6551 initializer");
-      const iface = new ethers.utils.Interface(["function setUp(bytes)"]);
       const decoded = iface.decodeFunctionData("setUp(bytes)", initializer);
       const decodedSetUp = ethers.utils.defaultAbiCoder.decode(
         ["address", "uint256", "uint256", "address", "address[]"],

@@ -1,10 +1,10 @@
 import FactoryABI from "../abis/CookieJarFactory.json";
 import PosterABI from "../abis/Poster.json";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDHConnect } from "@daohaus/connect";
 import { useTargets } from "./useTargets";
-import { CookieJar } from "../utils/cookieJarHandlers";
-import { Cookie, handleEvent } from "../utils/eventHandler";
+import { Cookie, CookieJar } from "../utils/cookieJarHandlers";
+import { handleEvent } from "../utils/eventHandler";
 import CookieJarIndexer from "../utils/CookieJarIndexer";
 import { PosterSchema } from "../utils/posterHandlers";
 
@@ -79,20 +79,20 @@ const useIndexer = () => {
   const getCookies = async () => {
     if (!indexer) return;
     const db = indexer.storage.db;
-    return db?.getAll("cookies") as Promise<Partial<Cookie>[]>;
+    return db?.getAll("cookies") as Promise<Cookie[]>;
   };
 
   const getCookiesByJarId = async (jarId: string) => {
     if (!indexer) return undefined;
     const db = indexer.storage.db;
-    const cookies: Partial<Cookie>[] | undefined = await db?.getAll("cookies");
-    return cookies?.filter((cookie) => cookie?.jarUid === jarId);
+    const cookies: Cookie[] | undefined = await db?.getAll("cookies");
+    return cookies?.filter((cookie) => cookie.jarUid === jarId);
   };
 
   const getCookiesByJarReasontag = async (reasonTag: string) => {
     if (!indexer) return undefined;
     const db = indexer.storage.db;
-    const cookies: Partial<Cookie>[] | undefined = await db?.getAll("cookies");
+    const cookies: Cookie[] | undefined = await db?.getAll("cookies");
     const filteredCookies = cookies?.filter(
       (cookie) => cookie?.reasonTag === reasonTag
     );
@@ -103,9 +103,7 @@ const useIndexer = () => {
   const getReasonByTag = async (tag: string) => {
     if (!indexer) return undefined;
     const db = indexer.storage.db;
-    const cookies: Partial<PosterSchema>[] | undefined = await db?.getAll(
-      "reasons"
-    );
+    const cookies: PosterSchema[] | undefined = await db?.getAll("reasons");
     return cookies?.filter((reason) => reason?.tag === tag);
   };
 

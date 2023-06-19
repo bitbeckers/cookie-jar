@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
-import { Avatar, Badge, Card, Link, ParMd } from "@daohaus/ui";
+import { Avatar, Badge, Card, ParMd } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";
 import { useProfile } from "@daohaus/moloch-v3-hooks";
-import { Cookie } from "../utils/eventHandler";
 import { useIndexer } from "../hooks/useIndexer";
 import { useQuery } from "react-query";
+import { Cookie } from "../utils/cookieJarHandlers";
 
 const DootBox = styled.div`
   display: flex;
@@ -23,20 +23,20 @@ const DootBox = styled.div`
  * @param {string} props.record.description - The description of the history record.
  * @param {string} props.record.link - The link to the history record.
  */
-export const HistoryCard = ({ record }: { record: Partial<Cookie> }) => {
+export const HistoryCard = ({ record }: { record: Cookie }) => {
   const { getReasonByTag } = useIndexer();
   const { profile: cookieGiver } = useProfile({
-    address: record?.cookieGiver ?? "",
+    address: record.cookieGiver,
   });
 
   const { profile: cookieMonster } = useProfile({
-    address: record?.cookieMonster ?? "",
+    address: record.cookieMonster,
   });
 
   const { data: reason } = useQuery({
-    queryKey: ["reason", record?.reasonTag],
-    queryFn: () => getReasonByTag(record?.reasonTag ?? ""),
-    enabled: !!record?.reasonTag,
+    queryKey: ["reason", record.reasonTag],
+    queryFn: () => getReasonByTag(record.reasonTag),
+    enabled: !!record.reasonTag,
     refetchInterval: 3000,
   });
 

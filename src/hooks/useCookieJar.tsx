@@ -2,7 +2,6 @@ import { useQuery } from "react-query";
 
 import { createContract } from "@daohaus/tx-builder";
 import { ValidNetwork, Keychain } from "@daohaus/keychain-utils";
-import { nowInSeconds } from "@daohaus/utils";
 
 import CookieJarAbi from "../abis/CookieJarCore.json";
 import { CookieJar } from "../utils/cookieJarHandlers";
