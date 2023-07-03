@@ -29,6 +29,8 @@ export const MintForm = () => {
       return {
         receiver: address,
         cookieToken: ZERO_ADDRESS,
+        donationToken: ZERO_ADDRESS,
+        donationAmount: "0",
       };
     }
   }, [address]);

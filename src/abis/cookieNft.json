@@ -224,6 +224,16 @@
         "type": "address"
       },
       {
+        "internalType": "address",
+        "name": "donationToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "donationAmount",
+        "type": "uint256"
+      },
+      {
         "internalType": "address[]",
         "name": "allowList",
         "type": "address[]"
@@ -247,7 +257,7 @@
         "type": "uint256"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {

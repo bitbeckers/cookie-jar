@@ -56,6 +56,50 @@ export const APP_FIELD: Record<string, CustomFieldLego> = {
       },
     ],
   },
+  DONATION_TOKEN: {
+    id: "checkRenderDonationToken",
+    type: "checkRender",
+    gateLabel: "Use Custom Token (native token by default)",
+    components: [
+      {
+        id: "donationToken",
+        type: "input",
+        label: "Donation Token",
+        defaultValue: ZERO_ADDRESS,
+        expectType: "ethAddress",
+        placeholder: "Enter token address if you want to support the devs",
+      },
+    ],
+  },
+  DONATION: {
+    id: "checkRenderDonation",
+    type: "checkRender",
+    gateLabel: "Donate to the devs",
+    components: [
+      {
+        id: "checkRenderDonationToken",
+        type: "checkRender",
+        gateLabel: "Use Custom Token (native token by default)",
+        components: [
+          {
+            id: "donationToken",
+            type: "input",
+            label: "Donation Token",
+            defaultValue: ZERO_ADDRESS,
+            expectType: "ethAddress",
+            placeholder: "Enter token address if you want to support the devs",
+          },
+        ],
+      },
+      {
+        id: "donationAmount",
+        type: "toWeiInput",
+        label: "Donation Amount",
+        defaultValue: 0,
+        placeholder: "Enter amount of donation token",
+      },
+    ],
+  },
   LINK: {
     id: "link",
     type: "input",

@@ -1,6 +1,5 @@
 import { APP_CONTRACT } from "./contract";
 
-
 export const APP_TX = {
   COOKIEJAR: {
     id: "COOKIEJAR",
@@ -32,6 +31,8 @@ export const APP_TX = {
       ".formValues.cookiePeriod",
       ".formValues.cookieAmount",
       ".formValues.cookieToken",
+      ".formValues.donationToken",
+      ".formValues.donationAmount",
       ".formValues.allowList",
     ],
   },
@@ -40,11 +41,7 @@ export const APP_TX = {
     contract: APP_CONTRACT.COOKIEJARTARGET,
     method: "executeCall",
     disablePoll: true,
-    args: [
-      ".to",
-      ".value",
-      ".data"
-    ],
-    staticArgs: []
-  }
+    args: [".to", ".value", ".data"],
+    staticArgs: [],
+  },
 };

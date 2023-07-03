@@ -3,7 +3,7 @@ import { ContractLego } from "@daohaus/utils";
 import COOKIEJAR_ABI from "../abis/CookieJarCore.json";
 import JAR_FACTORY_ABI from "../abis/CookieJarFactory.json";
 import COOKIENFT_ABI from "../abis/cookieNft.json";
-import { TARGET_GNOSIS } from "../targetDao";
+import { TARGET_GNOSIS, TARGET_GOERLI } from "../targetDao";
 
 export const APP_CONTRACT: Record<string, ContractLego> = {
   COOKIEJAR: {
@@ -18,6 +18,7 @@ export const APP_CONTRACT: Record<string, ContractLego> = {
     abi: COOKIENFT_ABI,
     targetAddress: {
       [TARGET_GNOSIS.CHAIN_ID]: TARGET_GNOSIS.COOKIE_JAR_NFT_ADDRESS,
+      [TARGET_GOERLI.CHAIN_ID]: TARGET_GOERLI.COOKIE_JAR_NFT_ADDRESS,
     },
   },
   POSTER: {
@@ -72,6 +73,7 @@ export const APP_CONTRACT: Record<string, ContractLego> = {
     abi: JAR_FACTORY_ABI,
     targetAddress: {
       [TARGET_GNOSIS.CHAIN_ID]: TARGET_GNOSIS.COOKIEJAR_FACTORY_ADDRESS,
+      [TARGET_GOERLI.CHAIN_ID]: TARGET_GOERLI.COOKIEJAR_FACTORY_ADDRESS,
     },
   },
 };

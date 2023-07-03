@@ -23,6 +23,7 @@ export const APP_FORM: Record<string, CustomFormLego> = {
       APP_FIELD.COOKIE_AMOUNT,
       APP_FIELD.COOKIE_TOKEN,
       { ...APP_FIELD.CSTEXTAREA, id: "allowList", label: "Allow List" },
+      { ...APP_FIELD.DONATION, id: "donation", label: "Donate to the devs" },
     ],
   },
   CONFIGJAR: {

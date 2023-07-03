@@ -8,6 +8,25 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "address",
+        "name": "donationToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "donationAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "DonationReceived",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address",
         "name": "previousOwner",
@@ -53,6 +72,19 @@
     ],
     "name": "SummonCookieJar",
     "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "SUSTAINABILITY_ADDR",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [],
@@ -105,6 +137,16 @@
         "type": "string"
       },
       {
+        "internalType": "address",
+        "name": "donationToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "donationAmount",
+        "type": "uint256"
+      },
+      {
         "internalType": "uint256",
         "name": "_saltNonce",
         "type": "uint256"
@@ -118,7 +160,7 @@
         "type": "address"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {

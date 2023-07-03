@@ -40,16 +40,16 @@ const useIndexer = () => {
       indexer.subscribe(
         addresses?.COOKIEJAR_FACTORY_ADDRESS,
         FactoryABI,
-        "gnosis",
-        28498500
+        addresses.CHAIN_ID,
+        addresses.START_BLOCK
       );
 
       // Subscribe to Poster
       indexer.subscribe(
         addresses?.POSTER_ADDRESS,
         PosterABI,
-        "gnosis",
-        28498500
+        addresses.CHAIN_ID,
+        addresses.START_BLOCK
       );
     }
   }, [addresses, indexer]);
