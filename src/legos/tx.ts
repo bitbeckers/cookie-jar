@@ -35,6 +35,9 @@ export const APP_TX = {
       ".formValues.donationAmount",
       ".formValues.allowList",
     ],
+    overrides: {
+      value: ".formValues.donationAmount",
+    },
   },
   COOKIEJARTARGET: {
     id: "COOKIEJARTARGET",
