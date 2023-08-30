@@ -1,13 +1,12 @@
 import { createIndexer, IdbStorage } from "chainsauce-web";
 import type { EventHandler, Indexer } from "chainsauce-web";
 import { Abi, PublicClient } from "viem";
-import { Contract, providers, utils } from "ethers";
-import { useEthersProvider } from "./ethersAdapters";
+import { Contract, utils, providers } from "ethers";
 import { JsonFragment } from "@daohaus/utils";
 
 interface CookieJarIndexerInterface {
   storage: IdbStorage;
-  publicClient: PublicClient;
+  rpc: string;
   eventHandler: EventHandler<IdbStorage>;
   indexer?: Indexer<IdbStorage>;
   init: () => Promise<void>;
@@ -21,24 +20,24 @@ interface CookieJarIndexerInterface {
 
 class CookieJarIndexer implements CookieJarIndexerInterface {
   storage: IdbStorage;
-  publicClient: PublicClient;
+  rpc: string;
   eventHandler: EventHandler<IdbStorage>;
   indexer?: Indexer<IdbStorage>;
 
   constructor(
     storageEntities: string[],
-    publicClient: PublicClient,
+    rpc: string,
     eventHandler: EventHandler<IdbStorage>
   ) {
     this.storage = new IdbStorage(storageEntities);
-    this.publicClient = publicClient;
+    this.rpc = rpc;
     this.eventHandler = eventHandler;
   }
 
   init = async () => {
-    const provider = useEthersProvider({ chainId: 100 });
+    const provider = new providers.JsonRpcProvider(this.rpc, 100);
     this.indexer = await createIndexer(
-      provider as providers.JsonRpcProvider,
+      provider,
       this.storage,
       this.eventHandler
     );

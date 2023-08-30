@@ -22,7 +22,7 @@ const useIndexer = () => {
         // check if the indexer has not been initialized
         const indexer = new CookieJarIndexer(
           storageEntities,
-          publicClient,
+          "https://rpc.ankr.com/gnosis",
           handleEvent
         );
         await indexer.init();
