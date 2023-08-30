@@ -7,7 +7,6 @@ import { useIndexer } from "../hooks/useIndexer";
 import { useMemo } from "react";
 import { groupBy } from "lodash";
 import { useQuery } from "react-query";
-import { BigNumber } from "ethers";
 
 export const History = () => {
   const { cookieJarId } = useParams();
@@ -28,12 +27,9 @@ export const History = () => {
     const leaderboard = Object.entries(groupedCookies)
       .map(([monster, monsterCookies]) => ({
         user: monster,
-        count: monsterCookies.reduce(
-          (acc, cookie) => acc.add(cookie.amount || "0"),
-          BigNumber.from(0)
-        ),
+        count: monsterCookies.reduce((acc, cookie) => acc + cookie.amount, 0n),
       }))
-      .sort((a, b) => (b.count.lt(a.count) ? -1 : 1));
+      .sort((a, b) => (b.count > a.count ? -1 : 1));
     console.log("Leaderboard", leaderboard);
 
     return leaderboard.map((record, idx) => (

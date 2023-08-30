@@ -1,70 +1,40 @@
 import { useQuery } from "react-query";
-
-import { createContract } from "@daohaus/tx-builder";
-import { ValidNetwork, Keychain } from "@daohaus/keychain-utils";
-import { LOCAL_ABI } from "@daohaus/abis";
-
-const fetchPosterRecords = async ({
-  userAddress,
-  cookieAddress,
-  chainId,
-  rpcs,
-}: {
-  userAddress: string;
-  cookieAddress: string;
-  chainId: ValidNetwork;
-  rpcs?: Keychain;
-}) => {
-  if (!cookieAddress || !chainId) {
-    throw new Error("No cookie jar address provided");
-  }
-  const posterContract = createContract({
-    address: "0x000000000000cd17345801aa8147b8d3950260ff",
-    abi: LOCAL_ABI.POSTER,
-    chainId,
-    rpcs,
-  });
-
-  try {
-    // Query the contract for new post events
-    const filter = posterContract.filters.NewPost(cookieAddress);
-    const events = await posterContract.queryFilter(filter);
-    // Return the events as an object
-    return {
-      events,
-    };
-  } catch (error: any) {
-    console.error(error);
-    throw new Error(error?.message as string);
-  }
-};
+import { useDHConnect } from "@daohaus/connect";
 
 export const usePoster = ({
   userAddress,
   cookieAddress,
-  chainId,
-  rpcs,
 }: {
   userAddress: string | undefined | null;
   cookieAddress: string | undefined | null;
-  chainId: ValidNetwork;
-  rpcs?: Keychain;
 }) => {
+  const { publicClient } = useDHConnect();
+
+  // event NewPost(address indexed user, string content, string indexed tag);
   const { data, ...rest } = useQuery(
     ["posterData", { cookieAddress }],
     () =>
-      fetchPosterRecords({
-        userAddress: userAddress as string,
-        cookieAddress: cookieAddress as string,
-        chainId,
-        rpcs,
+      publicClient?.getLogs({
+        address: "0x000000000000cd17345801aa8147b8d3950260ff",
+        event: {
+          name: "NewPost",
+          inputs: [
+            { type: "address", indexed: true, name: "user" },
+            { type: "string", indexed: false, name: "content" },
+            { type: "string", indexed: true, name: "tag" },
+          ],
+          type: "event",
+        },
+        args: {
+          user: cookieAddress as `0x${string}`,
+        },
       }),
     { enabled: !!userAddress }
   );
   console.log("data", data);
 
   // Parse the events data and extract the relevant information
-  const parsed = data?.events.map((record: any) => {
+  const parsed = data?.map((record: any) => {
     try {
       return JSON.parse(record.args[1]);
     } catch (error) {

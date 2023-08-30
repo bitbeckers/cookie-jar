@@ -1,14 +1,7 @@
-import styled from "styled-components";
-
 import { AddressDisplay, Card, Label, ParMd } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";
-import { ZERO_ADDRESS, formatPeriods, fromWei } from "@daohaus/utils";
+import { ZERO_ADDRESS, formatPeriods } from "@daohaus/utils";
 import { StyledRouterLink } from "./Layout";
-import { BigNumber } from "ethers";
-import COOKIEJAR_CORE_ABI from "../abis/CookieJarCore.json";
-import { ethers } from "ethers";
-import { useEffect, useState } from "react";
-import { useDHConnect } from "@daohaus/connect";
 import { useTargets } from "../hooks/useTargets";
 import { CookieJar } from "../utils/cookieJarHandlers";
 import { useCookieJar } from "../hooks/useCookieJar";
@@ -17,7 +10,7 @@ import { useCookieJar } from "../hooks/useCookieJar";
  */
 export const JarCard = ({ record }: { record: CookieJar }) => {
   const target = useTargets();
-  const { cookieJar, isMember } = useCookieJar({ cookieJarId: record.id });
+  const { isMember } = useCookieJar({ cookieJarId: record.id });
 
   return (
     <div style={{ marginBottom: "3rem" }}>
@@ -47,12 +40,12 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
         <Label>Period: </Label>
         <ParMd style={{ marginBottom: ".4rem" }}>
           {`${formatPeriods(
-            BigNumber.from(record?.initializer?.periodLength || "0").toString()
+            record?.initializer?.periodLength.toString() || "0"
           )}`}
         </ParMd>
         <Label>Amount: </Label>
         <ParMd style={{ marginBottom: ".4rem" }}>
-          {BigNumber.from(record?.initializer?.cookieAmount || "0").toString()}
+          {record?.initializer?.cookieAmount.toString() || "0"}
         </ParMd>
         <Label>Token: </Label>
         <ParMd style={{ marginBottom: ".4rem" }}>

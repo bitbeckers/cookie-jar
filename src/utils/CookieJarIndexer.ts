@@ -1,18 +1,19 @@
 import { createIndexer, IdbStorage } from "chainsauce-web";
 import type { EventHandler, Indexer } from "chainsauce-web";
-import { Web3Provider } from "@ethersproject/providers";
-import { Contract, ContractInterface } from "@ethersproject/contracts";
-import { add } from "lodash";
+import { Abi, PublicClient } from "viem";
+import { Contract, providers, utils } from "ethers";
+import { useEthersProvider } from "./ethersAdapters";
+import { JsonFragment } from "@daohaus/utils";
 
 interface CookieJarIndexerInterface {
   storage: IdbStorage;
-  provider: Web3Provider;
+  publicClient: PublicClient;
   eventHandler: EventHandler<IdbStorage>;
   indexer?: Indexer<IdbStorage>;
   init: () => Promise<void>;
   subscribe: (
     address: string,
-    abi: ContractInterface,
+    abi: Abi,
     chainName: string,
     fromBlock: number
   ) => Contract;
@@ -20,23 +21,24 @@ interface CookieJarIndexerInterface {
 
 class CookieJarIndexer implements CookieJarIndexerInterface {
   storage: IdbStorage;
-  provider: Web3Provider;
+  publicClient: PublicClient;
   eventHandler: EventHandler<IdbStorage>;
   indexer?: Indexer<IdbStorage>;
 
   constructor(
     storageEntities: string[],
-    provider: Web3Provider,
+    publicClient: PublicClient,
     eventHandler: EventHandler<IdbStorage>
   ) {
     this.storage = new IdbStorage(storageEntities);
-    this.provider = provider;
+    this.publicClient = publicClient;
     this.eventHandler = eventHandler;
   }
 
   init = async () => {
+    const provider = useEthersProvider({ chainId: 100 });
     this.indexer = await createIndexer(
-      this.provider,
+      provider as providers.JsonRpcProvider,
       this.storage,
       this.eventHandler
     );
@@ -44,7 +46,7 @@ class CookieJarIndexer implements CookieJarIndexerInterface {
 
   subscribe = (
     address: string,
-    abi: ContractInterface,
+    abi: Abi,
     chainName: string,
     fromBlock: number
   ) => {
@@ -52,7 +54,9 @@ class CookieJarIndexer implements CookieJarIndexerInterface {
       throw new Error("Indexer not initialized");
     }
 
-    return this.indexer.subscribe(address, abi, chainName, fromBlock);
+    const ethersAbi = new utils.Interface(abi as JsonFragment[]);
+
+    return this.indexer.subscribe(address, ethersAbi, chainName, fromBlock);
   };
 }
 

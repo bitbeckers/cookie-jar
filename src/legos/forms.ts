@@ -16,7 +16,7 @@ export const APP_FORM: Record<string, CustomFormLego> = {
       cookieAmount: true,
     },
     log: true,
-    tx: APP_TX.CREATENFTJAR as TXLego,
+    tx: APP_TX.CREATE_NFT_JAR as TXLego,
     fields: [
       APP_FIELD.RECEIVER,
       APP_FIELD.COOKIE_PERIOD,

@@ -26,7 +26,6 @@ export const Claims = () => {
 
   const {
     cookieJar,
-    isIdle,
     isLoading,
     error,
     data,
