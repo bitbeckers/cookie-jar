@@ -29,7 +29,7 @@ export const LayoutContainer = () => {
     daoAddress: string;
     cookieChain: string;
   }>();
-  const { provider, address } = useDHConnect();
+  const { publicClient, address } = useDHConnect();
   const target = useTargets();
 
   // Render
@@ -54,7 +54,7 @@ export const LayoutContainer = () => {
       }
     >
       <TXBuilder
-        provider={provider}
+        publicClient={publicClient}
         chainId={target?.CHAIN_ID}
         appState={{ memberAddress: address }}
       >

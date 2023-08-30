@@ -17,6 +17,8 @@ window.Buffer = window.Buffer || Buffer;
 
 const queryClient = new QueryClient();
 
+console.log(process.env);
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <HashRouter>

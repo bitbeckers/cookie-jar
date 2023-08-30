@@ -1,5 +1,3 @@
-import FactoryABI from "../abis/CookieJarFactory.json";
-import PosterABI from "../abis/Poster.json";
 import { useEffect, useRef, useState } from "react";
 import { useDHConnect } from "@daohaus/connect";
 import { useTargets } from "./useTargets";
@@ -7,9 +5,11 @@ import { Cookie, CookieJar } from "../utils/cookieJarHandlers";
 import { handleEvent } from "../utils/eventHandler";
 import CookieJarIndexer from "../utils/CookieJarIndexer";
 import { PosterSchema } from "../utils/posterHandlers";
+import { Poster, CookieJarFactory } from "../abis";
+import { Abi } from "viem";
 
 const useIndexer = () => {
-  const { provider } = useDHConnect();
+  const { publicClient } = useDHConnect();
   const [indexer, setIndexer] = useState<CookieJarIndexer | undefined>();
   const addresses = useTargets();
   const initialized = useRef(false); // add a useRef hook to keep track of whether the indexer has been initialized
@@ -18,11 +18,11 @@ const useIndexer = () => {
 
   useEffect(() => {
     const initIndexer = async () => {
-      if (provider && !initialized.current) {
+      if (publicClient && !initialized.current) {
         // check if the indexer has not been initialized
         const indexer = new CookieJarIndexer(
           storageEntities,
-          provider,
+          "https://rpc.ankr.com/gnosis",
           handleEvent
         );
         await indexer.init();
@@ -32,14 +32,14 @@ const useIndexer = () => {
     };
 
     initIndexer();
-  }, [provider]);
+  }, [publicClient]);
 
   useEffect(() => {
     if (addresses && indexer) {
       // Subscribe to Cookie Jar Factory
       indexer.subscribe(
         addresses?.COOKIEJAR_FACTORY_ADDRESS,
-        FactoryABI,
+        CookieJarFactory as Abi,
         addresses.CHAIN_ID,
         addresses.START_BLOCK
       );
@@ -47,7 +47,7 @@ const useIndexer = () => {
       // Subscribe to Poster
       indexer.subscribe(
         addresses?.POSTER_ADDRESS,
-        PosterABI,
+        Poster as Abi,
         addresses.CHAIN_ID,
         addresses.START_BLOCK
       );

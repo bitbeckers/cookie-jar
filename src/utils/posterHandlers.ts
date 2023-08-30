@@ -62,10 +62,10 @@ const processPosterContent = (content: string, tag: string) => {
   }
 };
 
-const processReasonContent = (content: string, tag: string) => {
+const processReasonContent = (content: string, tag: string): PosterSchema => {
   const parsedContent: PosterEventContent = JSON.parse(content);
 
-  const posterData: PosterSchema = {
+  return {
     table: "reason",
     name: parsedContent.title,
     description: parsedContent.description,
@@ -74,14 +74,12 @@ const processReasonContent = (content: string, tag: string) => {
     receiver: parsedContent.receiver,
     tag: tag,
   };
-
-  return posterData;
 };
 
-const processAssessContent = (content: string, tag: string) => {
+const processAssessContent = (content: string, tag: string): PosterSchema => {
   const parsedContent: PosterEventContent = JSON.parse(content);
 
-  const posterData: PosterSchema = {
+  return {
     table: "assess",
     name: parsedContent.title,
     description: parsedContent.description,
@@ -90,27 +88,16 @@ const processAssessContent = (content: string, tag: string) => {
     receiver: parsedContent.receiver,
     tag: tag,
   };
-
-  return posterData;
 };
 
 const isReason = (content: any): content is PosterSchema => {
-  console.log("Content: ", content);
   const parsedContent: PosterEventContent = JSON.parse(content);
 
-  if (parsedContent.table !== "reason") {
-    return false;
-  }
-
-  return true;
+  return parsedContent.table === "reason";
 };
 
 const isAssessment = (content: any): content is PosterSchema => {
   const parsedContent: PosterEventContent = JSON.parse(content);
 
-  if (parsedContent.table !== "assess") {
-    return false;
-  }
-
-  return true;
+  return parsedContent.table === "assess";
 };

@@ -1,24 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import { DataXl } from '@daohaus/ui';
-import { formatPeriods, nowInSeconds } from '@daohaus/utils';
+import { DataXl } from "@daohaus/ui";
+import { formatPeriods, nowInSeconds } from "@daohaus/utils";
 
 export const Countdown = ({
   claimPeriod,
   lastClaimed,
 }: {
-  claimPeriod: string;
-  lastClaimed: string;
+  claimPeriod: bigint;
+  lastClaimed: bigint;
 }) => {
-  const [timeLeft, setTimeLeft] = useState<string | 0>('');
+  const [timeLeft, setTimeLeft] = useState<string | 0>("");
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(
         formatPeriods(
-          Math.floor(
-            Number(claimPeriod) + Number(lastClaimed) - nowInSeconds()
-          ).toString()
+          BigInt(claimPeriod + lastClaimed - BigInt(nowInSeconds())).toString()
         )
       );
     }, 1000);
@@ -26,5 +24,5 @@ export const Countdown = ({
     return () => clearInterval(timer);
   }, []);
 
-  return <DataXl style={{ marginBottom: '2rem' }}>{timeLeft}</DataXl>;
+  return <DataXl style={{ marginBottom: "2rem" }}>{timeLeft}</DataXl>;
 };

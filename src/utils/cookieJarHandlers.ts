@@ -1,6 +1,25 @@
-import { Initializer, ListInitializer } from "../hooks/useCookieJarFactory";
-import { ethers, utils } from "ethers";
+import { parseAbiParameters } from "abitype";
 import { Event, IdbStorage, Indexer } from "chainsauce-web";
+import { keccak256, stringToBytes, decodeAbiParameters } from "viem";
+
+export interface CookieJarInitializer {
+  safeTarget: string;
+  cookieAmount: bigint;
+  periodLength: bigint;
+  cookieToken: string;
+}
+
+export interface ListInitializer extends CookieJarInitializer {
+  allowList: string[];
+}
+
+export type Initializer = CookieJarInitializer | ListInitializer;
+
+export type Details = {
+  type: string;
+  name: string;
+  description?: string;
+};
 
 export type SummonEvent = {
   id: string;
@@ -25,7 +44,7 @@ export type Cookie = {
   jarUid: string;
   cookieUid: string;
   reasonTag: string;
-  amount: string;
+  amount: bigint;
 };
 
 const calculateReasonTag = async (
@@ -46,8 +65,8 @@ const calculateReasonTag = async (
     return "";
   }
 
-  const reasonTag = ethers.utils.keccak256(
-    utils.toUtf8Bytes(`CookieJar.${cookieJar[0].id}.reason.${event.args._uid}`)
+  const reasonTag = keccak256(
+    stringToBytes(`CookieJar.${cookieJar[0].id}.reason.${event.args._uid}`)
   );
 
   console.log(
@@ -105,14 +124,16 @@ export const parseSummonEvent = (event: Event) => {
   }
 
   let initParams: Initializer;
-  const iface = new ethers.utils.Interface(["function setUp(bytes)"]);
 
   switch (_details.type) {
     case "6551":
       console.log("Found 6551 initializer");
-      const decoded = iface.decodeFunctionData("setUp(bytes)", initializer);
-      const decodedSetUp = ethers.utils.defaultAbiCoder.decode(
-        ["address", "uint256", "uint256", "address", "address[]"],
+      const decoded = decodeAbiParameters(
+        parseAbiParameters("bytes"),
+        initializer
+      );
+      const decodedSetUp = decodeAbiParameters(
+        parseAbiParameters("address, uint256, uint256, address, address[]"),
         decoded[0]
       );
 

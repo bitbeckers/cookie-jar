@@ -77,7 +77,7 @@ export const APP_FIELD: Record<string, CustomFieldLego> = {
     gateLabel: "Donate to the devs",
     components: [
       {
-        id: "donationAmount",
+        id: "proposalOffering",
         type: "toWeiInput",
         label: "Donation Amount",
         defaultValue: 0,

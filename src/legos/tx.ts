@@ -21,7 +21,7 @@ export const APP_TX = {
       },
     ],
   },
-  CREATENFTJAR: {
+  CREATE_NFT_JAR: {
     id: "CREATENFTJAR",
     contract: APP_CONTRACT.COOKIENFT,
     method: "cookieMint",
@@ -32,11 +32,11 @@ export const APP_TX = {
       ".formValues.cookieAmount",
       ".formValues.cookieToken",
       ".formValues.donationToken",
-      ".formValues.donationAmount",
+      ".formValues.proposalOffering",
       ".formValues.allowList",
     ],
     overrides: {
-      value: ".formValues.donationAmount",
+      value: ".formValues.proposalOffering",
     },
   },
   COOKIEJARTARGET: {

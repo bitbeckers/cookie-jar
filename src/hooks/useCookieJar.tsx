@@ -1,13 +1,15 @@
 import { useQuery } from "react-query";
 
-import { createContract } from "@daohaus/tx-builder";
 import { ValidNetwork, Keychain } from "@daohaus/keychain-utils";
 
-import CookieJarAbi from "../abis/CookieJarCore.json";
+import { CookieJarCore } from "../abis";
 import { CookieJar } from "../utils/cookieJarHandlers";
 import { useEffect, useMemo, useState } from "react";
 import { useIndexer } from "./useIndexer";
 import { useDHConnect } from "@daohaus/connect";
+import { createViemClient } from "@daohaus/utils";
+import { Abi, getContract } from "viem";
+
 // fetch user cookie claim data from the blockchain
 const fetchUserClaim = async ({
   cookieJarAddress,
@@ -23,29 +25,66 @@ const fetchUserClaim = async ({
   if (!cookieJarAddress || !chainId) {
     throw new Error("No cookie jar address provided");
   }
-  const cookieContract = createContract({
-    address: cookieJarAddress,
-    abi: CookieJarAbi,
+
+  const client = createViemClient({
     chainId,
     rpcs,
   });
 
-  try {
-    const lastClaimed = await cookieContract.claims(userAddress); // get last claimed timestamp for user
-    const claimAmt = await cookieContract.cookieAmount(); // get amount of cookie token to claim
-    const claimPeriod = await cookieContract.periodLength(); // get the period length for claims
-    const cookieToken = await cookieContract.cookieToken(); // get the cookie token address
-    const isMember = await cookieContract.isAllowList(userAddress); // get the cookie token address
+  const contract = {
+    address: cookieJarAddress as `0x${string}`,
+    abi: CookieJarCore as Abi,
+  };
 
-    const target = await cookieContract.owner(); // get the target safe address
-    const canClaim = await cookieContract.canClaim(userAddress); // todo: check if user is on isAllowList(userAddress)
+  try {
+    const [
+      lastClaimed,
+      claimAmt,
+      claimPeriod,
+      cookieToken,
+      isMember,
+      target,
+      canClaim,
+    ] = await Promise.all([
+      client.readContract({
+        ...contract,
+        functionName: "lastClaimed",
+        args: [userAddress],
+      }),
+      client.readContract({
+        ...contract,
+        functionName: "cookieAmount",
+      }),
+      client.readContract({
+        ...contract,
+        functionName: "periodLength",
+      }),
+      client.readContract({
+        ...contract,
+        functionName: "cookieToken",
+      }),
+      client.readContract({
+        ...contract,
+        functionName: "isAllowlist",
+        args: [userAddress],
+      }),
+      client.readContract({
+        ...contract,
+        functionName: "owner",
+      }),
+      client.readContract({
+        ...contract,
+        functionName: "canClaim",
+        args: [userAddress],
+      }),
+    ]);
 
     return {
-      lastClaimed: lastClaimed.toString() as string,
-      claimAmt: claimAmt.toString() as string,
-      claimPeriod: claimPeriod.toString() as string,
-      cookieToken: cookieToken.toString() as string,
-      target: target.toString() as string,
+      lastClaimed: lastClaimed as bigint,
+      claimAmt: claimAmt as bigint,
+      claimPeriod: claimPeriod as bigint,
+      cookieToken: cookieToken as string,
+      target: target as string,
       canClaim: canClaim as boolean,
       isMember: isMember as boolean,
     };
@@ -63,7 +102,7 @@ export const useCookieJar = ({
   cookieJarId?: string;
   rpcs?: Keychain;
 }) => {
-  const { address, chainId, isConnected } = useDHConnect();
+  const { address, chainId } = useDHConnect();
 
   const { getJarById } = useIndexer();
   const [cookieJar, setCookieJar] = useState<Partial<CookieJar>>();

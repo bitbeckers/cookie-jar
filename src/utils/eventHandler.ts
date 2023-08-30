@@ -6,7 +6,7 @@ import {
   Cookie,
 } from "./cookieJarHandlers";
 import { PosterSchema, parseNewPostEvent } from "./posterHandlers";
-import COOKIEJAR_CORE_ABI from "../abis/CookieJarCore.json";
+import { CookieJarCore } from "../abis";
 
 const storeOrUpdateCookie = async (storage: IdbStorage, event: Cookie) => {
   if (!storage.db) {
@@ -46,7 +46,7 @@ const storeCookieJar = async (
       .then(() =>
         indexer.subscribe(
           cookieJar.address,
-          COOKIEJAR_CORE_ABI,
+          CookieJarCore,
           "gnosis",
           blockNumber
         )
