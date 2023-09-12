@@ -1,6 +1,7 @@
-import { Avatar, Card, ParMd } from "@daohaus/ui";
+import { AddressDisplay, Avatar, Card, ParMd } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";
 import { useProfile } from "@daohaus/moloch-v3-hooks";
+import { useTargets } from "../hooks/useTargets";
 import { BigNumberish, ethers } from "ethers";
 /**
  * Represents a leaderboard record.
@@ -27,6 +28,7 @@ export const LeaderBoardCard = ({ record }: { record: LBRecord }) => {
   const { profile } = useProfile({
     address: record.user,
   });
+  const target = useTargets();
 
   return (
     <div style={{ marginBottom: "3rem", width: "50%" }}>
@@ -41,7 +43,12 @@ export const LeaderBoardCard = ({ record }: { record: LBRecord }) => {
           </ParMd>
         )}
         {/* Display the user's address */}
-        <ParMd style={{ marginBottom: "2rem" }}>{record?.user}</ParMd>
+        <AddressDisplay
+                address={record?.user}
+                truncate
+                copy
+                explorerNetworkId={target?.CHAIN_ID}
+              />
         {/* Display the user's cookie count */}
         <ParMd style={{ marginBottom: "1rem" }}>
           <img src={cookie} alt="cookie" height={"20px"} />{" "}

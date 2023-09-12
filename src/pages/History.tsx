@@ -1,4 +1,10 @@
-import { BiColumnLayout, ParMd, SingleColumnLayout } from "@daohaus/ui";
+import {
+  BiColumnLayout,
+  Card,
+  ParMd,
+  SingleColumnLayout,
+  widthQuery,
+} from "@daohaus/ui";
 
 import { HistoryCard } from "../components/HistoryCard";
 import { LeaderBoardCard } from "../components/LeaderBoardCard";
@@ -8,6 +14,19 @@ import { useMemo } from "react";
 import { groupBy } from "lodash";
 import { useQuery } from "react-query";
 import { BigNumber } from "ethers";
+import styled from "styled-components";
+import { StyledRouterLink } from "../components/Layout";
+
+const CardContainer = styled(Card)`
+  padding: 3rem;
+  width: 100%;
+  border: none;
+  margin-bottom: 3rem;
+  @media ${widthQuery.lg} {
+    max-width: 100%;
+    min-width: 0;
+  }
+`;
 
 export const History = () => {
   const { cookieJarId } = useParams();
@@ -44,7 +63,7 @@ export const History = () => {
   console.log({ cookies });
 
   return (
-    <>
+    <SingleColumnLayout>
       {!cookies && <ParMd style={{ marginBottom: "1rem" }}>Loading...</ParMd>}
 
       <BiColumnLayout
@@ -53,17 +72,18 @@ export const History = () => {
             <ParMd style={{ marginBottom: "1rem" }}>
               History (newer first)
             </ParMd>
-
-            {cookies &&
-              cookies.map((record, idx) => (
-                <HistoryCard record={record} key={idx} />
-              ))}
+            <CardContainer>
+              {cookies &&
+                cookies.map((record, idx) => (
+                  <HistoryCard record={record} key={idx} />
+                ))}
+            </CardContainer>
           </SingleColumnLayout>
         }
         right={
           <SingleColumnLayout>
             <ParMd style={{ marginBottom: "1rem" }}>Leader Board</ParMd>
-            {leaderBoardCards}
+            <CardContainer>{leaderBoardCards}</CardContainer>
           </SingleColumnLayout>
         }
         subtitle={
@@ -73,6 +93,9 @@ export const History = () => {
         }
         title="History and Stats"
       />
-    </>
+      <StyledRouterLink to={`/claims/${cookieJarId || ""}`}>
+        New Claim
+      </StyledRouterLink>
+    </SingleColumnLayout>
   );
 };
