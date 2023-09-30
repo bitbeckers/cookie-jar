@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 
-import { ValidNetwork, Keychain } from "@daohaus/keychain-utils";
+import { ValidNetwork } from "@daohaus/keychain-utils";
 
 import { CookieJarCore } from "../abis";
 import { useIndexer } from "./useIndexer";

@@ -1,8 +1,9 @@
-import { PublicClient } from "viem";
+import { PublicClient, decodeEventLog } from "viem";
 import { db, CookieDB } from "./db";
-import { AbiEvent } from "abitype";
+import { AbiEvent, parseAbi, parseAbiItem } from "abitype";
 import { EventHandlers, getEventHandler } from "./eventHandlers";
 import { debounce } from "lodash";
+import { postHandler } from "./posterHandlers";
 
 interface CookieJarIndexerInterface {
   db: CookieDB;
@@ -48,6 +49,7 @@ class CookieJarIndexer implements CookieJarIndexerInterface {
     console.log(subscriptions);
 
     try {
+      // Get cookie jars and claim events
       await Promise.all(
         subscriptions.map(async (s) => {
           if (s.lastBlock >= currentBlock) {
@@ -73,7 +75,9 @@ class CookieJarIndexer implements CookieJarIndexerInterface {
               `Got event for ${s.address} on ${s.event.name}`,
               events
             );
-            await Promise.all(events.map(async (e) => eventHandler(e, this._publicClient)));
+            await Promise.all(
+              events.map(async (e) => eventHandler(e, this._publicClient))
+            );
           }
 
           //TODO debounce/throttle this; currently calls update 3x
@@ -82,8 +86,55 @@ class CookieJarIndexer implements CookieJarIndexerInterface {
           });
         })
       );
+
+      // Get Poster (0x000000000000cd17345801aa8147b8d3950260ff) events for cookie jars
+      const cookieJars = (await this.db.cookieJars.toArray()).map(
+        (jar) => jar.address as `0x${string}`
+      );
+      const posterState = await this.db.keyvals.get("posterState");
+
+      if (posterState) {
+        console.log(`Getting posts from ${posterState.lastBlock}`);
+        const posts = await this._publicClient.getLogs({
+          address: "0x000000000000cd17345801aa8147b8d3950260ff",
+          event: parseAbiItem(
+            "event NewPost(address indexed user, string content, string indexed tag)"
+          ),
+          args: {
+            user: cookieJars,
+          },
+          fromBlock: posterState.lastBlock,
+        });
+
+        if (posts.length === 0) {
+          console.log(`No new posts`);
+        } else {
+          console.log(`Got posts`, posts);
+          await Promise.all(
+            posts.map(async (post) => {
+              const decoded = decodeEventLog({
+                abi: parseAbi([
+                  "event NewPost(address indexed user, string content, string indexed tag)",
+                ]),
+                data: post.data,
+                topics: post.topics,
+              });
+              postHandler(
+                decoded.args.user, //user
+                decoded.args.tag, //tag
+                decoded.args.content, //content
+                this._publicClient
+              );
+            })
+          );
+        }
+
+        await this.db.keyvals.update("posterState", {
+          lastBlock: currentBlock,
+        });
+      }
     } catch (e) {
-      console.error("Failed to update subscriptions", e);
+      console.error("Failed to update", e);
     } finally {
       this.updating = false;
     }

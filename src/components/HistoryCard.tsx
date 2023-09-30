@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { Avatar, Badge, Card, ParMd } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";
 import { useProfile } from "@daohaus/moloch-v3-hooks";
-import { Cookie } from "../utils/indexer/db";
+import { Cookie, Reason, db } from "../utils/indexer/db";
+import { useEffect, useState } from "react";
 
 const DootBox = styled.div`
   display: flex;
@@ -22,6 +23,7 @@ const DootBox = styled.div`
  * @param {string} props.record.link - The link to the history record.
  */
 export const HistoryCard = ({ record }: { record: Cookie }) => {
+  const [reason, setReason] = useState<Reason>();
   const { profile: cookieGiver } = useProfile({
     address: record.cookieGiver,
   });
@@ -29,6 +31,20 @@ export const HistoryCard = ({ record }: { record: Cookie }) => {
   const { profile: cookieMonster } = useProfile({
     address: record.cookieMonster,
   });
+
+  useEffect(() => {
+    const fetchReason = async () => {
+      console.log("Fetching reason: ", record.reasonTag);
+      const res = await db.reasons.get({ tag: record.reasonTag });
+      if (!res) {
+        return;
+      }
+      console.log("Reason: ", res);
+      setReason(res);
+    };
+
+    fetchReason();
+  }, [record.reasonTag]);
 
   return (
     <div style={{ marginBottom: "3rem", width: "70%" }}>
@@ -57,7 +73,7 @@ export const HistoryCard = ({ record }: { record: Cookie }) => {
         )}
         <ParMd style={{ marginBottom: "1rem" }}>
           <img src={cookie} alt="cookie" height={"20px"} />{" "}
-          {"No reason provided."}
+          {reason ? reason.description : "No reason provided."}
         </ParMd>
 
         <DootBox style={{ fontSize: "2rem", marginTop: "1rem" }}>

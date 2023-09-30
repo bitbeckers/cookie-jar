@@ -1,98 +1,103 @@
-// type PosterEventContent = {
-//   title: string;
-//   user: string;
-//   receiver: string;
-//   description: string;
-//   link: string;
-//   table: string;
-//   queryType: string;
-// };
+import { db } from "./db";
+import { hexToString, trim } from "viem";
 
-// export type PosterSchema = {
-//   table: "reason" | "assess";
-//   name: string;
-//   description?: string;
-//   link?: string;
-//   user?: string;
-//   receiver?: string;
-//   tag: string;
-// };
+type PosterEventContent = {
+  title: string;
+  user: string;
+  receiver: string;
+  description: string;
+  link: string;
+  table: string;
+  queryType: string;
+};
 
-// export const parseNewPostEvent = async (event: Event) => {
-//   // NewPost (index_topic_1 address user, string content, index_topic_2 string tag)
-//   const { tag, content } = event.args;
-//   console.log("Event: ", event);
+export type PosterSchema = {
+  table: "reason" | "assess";
+  title: string;
+  description: string;
+  link: string;
+  user: string;
+  receiver: string;
+  tag: string;
+};
 
-//   const cookieJar = await indexer.storage.db
-//     ?.getAll("cookieJars")
-//     ?.then((jars) =>
-//       jars.filter(
-//         (jar) => jar?.address.toLowerCase() === event.address.toLowerCase()
-//       )
-//     );
+export const postHandler = async (
+  user: string,
+  tag: string,
+  data: string,
+  publicClient: any
+) => {
+  const parsedContent = await parseNewPostEvent(user, tag, data);
+  console.log("Parsed Content: ", parsedContent);
+  if (!parsedContent) {
+    return;
+  }
+  await db.reasons.put(parsedContent, parsedContent.tag);
+};
 
-//   if (!cookieJar) {
-//     console.log("CookieJar for event not found.");
-//     return undefined;
-//   }
+export const parseNewPostEvent = async (
+  user: string,
+  tag: string,
+  content: string
+) => {
+  // NewPost (index_topic_1 address user, string content, index_topic_2 string tag)
+  const parsedContent = processPosterContent(content, tag);
 
-//   const parsedContent = processPosterContent(content, tag.hash);
+  if (!parsedContent) {
+    return undefined;
+  }
 
-//   if (!parsedContent) {
-//     return undefined;
-//   }
+  console.log("Parsed Content: ", parsedContent);
+  return parsedContent;
+};
 
-//   console.log("Parsed Content: ", parsedContent);
-//   return parsedContent;
-// };
+// emit NewPost(msg.sender, content, tag);
+const processPosterContent = (content: string, tag: string) => {
+  if (isReason(content)) {
+    return processReasonContent(content, tag);
+  }
 
-// // emit NewPost(msg.sender, content, tag);
-// const processPosterContent = (content: string, tag: string) => {
-//   if (isReason(content)) {
-//     return processReasonContent(content, tag);
-//   }
+  if (isAssessment(content)) {
+    return processAssessContent(content, tag);
+  }
+};
 
-//   if (isAssessment(content)) {
-//     return processAssessContent(content, tag);
-//   }
-// };
+const processReasonContent = (content: string, tag: string): PosterSchema => {
+  const parsedContent: PosterEventContent = JSON.parse(content);
 
-// const processReasonContent = (content: string, tag: string): PosterSchema => {
-//   const parsedContent: PosterEventContent = JSON.parse(content);
+  return {
+    table: "reason",
+    title: parsedContent.title,
+    description: parsedContent.description,
+    link: parsedContent.link,
+    user: parsedContent.user,
+    receiver: parsedContent.receiver,
+    tag: tag,
+  };
+};
 
-//   return {
-//     table: "reason",
-//     name: parsedContent.title,
-//     description: parsedContent.description,
-//     link: parsedContent.link,
-//     user: parsedContent.user,
-//     receiver: parsedContent.receiver,
-//     tag: tag,
-//   };
-// };
+const processAssessContent = (content: string, tag: string): PosterSchema => {
+  const parsedContent: PosterEventContent = JSON.parse(content);
 
-// const processAssessContent = (content: string, tag: string): PosterSchema => {
-//   const parsedContent: PosterEventContent = JSON.parse(content);
+  return {
+    table: "assess",
+    title: parsedContent.title,
+    description: parsedContent.description,
+    link: parsedContent.link,
+    user: parsedContent.user,
+    receiver: parsedContent.receiver,
+    tag: tag,
+  };
+};
 
-//   return {
-//     table: "assess",
-//     name: parsedContent.title,
-//     description: parsedContent.description,
-//     link: parsedContent.link,
-//     user: parsedContent.user,
-//     receiver: parsedContent.receiver,
-//     tag: tag,
-//   };
-// };
+const isReason = (content: any): content is PosterSchema => {
+  const parsedContent = JSON.parse(content);
 
-// const isReason = (content: any): content is PosterSchema => {
-//   const parsedContent: PosterEventContent = JSON.parse(content);
+  return parsedContent.table === "reason";
+};
 
-//   return parsedContent.table === "reason";
-// };
+const isAssessment = (content: any): content is PosterSchema => {
+  const parsedContent = JSON.parse(content);
 
-// const isAssessment = (content: any): content is PosterSchema => {
-//   const parsedContent: PosterEventContent = JSON.parse(content);
-
-//   return parsedContent.table === "assess";
-// };
+  return parsedContent.table === "assess";
+};

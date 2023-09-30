@@ -5,6 +5,8 @@ import {
   decodeAbiParameters,
   decodeFunctionData,
   PublicClient,
+  stringToBytes,
+  keccak256,
 } from "viem";
 
 export type EventHandlers = "StoreCookieJar" | "StoreCookie";
@@ -142,16 +144,13 @@ const storeCookie = async (giveCookieLog: Log, publicClient: PublicClient) => {
     return;
   }
 
-  const tx = await publicClient.getTransaction({
-    hash: giveCookieLog.transactionHash!,
-  });
-
   const cookie = {
     jarUid: cookieJar.jarUid,
     cookieGiver: giveCookieLog.data,
     cookieMonster,
     cookieUid: _uid,
     amount,
+    reasonTag: await calculateReasonTag(cookieJar.jarUid, _uid),
   } as Cookie;
 
   console.log("Found cookie: ", cookie);
@@ -201,3 +200,12 @@ export const getEventHandler = (handler: EventHandlers) => {
 //     console.error("Failed to store reason", e);
 //   }
 // };
+
+const calculateReasonTag = async (cookieJarUid: string, cookieUid: string) => {
+  const reasonTag = keccak256(
+    stringToBytes(`CookieJar.${cookieJarUid}.reason.${cookieUid}`)
+  );
+
+  console.log(`Calculated reasonTag: ${reasonTag} for cookie ${cookieUid}`);
+  return reasonTag;
+};

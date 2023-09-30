@@ -17,6 +17,14 @@ const useIndexer = () => {
       // check if the indexer has not been initialized
       const indexer = new CookieJarIndexer(publicClient!);
       setIndexer(indexer);
+
+      // Subscribe to Poster
+      if (!(await db.keyvals.get("posterState")) && addresses) {
+        await db.keyvals.add(
+          { lastBlock: BigInt(addresses.START_BLOCK) },
+          "posterState"
+        );
+      }
     };
 
     if (publicClient && !indexer) {
@@ -36,37 +44,11 @@ const useIndexer = () => {
         BigInt(addresses.START_BLOCK),
         "StoreCookieJar"
       );
-
-      // Subscribe to Poster
-      // indexer.subscribe(
-      //   addresses?.POSTER_ADDRESS as `0x${string}`,
-      //   Poster as Abi,
-      //   "NewPost",
-      //   BigInt(addresses.START_BLOCK)
-      // );
     }
   }, [addresses, indexer]);
 
   const cookieJars = useLiveQuery(() => db.cookieJars.toArray());
   const cookies = useLiveQuery(() => db.cookies.toArray());
-
-  // const getCookiesByJarReasontag = async (reasonTag: string) => {
-  //   if (!indexer) return undefined;
-  //   const db = indexer.storage.db;
-  //   const cookies: Cookie[] | undefined = await db?.getAll("cookies");
-  //   const filteredCookies = cookies?.filter(
-  //     (cookie) => cookie?.reasonTag === reasonTag
-  //   );
-  //   console.log("FILTERED COOKIES: ", filteredCookies);
-  //   return filteredCookies;
-  // };
-
-  // const getReasonByTag = async (tag: string) => {
-  //   if (!indexer) return undefined;
-  //   const db = indexer.storage.db;
-  //   const cookies: PosterSchema[] | undefined = await db?.getAll("reasons");
-  //   return cookies?.filter((reason) => reason?.tag === tag);
-  // };
 
   return {
     indexer,
