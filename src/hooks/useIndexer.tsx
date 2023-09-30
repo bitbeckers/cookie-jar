@@ -1,121 +1,78 @@
-import { useEffect, useRef, useState } from "react";
-import { useDHConnect } from "@daohaus/connect";
+import { useEffect, useState } from "react";
 import { useTargets } from "./useTargets";
-import { Cookie, CookieJar } from "../utils/cookieJarHandlers";
-import { handleEvent } from "../utils/eventHandler";
-import CookieJarIndexer from "../utils/CookieJarIndexer";
-import { PosterSchema } from "../utils/posterHandlers";
-import { Poster, CookieJarFactory } from "../abis";
-import { Abi } from "viem";
+import CookieJarIndexer from "../utils/indexer/CookieJarIndexer";
+import { parseAbiItem } from "abitype";
+import { useLiveQuery } from "dexie-react-hooks";
+import { useDHConnect } from "@daohaus/connect";
+import { db } from "../utils/indexer";
 
 const useIndexer = () => {
-  const { publicClient } = useDHConnect();
   const [indexer, setIndexer] = useState<CookieJarIndexer | undefined>();
   const addresses = useTargets();
-  const initialized = useRef(false); // add a useRef hook to keep track of whether the indexer has been initialized
-
-  const storageEntities = ["cookieJars", "cookies", "reasons"];
+  const { publicClient } = useDHConnect();
 
   useEffect(() => {
     const initIndexer = async () => {
-      if (publicClient && !initialized.current) {
-        // check if the indexer has not been initialized
-        const indexer = new CookieJarIndexer(
-          storageEntities,
-          "https://rpc.ankr.com/gnosis",
-          handleEvent
-        );
-        await indexer.init();
-        setIndexer(indexer);
-        initialized.current = true; // set initialized to true
-      }
+      console.log("set up");
+      // check if the indexer has not been initialized
+      const indexer = new CookieJarIndexer(publicClient!);
+      setIndexer(indexer);
     };
 
-    initIndexer();
-  }, [publicClient]);
+    if (publicClient && !indexer) {
+      initIndexer();
+    }
+  }, []);
 
   useEffect(() => {
     if (addresses && indexer) {
+      console.log("Registering initial subscriptions...");
       // Subscribe to Cookie Jar Factory
       indexer.subscribe(
-        addresses?.COOKIEJAR_FACTORY_ADDRESS,
-        CookieJarFactory as Abi,
-        addresses.CHAIN_ID,
-        addresses.START_BLOCK
+        addresses?.COOKIEJAR_FACTORY_ADDRESS as `0x${string}`,
+        parseAbiItem(
+          "event SummonCookieJar(address cookieJar, bytes initializer, string details, string uid)"
+        ),
+        BigInt(addresses.START_BLOCK),
+        "StoreCookieJar"
       );
 
       // Subscribe to Poster
-      indexer.subscribe(
-        addresses?.POSTER_ADDRESS,
-        Poster as Abi,
-        addresses.CHAIN_ID,
-        addresses.START_BLOCK
-      );
+      // indexer.subscribe(
+      //   addresses?.POSTER_ADDRESS as `0x${string}`,
+      //   Poster as Abi,
+      //   "NewPost",
+      //   BigInt(addresses.START_BLOCK)
+      // );
     }
   }, [addresses, indexer]);
 
-  const getJars = async () => {
-    if (!indexer) return;
-    const db = indexer.storage.db;
-    return db?.getAll("cookieJars") as Promise<CookieJar[]>;
-  };
+  const cookieJars = useLiveQuery(() => db.cookieJars.toArray());
+  const cookies = useLiveQuery(() => db.cookies.toArray());
 
-  const getJarById = async (jarId: string) => {
-    if (!indexer) return;
-    const db = indexer.storage.db;
-    const jars: CookieJar[] | undefined = await db?.getAll("cookieJars");
-    return jars?.filter((jar) => jar?.id === jarId);
-  };
+  // const getCookiesByJarReasontag = async (reasonTag: string) => {
+  //   if (!indexer) return undefined;
+  //   const db = indexer.storage.db;
+  //   const cookies: Cookie[] | undefined = await db?.getAll("cookies");
+  //   const filteredCookies = cookies?.filter(
+  //     (cookie) => cookie?.reasonTag === reasonTag
+  //   );
+  //   console.log("FILTERED COOKIES: ", filteredCookies);
+  //   return filteredCookies;
+  // };
 
-  const getJarByAddress = async (address: string) => {
-    if (!indexer) return;
-    const db = indexer.storage.db;
-    const jars: CookieJar[] | undefined = await db?.getAll("cookieJars");
-    return jars?.filter(
-      (jar) => jar?.address.toLowerCase() === address.toLowerCase()
-    );
-  };
-
-  const getCookies = async () => {
-    if (!indexer) return;
-    const db = indexer.storage.db;
-    return db?.getAll("cookies") as Promise<Cookie[]>;
-  };
-
-  const getCookiesByJarId = async (jarId: string) => {
-    if (!indexer) return undefined;
-    const db = indexer.storage.db;
-    const cookies: Cookie[] | undefined = await db?.getAll("cookies");
-    return cookies?.filter((cookie) => cookie.jarUid === jarId);
-  };
-
-  const getCookiesByJarReasontag = async (reasonTag: string) => {
-    if (!indexer) return undefined;
-    const db = indexer.storage.db;
-    const cookies: Cookie[] | undefined = await db?.getAll("cookies");
-    const filteredCookies = cookies?.filter(
-      (cookie) => cookie?.reasonTag === reasonTag
-    );
-    console.log("FILTERED COOKIES: ", filteredCookies);
-    return filteredCookies;
-  };
-
-  const getReasonByTag = async (tag: string) => {
-    if (!indexer) return undefined;
-    const db = indexer.storage.db;
-    const cookies: PosterSchema[] | undefined = await db?.getAll("reasons");
-    return cookies?.filter((reason) => reason?.tag === tag);
-  };
+  // const getReasonByTag = async (tag: string) => {
+  //   if (!indexer) return undefined;
+  //   const db = indexer.storage.db;
+  //   const cookies: PosterSchema[] | undefined = await db?.getAll("reasons");
+  //   return cookies?.filter((reason) => reason?.tag === tag);
+  // };
 
   return {
     indexer,
-    getJars,
-    getJarById,
-    getJarByAddress,
-    getCookies,
-    getCookiesByJarId,
-    getCookiesByJarReasontag,
-    getReasonByTag,
+    client: publicClient,
+    cookieJars,
+    cookies,
   };
 };
 

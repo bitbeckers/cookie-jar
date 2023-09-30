@@ -3,39 +3,26 @@ import { BiColumnLayout, ParMd, SingleColumnLayout } from "@daohaus/ui";
 import { HistoryCard } from "../components/HistoryCard";
 import { LeaderBoardCard } from "../components/LeaderBoardCard";
 import { useParams } from "react-router-dom";
-import { useIndexer } from "../hooks/useIndexer";
-import { useMemo } from "react";
 import { groupBy } from "lodash";
-import { useQuery } from "react-query";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "../utils/indexer";
 
 export const History = () => {
   const { cookieJarId } = useParams();
-  const { getCookiesByJarId } = useIndexer();
 
-  const { data: cookies, isLoading } = useQuery({
-    queryKey: ["cookies", cookieJarId],
-    queryFn: () => getCookiesByJarId(cookieJarId || ""),
-    enabled: !!cookieJarId,
-    refetchInterval: 3000,
-  });
+  const cookies = useLiveQuery(
+    () => db.cookies.where("jarUid").equals(cookieJarId!).toArray(),
+    [cookieJarId]
+  );
 
-  const leaderBoardCards = useMemo(() => {
-    if (!cookies) return [];
+  const groupedCookies = groupBy(cookies, "cookieMonster");
 
-    const groupedCookies = groupBy(cookies, "cookieMonster");
-
-    const leaderboard = Object.entries(groupedCookies)
-      .map(([monster, monsterCookies]) => ({
-        user: monster,
-        count: monsterCookies.reduce((acc, cookie) => acc + cookie.amount, 0n),
-      }))
-      .sort((a, b) => (b.count > a.count ? -1 : 1));
-    console.log("Leaderboard", leaderboard);
-
-    return leaderboard.map((record, idx) => (
-      <LeaderBoardCard record={record} key={idx} />
-    ));
-  }, [cookies, isLoading]);
+  const leaderboard = Object.entries(groupedCookies)
+    .map(([monster, monsterCookies]) => ({
+      user: monster,
+      count: monsterCookies.reduce((acc, cookie) => acc + cookie.amount, 0n),
+    }))
+    .sort((a, b) => (b.count > a.count ? -1 : 1));
 
   console.log({ cookies });
 
@@ -59,7 +46,9 @@ export const History = () => {
         right={
           <SingleColumnLayout>
             <ParMd style={{ marginBottom: "1rem" }}>Leader Board</ParMd>
-            {leaderBoardCards}
+            {leaderboard.map((record, idx) => (
+              <LeaderBoardCard record={record} key={idx} />
+            ))}
           </SingleColumnLayout>
         }
         subtitle={

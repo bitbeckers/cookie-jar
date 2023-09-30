@@ -3,14 +3,14 @@ import cookie from "../assets/cookie.png";
 import { ZERO_ADDRESS, formatPeriods } from "@daohaus/utils";
 import { StyledRouterLink } from "./Layout";
 import { useTargets } from "../hooks/useTargets";
-import { CookieJar } from "../utils/cookieJarHandlers";
 import { useCookieJar } from "../hooks/useCookieJar";
+import { CookieJar } from "../utils/indexer/db";
 /**
 
  */
 export const JarCard = ({ record }: { record: CookieJar }) => {
   const target = useTargets();
-  const { isMember } = useCookieJar({ cookieJarId: record.id });
+  const { isMember } = useCookieJar({ cookieJarId: record.jarUid });
 
   return (
     <div style={{ marginBottom: "3rem" }}>
@@ -63,12 +63,14 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
         </ParMd>
         <ParMd style={{ marginBottom: ".4rem" }}>
           Go to{" "}
-          <StyledRouterLink to={`/claims/${record.id}`}>Claim</StyledRouterLink>{" "}
+          <StyledRouterLink to={`/claims/${record.jarUid}`}>
+            Claim
+          </StyledRouterLink>{" "}
           to claim your tokens.
         </ParMd>
         <ParMd style={{ marginBottom: ".4rem" }}>
           Go to{" "}
-          <StyledRouterLink to={`/history/${record.id}`}>
+          <StyledRouterLink to={`/history/${record.jarUid}`}>
             History
           </StyledRouterLink>{" "}
           to inspect the crumbles.

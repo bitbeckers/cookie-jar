@@ -8,16 +8,16 @@ import { Buffer } from "buffer";
 
 import { Routes } from "./Routes";
 import { DEFAULT_TARGET } from "./targetDao";
+import { gnosis } from "viem/chains";
 
 import "./App.css";
+import { CookieJarIndexer } from "./utils/indexer";
 
 // This solves an issue when using WalletConnect and intercept Txs to create dao proposals
 // Related open issue: https://github.com/WalletConnect/walletconnect-monorepo/issues/748
 window.Buffer = window.Buffer || Buffer;
 
 const queryClient = new QueryClient();
-
-console.log(process.env);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

@@ -4,9 +4,9 @@ import { H2, H3, ParMd, SingleColumnLayout } from "@daohaus/ui";
 import { HausAnimated } from "../components/HausAnimated";
 
 import { JarCard } from "../components/JarCard";
-import { useIndexer } from "../hooks/useIndexer";
-import { useQuery } from "react-query";
 import { StyledRouterLink } from "../components/Layout";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "../utils/indexer";
 
 const LinkBox = styled.div`
   display: flex;
@@ -15,21 +15,15 @@ const LinkBox = styled.div`
 `;
 
 export const Jars = () => {
-  const { getJars } = useIndexer();
-
-  const { data, isLoading } = useQuery({
-    queryKey: "jars",
-    queryFn: () => getJars(),
-    refetchInterval: 5000,
-  });
+  const cookieJars = useLiveQuery(() => db.cookieJars.toArray());
 
   return (
     <SingleColumnLayout>
       <H2>Jars</H2>
 
-      {!data && isLoading && <HausAnimated />}
+      {!cookieJars && <HausAnimated />}
 
-      {!data && !isLoading && (
+      {cookieJars && cookieJars.length === 0 && (
         <>
           <H3 style={{ marginBottom: "2.4rem" }}>No Jars found</H3>
           <ParMd style={{ marginBottom: "2.4rem" }}>
@@ -42,10 +36,17 @@ export const Jars = () => {
         </>
       )}
 
-      {data &&
-        !isLoading &&
-        data.length > 0 &&
-        data.map((jar) => <JarCard record={jar} key={jar.id} />)}
+      {cookieJars && cookieJars.length > 0 && (
+        <>
+          {cookieJars.map((jar) => (
+            <JarCard record={jar} key={jar.jarUid} />
+          ))}
+
+          <LinkBox>
+            <StyledRouterLink to="/create">Create New</StyledRouterLink>
+          </LinkBox>
+        </>
+      )}
     </SingleColumnLayout>
   );
 };

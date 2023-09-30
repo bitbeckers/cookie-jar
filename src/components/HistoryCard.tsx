@@ -3,9 +3,7 @@ import styled from "styled-components";
 import { Avatar, Badge, Card, ParMd } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";
 import { useProfile } from "@daohaus/moloch-v3-hooks";
-import { useIndexer } from "../hooks/useIndexer";
-import { useQuery } from "react-query";
-import { Cookie } from "../utils/cookieJarHandlers";
+import { Cookie } from "../utils/indexer/db";
 
 const DootBox = styled.div`
   display: flex;
@@ -24,20 +22,12 @@ const DootBox = styled.div`
  * @param {string} props.record.link - The link to the history record.
  */
 export const HistoryCard = ({ record }: { record: Cookie }) => {
-  const { getReasonByTag } = useIndexer();
   const { profile: cookieGiver } = useProfile({
     address: record.cookieGiver,
   });
 
   const { profile: cookieMonster } = useProfile({
     address: record.cookieMonster,
-  });
-
-  const { data: reason } = useQuery({
-    queryKey: ["reason", record.reasonTag],
-    queryFn: () => getReasonByTag(record.reasonTag),
-    enabled: !!record.reasonTag,
-    refetchInterval: 3000,
   });
 
   return (
@@ -67,7 +57,7 @@ export const HistoryCard = ({ record }: { record: Cookie }) => {
         )}
         <ParMd style={{ marginBottom: "1rem" }}>
           <img src={cookie} alt="cookie" height={"20px"} />{" "}
-          {reason ? reason[0]?.description : "No reason provided."}
+          {"No reason provided."}
         </ParMd>
 
         <DootBox style={{ fontSize: "2rem", marginTop: "1rem" }}>

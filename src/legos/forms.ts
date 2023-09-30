@@ -58,9 +58,7 @@ export const APP_FORM: Record<string, CustomFormLego> = {
     description:
       "You have not claimed your daily cookie yet. Claiming a cookie will send funds direct to you from the jar.",
     requiredFields: {
-      cookiePeriod: true,
-      cookieToken: true,
-      cookieAmount: true,
+      description: true,
     },
     tx: APP_TX.COOKIEJAR as TXLego,
     log: true,

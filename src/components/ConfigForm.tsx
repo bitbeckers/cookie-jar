@@ -32,7 +32,7 @@ export const ConfigForm = () => {
   const [isLoading2, setIsLoading] = useState(false);
   const [status, setStatus] = useState<null | StatusMsg>(null);
 
-  if (!target) return null;
+  if (!target || !cookieJarId) return null;
 
   const { cookieJar, data } = useCookieJar({
     cookieJarId: cookieJarId,

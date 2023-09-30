@@ -24,19 +24,12 @@ export const Claims = () => {
 
   const { cookieJarId } = useParams();
 
-  const {
-    cookieJar,
-    isLoading,
-    error,
-    data,
-    hasClaimed,
-    canClaim,
-    refetch,
-  } = useCookieJar({
-    cookieJarId: cookieJarId,
-  });
+  const { cookieJar, isLoading, error, data, hasClaimed, canClaim, refetch } =
+    useCookieJar({
+      cookieJarId: cookieJarId!,
+    });
 
-  const isGnosis = chainId === "0x64";
+  console.log({ cookieJarId, cookieJar, isLoading, error, data });
 
   if (!isConnected)
     return (
@@ -45,14 +38,6 @@ export const Claims = () => {
         description="You need to connect your wallet in order to see if you are eligable for a claim"
       />
     );
-  if (!isGnosis) {
-    return (
-      <DisplayClaim
-        heading="Connect to Gnosis Chain"
-        description="Cookie Jar is only on Gnosis Chain."
-      />
-    );
-  }
 
   if (isLoading)
     return (
@@ -157,7 +142,7 @@ export const Claims = () => {
             />
             <ParMd style={{ marginBottom: ".4rem" }}>
               Go to{" "}
-              <StyledRouterLink to={`/history/${cookieJar?.id}`}>
+              <StyledRouterLink to={`/history/${cookieJar?.jarUid}`}>
                 History
               </StyledRouterLink>{" "}
               to inspect the crumbles.

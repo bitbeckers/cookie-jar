@@ -19,6 +19,7 @@ export const ClaimDetails = ({
   claimPeriod: bigint;
   unit: string;
 }) => {
+  console.log("claimAmt", claimAmt);
   return (
     <DetailsBox>
       <DataIndicator

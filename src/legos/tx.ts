@@ -4,7 +4,7 @@ export const APP_TX = {
   COOKIEJAR: {
     id: "COOKIEJAR",
     contract: APP_CONTRACT.COOKIEJAR,
-    method: "reachInJar(address,string)",
+    method: "reachInJar",
     args: [
       ".formValues.receiver",
       {

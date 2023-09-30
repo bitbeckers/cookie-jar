@@ -3,33 +3,29 @@ import { useQuery } from "react-query";
 import { ValidNetwork, Keychain } from "@daohaus/keychain-utils";
 
 import { CookieJarCore } from "../abis";
-import { CookieJar } from "../utils/cookieJarHandlers";
-import { useEffect, useMemo, useState } from "react";
 import { useIndexer } from "./useIndexer";
 import { useDHConnect } from "@daohaus/connect";
-import { createViemClient } from "@daohaus/utils";
-import { Abi, getContract } from "viem";
+import { Abi, PublicClient } from "viem";
+import { db } from "../utils/indexer/db";
+import { useLiveQuery } from "dexie-react-hooks";
 
 // fetch user cookie claim data from the blockchain
 const fetchUserClaim = async ({
   cookieJarAddress,
   userAddress,
   chainId,
-  rpcs,
+  publicClient,
 }: {
   cookieJarAddress: string | undefined | null;
   userAddress: string;
   chainId: ValidNetwork | undefined | null;
-  rpcs?: Keychain;
+  publicClient: PublicClient;
 }) => {
   if (!cookieJarAddress || !chainId) {
     throw new Error("No cookie jar address provided");
   }
 
-  const client = createViemClient({
-    chainId,
-    rpcs,
-  });
+  console.log("FETCHING USER CLAIM");
 
   const contract = {
     address: cookieJarAddress as `0x${string}`,
@@ -46,33 +42,33 @@ const fetchUserClaim = async ({
       target,
       canClaim,
     ] = await Promise.all([
-      client.readContract({
+      publicClient.readContract({
         ...contract,
-        functionName: "lastClaimed",
+        functionName: "claims",
         args: [userAddress],
       }),
-      client.readContract({
+      publicClient.readContract({
         ...contract,
         functionName: "cookieAmount",
       }),
-      client.readContract({
+      publicClient.readContract({
         ...contract,
         functionName: "periodLength",
       }),
-      client.readContract({
+      publicClient.readContract({
         ...contract,
         functionName: "cookieToken",
       }),
-      client.readContract({
+      publicClient.readContract({
         ...contract,
-        functionName: "isAllowlist",
+        functionName: "isAllowList",
         args: [userAddress],
       }),
-      client.readContract({
+      publicClient.readContract({
         ...contract,
         functionName: "owner",
       }),
-      client.readContract({
+      publicClient.readContract({
         ...contract,
         functionName: "canClaim",
         args: [userAddress],
@@ -95,56 +91,28 @@ const fetchUserClaim = async ({
 };
 
 // custom hook to fetch and return user claim data
-export const useCookieJar = ({
-  cookieJarId,
-  rpcs,
-}: {
-  cookieJarId?: string;
-  rpcs?: Keychain;
-}) => {
+export const useCookieJar = ({ cookieJarId }: { cookieJarId: string }) => {
   const { address, chainId } = useDHConnect();
+  const { client } = useIndexer();
 
-  const { getJarById } = useIndexer();
-  const [cookieJar, setCookieJar] = useState<Partial<CookieJar>>();
+  const cookieJar = useLiveQuery(() => db.cookieJars.get(cookieJarId));
 
-  const cookieJarAddress = cookieJar?.address;
+  console.log("COOKIE JAR", cookieJar);
 
-  // Memoized function to fetch user claim data
-  const fetchUserClaimMemoized = useMemo(() => {
-    return () =>
+  const { data, ...rest } = useQuery(
+    ["claimData", { address }],
+    () =>
       fetchUserClaim({
         cookieJarAddress: cookieJar?.address,
         userAddress: address?.toLowerCase() || "",
         chainId,
-        rpcs,
-      });
-  }, [address, chainId, cookieJar?.address, rpcs]);
-
-  const { data, ...rest } = useQuery(
-    ["claimData", { address, cookieJarAddress }],
-    fetchUserClaimMemoized,
-    { enabled: !!address && !!cookieJarAddress, refetchInterval: 5000 }
+        publicClient: client!,
+      }),
+    {
+      enabled: !!address && !!cookieJar && !!chainId && !!client,
+      refetchInterval: 5000,
+    }
   );
-
-  // Memoized function to fetch cookie jar by ID
-  const getJarByIdMemoized = useMemo(() => {
-    return async () => {
-      if (!cookieJarId) return;
-      const jars = await getJarById(cookieJarId);
-
-      if (!jars) return;
-      setCookieJar(jars[0]);
-    };
-  }, [cookieJarId, getJarById]);
-
-  useEffect(() => {
-    const getCookieJar = async () => {
-      if (!cookieJarId) return;
-      await getJarByIdMemoized();
-    };
-
-    getCookieJar();
-  }, [cookieJarId, getJarByIdMemoized]);
 
   // determine if user has claimed cookies before
   const hasClaimed = data?.lastClaimed && Number(data.lastClaimed) > 0;
