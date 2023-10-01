@@ -15,7 +15,7 @@ export const ClaimDetails = ({
   claimAmt,
   claimPeriod,
   unit,
-  claimId
+  claimId,
 }: {
   claimAmt: bigint;
   claimPeriod: bigint;
@@ -34,7 +34,10 @@ export const ClaimDetails = ({
           unit: unit,
         })}
       />
-      <DataIndicator label="Claim Period" data={formatPeriods(claimPeriod)} />
+      <DataIndicator
+        label="Claim Period"
+        data={formatPeriods(claimPeriod.toString())}
+      />
       <DataIndicator label="Balance" data={"TODO"} />
       <StyledRouterLink to={`/history/${claimId || ""}`}>
         View History

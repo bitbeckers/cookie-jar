@@ -4,11 +4,8 @@ import { Avatar, Badge, Button, Card, ParMd } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";
 import { useProfile } from "@daohaus/moloch-v3-hooks";
 import { Cookie, Reason, db } from "../utils/indexer/db";
-import { useEffect, useState } from "react";
 import { useTxBuilder } from "@daohaus/tx-builder";
-import { APP_TX } from "../legos/tx";
 import { useDHConnect } from "@daohaus/connect";
-import { assembleTxArgs } from "@daohaus/contract-utils";
 import { CookieJarCore } from "../abis";
 import { useLiveQuery } from "dexie-react-hooks";
 

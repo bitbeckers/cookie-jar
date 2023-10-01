@@ -21,9 +21,9 @@ export interface CookieJar {
   address: string;
   type: string;
   name: string;
-  description?: string;
-  link?: string;
-  initializer?: Initializer;
+  description: string;
+  link: string;
+  initializer: Initializer;
 }
 
 export interface Subscription {
