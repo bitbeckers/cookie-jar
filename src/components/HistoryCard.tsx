@@ -31,7 +31,6 @@ const DootBox = styled.div`
 export const HistoryCard = ({ record }: { record: Cookie }) => {
   const { chainId } = useDHConnect();
   const { fireTransaction } = useTxBuilder();
-  const [reason, setReason] = useState<Reason>();
   const { profile: cookieGiver } = useProfile({
     address: record.cookieGiver,
   });
@@ -45,26 +44,15 @@ export const HistoryCard = ({ record }: { record: Cookie }) => {
     [record]
   );
 
-  console.log("record: ", record);
-
   const doots = useLiveQuery(
     () => db.ratings.where({ assessTag: record.assessTag }).toArray(),
     [record]
   );
 
-  useEffect(() => {
-    const fetchReason = async () => {
-      console.log("Fetching reason: ", record.reasonTag);
-      const res = await db.reasons.get({ reasonTag: record.reasonTag });
-      if (!res) {
-        return;
-      }
-      console.log("Reason: ", res);
-      setReason(res);
-    };
-
-    fetchReason();
-  }, [record.reasonTag]);
+  const reason = useLiveQuery(
+    () => db.reasons.get({ reasonTag: record.reasonTag }),
+    [record]
+  );
 
   const onDoot = async (doot: "up" | "down") => {
     if (!cookieJar?.address) {

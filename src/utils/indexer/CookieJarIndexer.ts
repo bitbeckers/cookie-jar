@@ -2,7 +2,7 @@ import { PublicClient, decodeEventLog } from "viem";
 import { db, CookieDB } from "./db";
 import { AbiEvent, parseAbi, parseAbiItem } from "abitype";
 import { EventHandlers, getEventHandler } from "./eventHandlers";
-import { debounce } from "lodash";
+import { debounce, set } from "lodash";
 import { postHandler } from "./posterHandlers";
 
 interface CookieJarIndexerInterface {
@@ -28,7 +28,7 @@ class CookieJarIndexer implements CookieJarIndexerInterface {
     this.update = debounce(async () => this._update(), 5000, {
       maxWait: 60000,
     });
-    this.update();
+    setInterval(this.update, 10000);
   }
 
   public get db() {
