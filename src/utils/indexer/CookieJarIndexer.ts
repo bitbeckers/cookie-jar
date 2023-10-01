@@ -93,7 +93,7 @@ class CookieJarIndexer implements CookieJarIndexerInterface {
       );
       const posterState = await this.db.keyvals.get("posterState");
 
-      if (posterState) {
+      if (posterState && cookieJars.length > 0) {
         console.log(`Getting posts from ${posterState.lastBlock}`);
         const posts = await this._publicClient.getLogs({
           address: "0x000000000000cd17345801aa8147b8d3950260ff",

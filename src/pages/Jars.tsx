@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 import {
+  Button,
   Card,
   H2,
   H3,
@@ -37,9 +38,9 @@ export const Jars = () => {
   return (
     <SingleColumnLayout>
       <H2>Jars</H2>
-      <LinkBox>
-        <StyledRouterLink to="/create">Create New 🫙</StyledRouterLink>
-      </LinkBox>
+      <StyledRouterLink to="/create">
+        <Button>Create New 🫙 </Button>
+      </StyledRouterLink>
 
       {!cookieJars && <Spinner />}
 
@@ -57,10 +58,6 @@ export const Jars = () => {
           {cookieJars.map((jar) => (
             <JarCard record={jar} key={jar.jarUid} />
           ))}
-
-          <LinkBox>
-            <StyledRouterLink to="/create">Create New</StyledRouterLink>
-          </LinkBox>
         </JarContainer>
       )}
     </SingleColumnLayout>
