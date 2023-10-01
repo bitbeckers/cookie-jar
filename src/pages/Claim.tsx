@@ -17,7 +17,7 @@ import { useCookieJar } from "../hooks/useCookieJar";
 import { StyledRouterLink } from "../components/Layout";
 
 export const Claims = () => {
-  const { address, chainId, isConnected } = useDHConnect();
+  const { address, isConnected } = useDHConnect();
   const [showConfetti, setShowConfetti] = useState(false);
   const { width, height } = useWindowSize();
   const target = useTargets();
@@ -139,7 +139,7 @@ export const Claims = () => {
               unit={
                 target ? HAUS_NETWORK_DATA[target.CHAIN_ID]?.symbol || "" : ""
               }
-              claimId={cookieJar?.id}
+              claimId={cookieJar?.jarUid}
             />
             <ParMd style={{ marginBottom: ".4rem" }}>
               Go to{" "}
@@ -160,7 +160,7 @@ export const Claims = () => {
           claimAmt={data.claimAmt}
           claimPeriod={data.claimPeriod}
           unit={target ? HAUS_NETWORK_DATA[target.CHAIN_ID]?.symbol || "" : ""}
-          claimId={cookieJar?.id}
+          claimId={cookieJar?.jarUid}
         />
         <ClaimForm
           user={address}

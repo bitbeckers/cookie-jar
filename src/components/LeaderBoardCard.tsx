@@ -1,8 +1,16 @@
+import styled from "styled-components";
 import { AddressDisplay, Avatar, Card, ParMd } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";
 import { useProfile } from "@daohaus/moloch-v3-hooks";
 import { formatEther } from "viem";
 import { useTargets } from "../hooks/useTargets";
+
+const LeaderCard = styled(Card)`
+  background-color: ${({ theme }) => theme.secondary.step3};
+  padding: 3rem;
+  width: 100%;
+  margin-bottom: 3rem;
+`;
 
 /**
  * Represents a leaderboard record.
@@ -32,30 +40,28 @@ export const LeaderBoardCard = ({ record }: { record: LBRecord }) => {
   const target = useTargets();
 
   return (
-    <div style={{ marginBottom: "3rem", width: "50%" }}>
-      <Card>
-        {/* If the user has a profile image, display it along with their ENS name */}
-        {profile && (
-          <ParMd style={{ marginBottom: ".4rem" }}>
-            {profile?.image && !profile.image.includes("null") && (
-              <Avatar alt={profile.ens} size="sm" src={profile.image} />
-            )}{" "}
-            {profile.ens}
-          </ParMd>
-        )}
-        {/* Display the user's address */}
-        <AddressDisplay
-          address={record?.user}
-          truncate
-          copy
-          explorerNetworkId={target?.CHAIN_ID}
-        />
-        {/* Display the user's cookie count */}
-        <ParMd style={{ marginBottom: "1rem" }}>
-          <img src={cookie} alt="cookie" height={"20px"} />{" "}
-          {`Count: ${formatEther(record?.count)}`}
+    <LeaderCard>
+      {/* If the user has a profile image, display it along with their ENS name */}
+      {profile && (
+        <ParMd style={{ marginBottom: ".4rem" }}>
+          {profile?.image && !profile.image.includes("null") && (
+            <Avatar alt={profile.ens} size="sm" src={profile.image} />
+          )}{" "}
+          {profile.ens}
         </ParMd>
-      </Card>
-    </div>
+      )}
+      {/* Display the user's address */}
+      <AddressDisplay
+        address={record?.user}
+        truncate
+        copy
+        explorerNetworkId={target?.CHAIN_ID}
+      />
+      {/* Display the user's cookie count */}
+      <ParMd style={{ marginBottom: "1rem" }}>
+        <img src={cookie} alt="cookie" height={"20px"} />{" "}
+        {`Count: ${formatEther(record?.count)}`}
+      </ParMd>
+    </LeaderCard>
   );
 };

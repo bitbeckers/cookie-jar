@@ -21,6 +21,8 @@ import { StyledRouterLink } from "./Layout";
 import { useTargets } from "../hooks/useTargets";
 import { useCookieJar } from "../hooks/useCookieJar";
 import { CookieJar } from "../utils/indexer/db";
+import { useDHConnect } from "@daohaus/connect";
+import { useEffect, useState } from "react";
 
 export const StyledCard = styled(Card)`
   background-color: ${({ theme }) => theme.secondary.step3};
@@ -70,7 +72,23 @@ export const DataGrid = styled.div`
 
 export const JarCard = ({ record }: { record: CookieJar }) => {
   const target = useTargets();
+  const { publicClient } = useDHConnect();
   const { isMember } = useCookieJar({ cookieJarId: record.jarUid });
+  const [balance, setBalance] = useState<string>("Loading");
+
+  useEffect(() => {
+    const getBalance = async () => {
+      const _balance = await publicClient?.getBalance({
+        address: record.initializer.safeTarget as `0x${string}`,
+      });
+      if (!_balance) {
+        return;
+      }
+      setBalance(fromWei(_balance.toString()));
+    };
+
+    getBalance();
+  }, [publicClient]);
 
   return (
     <div style={{ marginBottom: "3rem" }}>
@@ -138,7 +156,7 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
                   : record?.initializer?.cookieToken
               }
             />
-            <DataIndicator label="Jar Balance" data={"TODO"} />
+            <DataIndicator label="Jar Balance" data={balance} />
           </>
         </DataGrid>
 

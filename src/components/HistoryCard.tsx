@@ -15,6 +15,13 @@ const DootBox = styled.div`
   justify-content: center;
 `;
 
+const CookieCard = styled(Card)`
+  background-color: ${({ theme }) => theme.secondary.step3};
+  padding: 3rem;
+  width: 100%;
+  margin-bottom: 3rem;
+`;
+
 /**
  * Renders a card displaying a history record, including the user's profile picture,
  * username, description, link, and the number of upvotes and downvotes.
@@ -81,56 +88,54 @@ export const HistoryCard = ({ record }: { record: Cookie }) => {
   };
 
   return (
-    <div style={{ marginBottom: "3rem", width: "70%" }}>
-      <Card>
-        {cookieGiver && (
-          <ParMd style={{ marginBottom: ".4rem" }}>
-            Giver:
-            {cookieGiver?.image && !cookieGiver.image.includes("null") && (
-              <Avatar alt={cookieGiver.ens} size="sm" src={cookieGiver.image} />
-            )}{" "}
-            {cookieGiver.ens}
-          </ParMd>
-        )}
-        {cookieMonster && (
-          <ParMd style={{ marginBottom: ".4rem" }}>
-            CookieMonster:
-            {cookieMonster?.image && !cookieMonster.image.includes("null") && (
-              <Avatar
-                alt={cookieMonster.ens}
-                size="sm"
-                src={cookieMonster.image}
-              />
-            )}{" "}
-            {cookieMonster.ens}
-          </ParMd>
-        )}
-        <ParMd style={{ marginBottom: "1rem" }}>
-          <img src={cookie} alt="cookie" height={"20px"} />{" "}
-          {reason ? reason.description : "No reason provided."}
+    <CookieCard style={{ marginBottom: "3rem" }}>
+      {cookieGiver && (
+        <ParMd style={{ marginBottom: ".4rem" }}>
+          Giver:
+          {cookieGiver?.image && !cookieGiver.image.includes("null") && (
+            <Avatar alt={cookieGiver.ens} size="sm" src={cookieGiver.image} />
+          )}{" "}
+          {cookieGiver.ens}
         </ParMd>
+      )}
+      {cookieMonster && (
+        <ParMd style={{ marginBottom: ".4rem" }}>
+          CookieMonster:
+          {cookieMonster?.image && !cookieMonster.image.includes("null") && (
+            <Avatar
+              alt={cookieMonster.ens}
+              size="sm"
+              src={cookieMonster.image}
+            />
+          )}{" "}
+          {cookieMonster.ens}
+        </ParMd>
+      )}
+      <ParMd style={{ marginBottom: "1rem" }}>
+        <img src={cookie} alt="cookie" height={"20px"} />{" "}
+        {reason ? reason.description : "No reason provided."}
+      </ParMd>
 
-        <DootBox style={{ fontSize: "2rem", marginTop: "1rem" }}>
-          <Button
-            onClick={() => onDoot("up")}
-            style={{ background: "none", border: "none" }}
-          >
-            👍
-            <Badge
-              badgeLabel={`${doots?.filter((d) => d.isGood).length} updoot`}
-            />
-          </Button>
-          <Button
-            onClick={() => onDoot("down")}
-            style={{ background: "none", border: "none" }}
-          >
-            👎
-            <Badge
-              badgeLabel={`${doots?.filter((d) => !d.isGood).length}  downdoot`}
-            />
-          </Button>
-        </DootBox>
-      </Card>
-    </div>
+      <DootBox style={{ fontSize: "2rem", marginTop: "1rem" }}>
+        <Button
+          onClick={() => onDoot("up")}
+          style={{ background: "none", border: "none" }}
+        >
+          👍
+          <Badge
+            badgeLabel={`${doots?.filter((d) => d.isGood).length} updoot`}
+          />
+        </Button>
+        <Button
+          onClick={() => onDoot("down")}
+          style={{ background: "none", border: "none" }}
+        >
+          👎
+          <Badge
+            badgeLabel={`${doots?.filter((d) => !d.isGood).length}  downdoot`}
+          />
+        </Button>
+      </DootBox>
+    </CookieCard>
   );
 };
