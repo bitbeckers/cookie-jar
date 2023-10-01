@@ -5,6 +5,7 @@ import { Outlet, useLocation, useParams } from "react-router-dom";
 import { CookieLayout } from "./CookieLayout";
 import { StyledRouterLink } from "./Layout";
 import { useTargets } from "../hooks/useTargets";
+import { useIndexer } from "../hooks/useIndexer";
 
 /**
  * LayoutContainer component that wraps the entire application with a CookieLayout.
@@ -29,7 +30,8 @@ export const LayoutContainer = () => {
     daoAddress: string;
     cookieChain: string;
   }>();
-  const { provider, address } = useDHConnect();
+  const { publicClient, address } = useDHConnect();
+  const { indexer } = useIndexer();
   const target = useTargets();
 
   // Render
@@ -38,8 +40,6 @@ export const LayoutContainer = () => {
       pathname={location.pathname}
       navLinks={[
         { label: "Home", href: `/` },
-        // { label: "Safes", href: `${routePath}/safes` },
-        ///{ label: "Allow List", href: `/members` },
         { label: "Claim", href: `/claims/${cookieChain}/${cookieAddress}` },
         { label: "Stats", href: `/history/${cookieChain}/${cookieAddress}` },
         { label: "Config", href: `/config/${cookieChain}/${cookieAddress}` },
@@ -54,7 +54,7 @@ export const LayoutContainer = () => {
       }
     >
       <TXBuilder
-        provider={provider}
+        publicClient={publicClient}
         chainId={target?.CHAIN_ID}
         appState={{ memberAddress: address }}
       >

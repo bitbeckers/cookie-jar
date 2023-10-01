@@ -1,11 +1,10 @@
 import { APP_CONTRACT } from "./contract";
 
-
 export const APP_TX = {
   COOKIEJAR: {
     id: "COOKIEJAR",
     contract: APP_CONTRACT.COOKIEJAR,
-    method: "reachInJar(address,string)",
+    method: "reachInJar",
     args: [
       ".formValues.receiver",
       {
@@ -22,7 +21,7 @@ export const APP_TX = {
       },
     ],
   },
-  CREATENFTJAR: {
+  CREATE_NFT_JAR: {
     id: "CREATENFTJAR",
     contract: APP_CONTRACT.COOKIENFT,
     method: "cookieMint",
@@ -32,19 +31,20 @@ export const APP_TX = {
       ".formValues.cookiePeriod",
       ".formValues.cookieAmount",
       ".formValues.cookieToken",
+      ".formValues.donationToken",
+      ".formValues.proposalOffering",
       ".formValues.allowList",
     ],
+    overrides: {
+      value: ".formValues.proposalOffering",
+    },
   },
   COOKIEJARTARGET: {
     id: "COOKIEJARTARGET",
     contract: APP_CONTRACT.COOKIEJARTARGET,
     method: "executeCall",
     disablePoll: true,
-    args: [
-      ".to",
-      ".value",
-      ".data"
-    ],
-    staticArgs: []
-  }
+    args: [".to", ".value", ".data"],
+    staticArgs: [],
+  },
 };

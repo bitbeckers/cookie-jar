@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 import {
+  Button,
   Card,
   H2,
   H3,
@@ -9,13 +10,10 @@ import {
   Spinner,
   widthQuery,
 } from "@daohaus/ui";
-import { HausAnimated } from "../components/HausAnimated";
 
 import { JarCard } from "../components/JarCard";
-import { useIndexer } from "../hooks/useIndexer";
-import { useQuery } from "react-query";
-import { useDHConnect } from "@daohaus/connect";
 import { StyledRouterLink } from "../components/Layout";
+import { useIndexer } from "../hooks/useIndexer";
 
 const LinkBox = styled.div`
   display: flex;
@@ -35,37 +33,30 @@ const JarContainer = styled(Card)`
 `;
 
 export const Jars = () => {
-  const { getJars } = useIndexer();
-
-  const { data, isLoading } = useQuery({
-    queryKey: "jars",
-    queryFn: () => getJars(),
-    refetchInterval: 5000,
-  });
+  const { cookieJars } = useIndexer();
 
   return (
     <SingleColumnLayout>
       <H2>Jars</H2>
-      <LinkBox>
-        <StyledRouterLink to="/create">Create New 🫙</StyledRouterLink>
-      </LinkBox>
+      <StyledRouterLink to="/create">
+        <Button>Create New 🫙 </Button>
+      </StyledRouterLink>
 
-      {(!data || isLoading) && <Spinner />}
+      {!cookieJars && <Spinner />}
 
-      {(!isLoading && !data) ||
-        (data && data.length == 0 && (
-          <>
-            <H3 style={{ marginBottom: "2.4rem" }}>No Jars found</H3>
-            <ParMd style={{ marginBottom: "2.4rem" }}>
-              No Jars found on this network. Create a new one!
-            </ParMd>
-          </>
-        ))}
+      {cookieJars && cookieJars.length === 0 && (
+        <>
+          <H3 style={{ marginBottom: "2.4rem" }}>No Jars found</H3>
+          <ParMd style={{ marginBottom: "2.4rem" }}>
+            No Jars found on this network. Create a new one!
+          </ParMd>
+        </>
+      )}
 
-      {data && !isLoading && data.length > 0 && (
+      {cookieJars && cookieJars.length > 0 && (
         <JarContainer>
-          {data.map((jar) => (
-            <JarCard record={jar} key={jar.id} />
+          {cookieJars.map((jar) => (
+            <JarCard record={jar} key={jar.jarUid} />
           ))}
         </JarContainer>
       )}

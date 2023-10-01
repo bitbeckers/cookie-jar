@@ -1,9 +1,6 @@
 import { FieldValues } from "react-hook-form";
 import { FormBuilder } from "@daohaus/form-builder";
 
-import COOKIEJARTARGET_ABI from "../abis/cookieJarTarget.json";
-import COOKIEJAR_CORE_ABI from "../abis/CookieJarCore.json";
-
 import { APP_FORM } from "../legos/forms";
 import { AppFieldLookup } from "../legos/fieldConfig";
 import { useDHConnect } from "@daohaus/connect";
@@ -19,6 +16,7 @@ import { useTxBuilder } from "@daohaus/tx-builder";
 import { useToast } from "@daohaus/ui";
 import { StatusMsg } from "./ClaimForm";
 import { useTargets } from "../hooks/useTargets";
+import { CookieJarCore, CookieJarTarget } from "../abis";
 
 export type SummonStates = "idle" | "loading" | "success" | "error";
 
@@ -34,7 +32,7 @@ export const ConfigForm = () => {
   const [isLoading2, setIsLoading] = useState(false);
   const [status, setStatus] = useState<null | StatusMsg>(null);
 
-  if (!target) return null;
+  if (!target || !cookieJarId) return null;
 
   const { cookieJar, data } = useCookieJar({
     cookieJarId: cookieJarId,
@@ -64,7 +62,7 @@ export const ConfigForm = () => {
     );
 
     // setConfig
-    const encodedFunction = encodeFunction(COOKIEJAR_CORE_ABI, "setConfig", [
+    const encodedFunction = encodeFunction(CookieJarCore, "setConfig", [
       formValues.cookiePeriod,
       formValues.cookieAmount,
       formValues.cookieToken,
@@ -78,7 +76,7 @@ export const ConfigForm = () => {
         contract: {
           type: "static",
           contractName: "COOKIEJARTARGET",
-          abi: COOKIEJARTARGET_ABI,
+          abi: CookieJarTarget,
           targetAddress: formValues.target,
         },
         method: "executeCall",

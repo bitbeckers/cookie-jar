@@ -29,7 +29,6 @@ export const ClaimForm = ({
   cookieAddress: string | undefined;
 }) => {
   const [txStatus, setTxStatus] = useState<StatusMsg | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const target = useTargets();
 
   if (!user || !cookieAddress || !target) return null;
@@ -56,12 +55,10 @@ export const ClaimForm = ({
           onTxError: () => {
             setTxStatus(StatusMsg.TxErr);
             onError?.();
-            setIsLoading(false);
           },
           onTxSuccess: () => {
             setTxStatus(StatusMsg.TxSuccess);
             onSuccess?.();
-            setIsLoading(false);
           },
         }}
       />

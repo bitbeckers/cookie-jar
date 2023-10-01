@@ -1,51 +1,86 @@
 import { useQuery } from "react-query";
 
-import { createContract } from "@daohaus/tx-builder";
-import { ValidNetwork, Keychain } from "@daohaus/keychain-utils";
+import { ValidNetwork } from "@daohaus/keychain-utils";
 
-import CookieJarAbi from "../abis/CookieJarCore.json";
-import { CookieJar } from "../utils/cookieJarHandlers";
-import { useEffect, useMemo, useState } from "react";
+import { CookieJarCore } from "../abis";
 import { useIndexer } from "./useIndexer";
 import { useDHConnect } from "@daohaus/connect";
+import { Abi, PublicClient } from "viem";
+import { db } from "../utils/indexer/db";
+import { useLiveQuery } from "dexie-react-hooks";
+
 // fetch user cookie claim data from the blockchain
 const fetchUserClaim = async ({
   cookieJarAddress,
   userAddress,
   chainId,
-  rpcs,
+  publicClient,
 }: {
   cookieJarAddress: string | undefined | null;
   userAddress: string;
   chainId: ValidNetwork | undefined | null;
-  rpcs?: Keychain;
+  publicClient: PublicClient;
 }) => {
   if (!cookieJarAddress || !chainId) {
     throw new Error("No cookie jar address provided");
   }
-  const cookieContract = createContract({
-    address: cookieJarAddress,
-    abi: CookieJarAbi,
-    chainId,
-    rpcs,
-  });
+
+  console.log("FETCHING USER CLAIM");
+
+  const contract = {
+    address: cookieJarAddress as `0x${string}`,
+    abi: CookieJarCore as Abi,
+  };
 
   try {
-    const lastClaimed = await cookieContract.claims(userAddress); // get last claimed timestamp for user
-    const claimAmt = await cookieContract.cookieAmount(); // get amount of cookie token to claim
-    const claimPeriod = await cookieContract.periodLength(); // get the period length for claims
-    const cookieToken = await cookieContract.cookieToken(); // get the cookie token address
-    const isMember = await cookieContract.isAllowList(userAddress); // get the cookie token address
-
-    const target = await cookieContract.owner(); // get the target safe address
-    const canClaim = await cookieContract.canClaim(userAddress); // todo: check if user is on isAllowList(userAddress)
+    const [
+      lastClaimed,
+      claimAmt,
+      claimPeriod,
+      cookieToken,
+      isMember,
+      target,
+      canClaim,
+    ] = await Promise.all([
+      publicClient.readContract({
+        ...contract,
+        functionName: "claims",
+        args: [userAddress],
+      }),
+      publicClient.readContract({
+        ...contract,
+        functionName: "cookieAmount",
+      }),
+      publicClient.readContract({
+        ...contract,
+        functionName: "periodLength",
+      }),
+      publicClient.readContract({
+        ...contract,
+        functionName: "cookieToken",
+      }),
+      publicClient.readContract({
+        ...contract,
+        functionName: "isAllowList",
+        args: [userAddress],
+      }),
+      publicClient.readContract({
+        ...contract,
+        functionName: "owner",
+      }),
+      publicClient.readContract({
+        ...contract,
+        functionName: "canClaim",
+        args: [userAddress],
+      }),
+    ]);
 
     return {
-      lastClaimed: lastClaimed.toString() as string,
-      claimAmt: claimAmt.toString() as string,
-      claimPeriod: claimPeriod.toString() as string,
-      cookieToken: cookieToken.toString() as string,
-      target: target.toString() as string,
+      lastClaimed: lastClaimed as bigint,
+      claimAmt: claimAmt as bigint,
+      claimPeriod: claimPeriod as bigint,
+      cookieToken: cookieToken as string,
+      target: target as string,
       canClaim: canClaim as boolean,
       isMember: isMember as boolean,
     };
@@ -56,56 +91,26 @@ const fetchUserClaim = async ({
 };
 
 // custom hook to fetch and return user claim data
-export const useCookieJar = ({
-  cookieJarId,
-  rpcs,
-}: {
-  cookieJarId?: string;
-  rpcs?: Keychain;
-}) => {
-  const { address, chainId, isConnected } = useDHConnect();
+export const useCookieJar = ({ cookieJarId }: { cookieJarId: string }) => {
+  const { address, chainId } = useDHConnect();
+  const { client } = useIndexer();
 
-  const { getJarById } = useIndexer();
-  const [cookieJar, setCookieJar] = useState<Partial<CookieJar>>();
+  const cookieJar = useLiveQuery(() => db.cookieJars.get(cookieJarId));
 
-  const cookieJarAddress = cookieJar?.address;
-
-  // Memoized function to fetch user claim data
-  const fetchUserClaimMemoized = useMemo(() => {
-    return () =>
+  const { data, ...rest } = useQuery(
+    ["claimData", { address }],
+    () =>
       fetchUserClaim({
         cookieJarAddress: cookieJar?.address,
         userAddress: address?.toLowerCase() || "",
         chainId,
-        rpcs,
-      });
-  }, [address, chainId, cookieJar?.address, rpcs]);
-
-  const { data, ...rest } = useQuery(
-    ["claimData", { address, cookieJarAddress }],
-    fetchUserClaimMemoized,
-    { enabled: !!address && !!cookieJarAddress, refetchInterval: 5000 }
+        publicClient: client!,
+      }),
+    {
+      enabled: !!address && !!cookieJar && !!chainId && !!client,
+      refetchInterval: 5000,
+    }
   );
-
-  // Memoized function to fetch cookie jar by ID
-  const getJarByIdMemoized = useMemo(() => {
-    return async () => {
-      if (!cookieJarId) return;
-      const jars = await getJarById(cookieJarId);
-
-      if (!jars) return;
-      setCookieJar(jars[0]);
-    };
-  }, [cookieJarId, getJarById]);
-
-  useEffect(() => {
-    const getCookieJar = async () => {
-      if (!cookieJarId) return;
-      await getJarByIdMemoized();
-    };
-
-    getCookieJar();
-  }, [cookieJarId, getJarByIdMemoized]);
 
   // determine if user has claimed cookies before
   const hasClaimed = data?.lastClaimed && Number(data.lastClaimed) > 0;

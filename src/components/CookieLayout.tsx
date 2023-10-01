@@ -1,12 +1,12 @@
-import { ComponentProps, ReactNode } from 'react';
+import { ComponentProps, ReactNode } from "react";
 
-import { AppSwitcher, Footer, MainLayout, widthQuery } from '@daohaus/ui';
-import { OuterLayout } from '@daohaus/ui';
-import styled from 'styled-components';
-import { DaoHausNavProps } from '@daohaus/connect/components/DaoHausNav/DaoHausNav.types';
-import { DaoHausNav, DaoHausNavMenu } from '@daohaus/connect';
-import CookieFooter from './CookieFooter';
-import { useParams } from 'react-router-dom';
+import { AppSwitcher, MainLayout, widthQuery } from "@daohaus/ui";
+import { OuterLayout } from "@daohaus/ui";
+import styled from "styled-components";
+import { DaoHausNavProps } from "@daohaus/connect/components/DaoHausNav/DaoHausNav.types";
+import { DaoHausNav, DaoHausNavMenu } from "@daohaus/connect";
+import CookieFooter from "./CookieFooter";
+import { useParams } from "react-router-dom";
 
 const Header = styled.div`
   display: flex;
@@ -37,8 +37,8 @@ export const CookieLayout = ({
   appNavLinks?: ComponentProps<typeof AppSwitcher>;
   pathname: string;
 }) => {
-  const { cookieAddress, cookieChain } = useParams();
-  
+  const { cookieAddress } = useParams();
+
   return (
     <OuterLayout>
       <Header>
@@ -48,11 +48,13 @@ export const CookieLayout = ({
         </div>
         <DaoHausNav />
       </Header>
-      {cookieAddress && <DaoHausNavMenu
-        navLinks={navLinks}
-        dropdownLinks={dropdownLinks}
-        pathname={pathname}
-      />}
+      {cookieAddress && (
+        <DaoHausNavMenu
+          navLinks={navLinks}
+          dropdownLinks={dropdownLinks}
+          pathname={pathname}
+        />
+      )}
       <MainLayout>{children}</MainLayout>
       <CookieFooter />
     </OuterLayout>

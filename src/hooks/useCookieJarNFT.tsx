@@ -1,77 +1,47 @@
 import { useQuery } from "react-query";
 
-import { createContract } from "@daohaus/tx-builder";
-import { ValidNetwork, Keychain } from "@daohaus/keychain-utils";
+import { ValidNetwork } from "@daohaus/keychain-utils";
 
-import CookieNftAbi from "../abis/cookieNft.json";
 import { ZERO_ADDRESS } from "@daohaus/utils";
-
-// fetch user cookie claim data from the blockchain
-const fetchNFT = async ({
-  nftAddress,
-  userAddress,
-  chainId,
-  rpcs,
-}: {
-  nftAddress: string | undefined | null;
-  userAddress: string;
-  chainId: ValidNetwork | undefined | null;
-  rpcs?: Keychain;
-}) => {
-  if (!nftAddress || !chainId) {
-    throw new Error("No cookie jar address provided");
-  }
-  console.log("CREATING CONTRACT");
-
-  const nftContract = createContract({
-    address: nftAddress,
-    abi: CookieNftAbi,
-    chainId,
-    rpcs,
-  });
-
-  // TODO: check if sold out
-  // const cap = await nftContract.cap();
-
-  console.log(nftContract);
-
-  try {
-    const filter = nftContract.filters.Transfer(ZERO_ADDRESS, null);
-    const events = await nftContract.queryFilter(filter);
-    console.log("factory events", events);
-    return {
-      events,
-    };
-  } catch (error: any) {
-    console.error(error);
-    throw new Error(error?.message as string);
-  }
-};
+import { useDHConnect } from "@daohaus/connect";
 
 export const useCookieNFT = ({
   nftAddress,
   userAddress,
   chainId,
-  rpcs,
 }: {
   nftAddress: string | undefined | null;
   userAddress: string | undefined | null;
   chainId: ValidNetwork | undefined | null;
-  rpcs?: Keychain;
 }) => {
+  const { publicClient } = useDHConnect();
+
+  if (!nftAddress || !chainId) {
+    throw new Error("No cookie jar address provided");
+  }
+
   const { data, ...rest } = useQuery(
     ["nftData", { userAddress }],
     () =>
-      fetchNFT({
-        nftAddress,
-        userAddress: userAddress as string,
-        chainId,
-        rpcs,
+      publicClient?.getLogs({
+        address: nftAddress as `0x${string}`,
+        event: {
+          name: "Transfer",
+          inputs: [
+            { type: "address", indexed: true, name: "from" },
+            { type: "address", indexed: true, name: "to" },
+            { type: "uint256", indexed: false, name: "value" },
+          ],
+          type: "event",
+        },
+        args: {
+          from: ZERO_ADDRESS as `0x${string}`,
+        },
       }),
     { enabled: !!userAddress }
   );
 
-  const totalSupply = data?.events.length;
+  const totalSupply = data?.length;
 
   return {
     data,

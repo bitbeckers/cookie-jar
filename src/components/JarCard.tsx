@@ -18,14 +18,11 @@ import {
   toWholeUnits,
 } from "@daohaus/utils";
 import { StyledRouterLink } from "./Layout";
-import { BigNumber } from "ethers";
-import COOKIEJAR_CORE_ABI from "../abis/CookieJarCore.json";
-import { ethers } from "ethers";
-import { useEffect, useState } from "react";
-import { useDHConnect } from "@daohaus/connect";
 import { useTargets } from "../hooks/useTargets";
-import { CookieJar } from "../utils/cookieJarHandlers";
 import { useCookieJar } from "../hooks/useCookieJar";
+import { CookieJar } from "../utils/indexer/db";
+import { useDHConnect } from "@daohaus/connect";
+import { useEffect, useState } from "react";
 
 export const StyledCard = styled(Card)`
   background-color: ${({ theme }) => theme.secondary.step3};
@@ -75,7 +72,23 @@ export const DataGrid = styled.div`
 
 export const JarCard = ({ record }: { record: CookieJar }) => {
   const target = useTargets();
-  const { cookieJar, isMember } = useCookieJar({ cookieJarId: record.id });
+  const { publicClient } = useDHConnect();
+  const { isMember } = useCookieJar({ cookieJarId: record.jarUid });
+  const [balance, setBalance] = useState<string>("Loading");
+
+  useEffect(() => {
+    const getBalance = async () => {
+      const _balance = await publicClient?.getBalance({
+        address: record.initializer.safeTarget as `0x${string}`,
+      });
+      if (!_balance) {
+        return;
+      }
+      setBalance(fromWei(_balance.toString()));
+    };
+
+    getBalance();
+  }, [publicClient]);
 
   return (
     <div style={{ marginBottom: "3rem" }}>
@@ -98,14 +111,13 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
             <TagSection>
               <Label>Treasury:</Label>
               <AddressDisplay
-                address={record?.initializer?.safeTarget || ZERO_ADDRESS}
+                address={record.initializer.safeTarget || ZERO_ADDRESS}
                 copy
                 truncate
                 explorerNetworkId={target?.CHAIN_ID}
               />
 
               <Tag tagColor="pink">{record.type}</Tag>
-              
             </TagSection>
             <TagSection>
               <Label>Member</Label>
@@ -126,17 +138,13 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
             <DataIndicator
               label="Period"
               data={formatPeriods(
-                BigNumber.from(
-                  record?.initializer?.periodLength || "0"
-                ).toString()
-              )}
+                record.initializer.periodLength.toString()
+              ).toString()}
             />
             <DataIndicator
               label="Amount"
               data={toWholeUnits(
-                BigNumber.from(
-                  record?.initializer?.cookieAmount || "0"
-                ).toString(),
+                record.initializer.cookieAmount.toString().toString(),
                 18
               )}
             />
@@ -148,19 +156,19 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
                   : record?.initializer?.cookieToken
               }
             />
-            <DataIndicator
-              label="Jar Balance"
-              data={"TODO"}
-            />
+            <DataIndicator label="Jar Balance" data={balance} />
           </>
         </DataGrid>
 
         <ParMd style={{ marginBottom: ".4rem" }}>
-          <StyledRouterLink to={`/claims/${record.id}`}>Claim</StyledRouterLink> tokens.
+          <StyledRouterLink to={`/claims/${record.jarUid}`}>
+            Claim
+          </StyledRouterLink>{" "}
+          tokens.
         </ParMd>
         <ParMd style={{ marginBottom: ".4rem" }}>
           Go to{" "}
-          <StyledRouterLink to={`/history/${record.id}`}>
+          <StyledRouterLink to={`/history/${record.jarUid}`}>
             History
           </StyledRouterLink>{" "}
           to inspect the crumbles.

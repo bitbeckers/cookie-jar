@@ -16,13 +16,14 @@ export const APP_FORM: Record<string, CustomFormLego> = {
       cookieAmount: true,
     },
     log: true,
-    tx: APP_TX.CREATENFTJAR as TXLego,
+    tx: APP_TX.CREATE_NFT_JAR as TXLego,
     fields: [
       APP_FIELD.RECEIVER,
       APP_FIELD.COOKIE_PERIOD,
       APP_FIELD.COOKIE_AMOUNT,
       APP_FIELD.COOKIE_TOKEN,
       { ...APP_FIELD.CSTEXTAREA, id: "allowList", label: "Allow List" },
+      { ...APP_FIELD.DONATION, id: "donation", label: "Donate to the devs" },
     ],
   },
   CONFIGJAR: {
@@ -57,9 +58,7 @@ export const APP_FORM: Record<string, CustomFormLego> = {
     description:
       "You have not claimed your daily cookie yet. Claiming a cookie will send funds direct to you from the jar.",
     requiredFields: {
-      cookiePeriod: true,
-      cookieToken: true,
-      cookieAmount: true,
+      description: true,
     },
     tx: APP_TX.COOKIEJAR as TXLego,
     log: true,

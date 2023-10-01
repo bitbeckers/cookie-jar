@@ -17,27 +17,19 @@ import { useCookieJar } from "../hooks/useCookieJar";
 import { StyledRouterLink } from "../components/Layout";
 
 export const Claims = () => {
-  const { address, chainId, isConnected } = useDHConnect();
+  const { address, isConnected } = useDHConnect();
   const [showConfetti, setShowConfetti] = useState(false);
   const { width, height } = useWindowSize();
   const target = useTargets();
 
   const { cookieJarId } = useParams();
 
-  const {
-    cookieJar,
-    isIdle,
-    isLoading,
-    error,
-    data,
-    hasClaimed,
-    canClaim,
-    refetch,
-  } = useCookieJar({
-    cookieJarId: cookieJarId,
-  });
+  const { cookieJar, isLoading, error, data, hasClaimed, canClaim, refetch } =
+    useCookieJar({
+      cookieJarId: cookieJarId!,
+    });
 
-  const isGnosis = chainId === "0x64";
+  console.log({ cookieJarId, cookieJar, isLoading, error, data });
 
   if (!isConnected)
     return (
@@ -46,14 +38,6 @@ export const Claims = () => {
         description="You need to connect your wallet in order to see if you are eligable for a claim"
       />
     );
-  if (!isGnosis) {
-    return (
-      <DisplayClaim
-        heading="Connect to Gnosis Chain"
-        description="Cookie Jar is only on Gnosis Chain."
-      />
-    );
-  }
 
   if (isLoading)
     return (
@@ -155,11 +139,11 @@ export const Claims = () => {
               unit={
                 target ? HAUS_NETWORK_DATA[target.CHAIN_ID]?.symbol || "" : ""
               }
-              claimId={cookieJar?.id}
+              claimId={cookieJar?.jarUid}
             />
             <ParMd style={{ marginBottom: ".4rem" }}>
               Go to{" "}
-              <StyledRouterLink to={`/history/${cookieJar?.id}`}>
+              <StyledRouterLink to={`/history/${cookieJar?.jarUid}`}>
                 History
               </StyledRouterLink>{" "}
               to inspect the crumbles.
@@ -176,7 +160,7 @@ export const Claims = () => {
           claimAmt={data.claimAmt}
           claimPeriod={data.claimPeriod}
           unit={target ? HAUS_NETWORK_DATA[target.CHAIN_ID]?.symbol || "" : ""}
-          claimId={cookieJar?.id}
+          claimId={cookieJar?.jarUid}
         />
         <ClaimForm
           user={address}

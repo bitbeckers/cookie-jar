@@ -11,7 +11,6 @@ export const CreateNFTJar = () => {
   const { chainId, address } = useDHConnect();
   const target = useTargets();
 
-  console.log("target", target);
   const { totalSupply } = useCookieNFT({
     nftAddress: target?.LIST_COOKIEJAR_6551_ADDRESS,
     userAddress: address,
