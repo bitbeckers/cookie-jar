@@ -37,10 +37,11 @@ export interface Subscription {
 export interface Cookie {
   cookieUid: string;
   jarUid: string;
-  reasonTag: string;
   cookieGiver: `0x${string}`;
   cookieMonster: string;
   amount: bigint;
+  reasonTag: string;
+  assessTag: string;
 }
 
 export interface Reason {
@@ -49,7 +50,14 @@ export interface Reason {
   link: string;
   user: string;
   receiver: string;
-  tag: string;
+  reasonTag: string;
+}
+
+export interface Rating {
+  id?: number;
+  assessTag: string;
+  user: string;
+  isGood: boolean;
 }
 
 export class CookieDB extends Dexie {
@@ -58,6 +66,7 @@ export class CookieDB extends Dexie {
   cookieJars!: Table<CookieJar>;
   cookies!: Table<Cookie>;
   reasons!: Table<Reason>;
+  ratings!: Table<Rating>;
   keyvals!: Table<any>;
 
   constructor() {
@@ -66,7 +75,8 @@ export class CookieDB extends Dexie {
       cookieJars: "&jarUid, address, type", // Primary key and indexed props
       subscriptions: "[address+event.name], address, lastBlock, event.name",
       cookies: "[jarUid+cookieUid]",
-      reasons: "&tag, user, receiver",
+      reasons: "&reasonTag, user, receiver",
+      ratings: "[assessTag+user], assessTag, user, isGood",
       keyvals: "",
     });
   }

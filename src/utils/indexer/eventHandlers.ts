@@ -151,6 +151,7 @@ const storeCookie = async (giveCookieLog: Log, publicClient: PublicClient) => {
     cookieUid: _uid,
     amount,
     reasonTag: await calculateReasonTag(cookieJar.jarUid, _uid),
+    assessTag: await calculateAssessTag(cookieJar.jarUid, _uid),
   } as Cookie;
 
   console.log("Found cookie: ", cookie);
@@ -177,30 +178,6 @@ export const getEventHandler = (handler: EventHandlers) => {
   }
 };
 
-// const storeReason = async (
-//   indexer: Indexer<IdbStorage>,
-//   post: PosterSchema
-// ) => {
-//   if (!indexer.storage.db) {
-//     console.error("No storage");
-//     return;
-//   }
-
-//   const {
-//     storage: { db },
-//   } = indexer;
-
-//   try {
-//     console.log("Storing reason", post);
-
-//     await db.add("reasons", post, post.tag);
-
-//     console.log(`Stored reason ${post.tag}`);
-//   } catch (e) {
-//     console.error("Failed to store reason", e);
-//   }
-// };
-
 const calculateReasonTag = async (cookieJarUid: string, cookieUid: string) => {
   const reasonTag = keccak256(
     stringToBytes(`CookieJar.${cookieJarUid}.reason.${cookieUid}`)
@@ -208,4 +185,13 @@ const calculateReasonTag = async (cookieJarUid: string, cookieUid: string) => {
 
   console.log(`Calculated reasonTag: ${reasonTag} for cookie ${cookieUid}`);
   return reasonTag;
+};
+
+const calculateAssessTag = async (cookieJarUid: string, cookieUid: string) => {
+  const assessTag = keccak256(
+    stringToBytes(`CookieJar.${cookieJarUid}.reaction.${cookieUid}`)
+  );
+
+  console.log(`Calculated assessTag: ${assessTag} for cookie ${cookieUid}`);
+  return assessTag;
 };

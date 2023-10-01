@@ -1,10 +1,16 @@
 import styled from "styled-components";
 
-import { Avatar, Badge, Card, ParMd } from "@daohaus/ui";
+import { Avatar, Badge, Button, Card, ParMd } from "@daohaus/ui";
 import cookie from "../assets/cookie.png";
 import { useProfile } from "@daohaus/moloch-v3-hooks";
 import { Cookie, Reason, db } from "../utils/indexer/db";
 import { useEffect, useState } from "react";
+import { useTxBuilder } from "@daohaus/tx-builder";
+import { APP_TX } from "../legos/tx";
+import { useDHConnect } from "@daohaus/connect";
+import { assembleTxArgs } from "@daohaus/contract-utils";
+import { CookieJarCore } from "../abis";
+import { useLiveQuery } from "dexie-react-hooks";
 
 const DootBox = styled.div`
   display: flex;
@@ -23,6 +29,8 @@ const DootBox = styled.div`
  * @param {string} props.record.link - The link to the history record.
  */
 export const HistoryCard = ({ record }: { record: Cookie }) => {
+  const { chainId } = useDHConnect();
+  const { fireTransaction } = useTxBuilder();
   const [reason, setReason] = useState<Reason>();
   const { profile: cookieGiver } = useProfile({
     address: record.cookieGiver,
@@ -32,10 +40,22 @@ export const HistoryCard = ({ record }: { record: Cookie }) => {
     address: record.cookieMonster,
   });
 
+  const cookieJar = useLiveQuery(
+    () => db.cookieJars.where("jarUid").equals(record.jarUid).first(),
+    [record]
+  );
+
+  console.log("record: ", record);
+
+  const doots = useLiveQuery(
+    () => db.ratings.where({ assessTag: record.assessTag }).toArray(),
+    [record]
+  );
+
   useEffect(() => {
     const fetchReason = async () => {
       console.log("Fetching reason: ", record.reasonTag);
-      const res = await db.reasons.get({ tag: record.reasonTag });
+      const res = await db.reasons.get({ reasonTag: record.reasonTag });
       if (!res) {
         return;
       }
@@ -45,6 +65,35 @@ export const HistoryCard = ({ record }: { record: Cookie }) => {
 
     fetchReason();
   }, [record.reasonTag]);
+
+  const onDoot = async (doot: "up" | "down") => {
+    if (!cookieJar?.address) {
+      console.log(`No cookie jar address found for jarId ${record.jarUid}`);
+      return;
+    }
+
+    const isGood: boolean = doot === "up" ? true : false;
+
+    const tx = await fireTransaction({
+      tx: {
+        id: "DOOT",
+        contract: {
+          type: "static",
+          contractName: "CookieJar",
+          abi: CookieJarCore,
+          targetAddress: cookieJar.address as `0x${string}`,
+        },
+        disablePoll: true,
+        method: "assessReason",
+        staticArgs: [record.cookieUid, isGood],
+      },
+      callerState: {
+        chainId,
+        contractAddress: record.cookieGiver,
+      },
+    });
+    console.log({ tx });
+  };
 
   return (
     <div style={{ marginBottom: "3rem", width: "70%" }}>
@@ -77,14 +126,24 @@ export const HistoryCard = ({ record }: { record: Cookie }) => {
         </ParMd>
 
         <DootBox style={{ fontSize: "2rem", marginTop: "1rem" }}>
-          <div>
+          <Button
+            onClick={() => onDoot("up")}
+            style={{ background: "none", border: "none" }}
+          >
             👍
-            <Badge badgeLabel={`${0} updoot`} />
-          </div>
-          <div>
+            <Badge
+              badgeLabel={`${doots?.filter((d) => d.isGood).length} updoot`}
+            />
+          </Button>
+          <Button
+            onClick={() => onDoot("down")}
+            style={{ background: "none", border: "none" }}
+          >
             👎
-            <Badge badgeLabel={`${0} downdoot`} />
-          </div>
+            <Badge
+              badgeLabel={`${doots?.filter((d) => !d.isGood).length}  downdoot`}
+            />
+          </Button>
         </DootBox>
       </Card>
     </div>
