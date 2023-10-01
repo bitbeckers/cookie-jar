@@ -1,6 +1,14 @@
 import styled from "styled-components";
 
-import { H2, H3, ParMd, SingleColumnLayout } from "@daohaus/ui";
+import {
+  Card,
+  H2,
+  H3,
+  ParMd,
+  SingleColumnLayout,
+  Spinner,
+  widthQuery,
+} from "@daohaus/ui";
 import { HausAnimated } from "../components/HausAnimated";
 
 import { JarCard } from "../components/JarCard";
@@ -15,6 +23,17 @@ const LinkBox = styled.div`
   justify-content: center;
 `;
 
+const JarContainer = styled(Card)`
+  padding: 3rem;
+  width: 100%;
+  border: none;
+  margin-bottom: 3rem;
+  @media ${widthQuery.lg} {
+    max-width: 100%;
+    min-width: 0;
+  }
+`;
+
 export const Jars = () => {
   const { getJars } = useIndexer();
 
@@ -27,26 +46,29 @@ export const Jars = () => {
   return (
     <SingleColumnLayout>
       <H2>Jars</H2>
+      <LinkBox>
+        <StyledRouterLink to="/create">Create New 🫙</StyledRouterLink>
+      </LinkBox>
 
-      {!data && isLoading && <HausAnimated />}
+      {(!data || isLoading) && <Spinner />}
 
-      {!data && !isLoading && (
-        <>
-          <H3 style={{ marginBottom: "2.4rem" }}>No Jars found</H3>
-          <ParMd style={{ marginBottom: "2.4rem" }}>
-            No Jars found on this network. Create a new one!
-          </ParMd>
+      {(!isLoading && !data) ||
+        (data && data.length == 0 && (
+          <>
+            <H3 style={{ marginBottom: "2.4rem" }}>No Jars found</H3>
+            <ParMd style={{ marginBottom: "2.4rem" }}>
+              No Jars found on this network. Create a new one!
+            </ParMd>
+          </>
+        ))}
 
-          <LinkBox>
-            <StyledRouterLink to="/create">Create New</StyledRouterLink>
-          </LinkBox>
-        </>
+      {data && !isLoading && data.length > 0 && (
+        <JarContainer>
+          {data.map((jar) => (
+            <JarCard record={jar} key={jar.id} />
+          ))}
+        </JarContainer>
       )}
-
-      {data &&
-        !isLoading &&
-        data.length > 0 &&
-        data.map((jar) => <JarCard record={jar} key={jar.id} />)}
     </SingleColumnLayout>
   );
 };
