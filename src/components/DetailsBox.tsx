@@ -2,11 +2,12 @@ import styled from "styled-components";
 
 import { DataIndicator } from "@daohaus/ui";
 import { formatPeriods, formatValueTo, fromWei } from "@daohaus/utils";
+import { StyledRouterLink } from "./Layout";
 
 const DetailsBox = styled.div`
   display: flex;
   flex-wrap: wrap;
-  width: 30%;
+  width: 40%;
   justify-content: space-between;
 `;
 
@@ -14,10 +15,12 @@ export const ClaimDetails = ({
   claimAmt,
   claimPeriod,
   unit,
+  claimId
 }: {
   claimAmt: bigint;
   claimPeriod: bigint;
   unit: string;
+  claimId: string | undefined;
 }) => {
   console.log("claimAmt", claimAmt);
   return (
@@ -31,10 +34,11 @@ export const ClaimDetails = ({
           unit: unit,
         })}
       />
-      <DataIndicator
-        label="Claim Period"
-        data={formatPeriods(claimPeriod.toString())}
-      />
+      <DataIndicator label="Claim Period" data={formatPeriods(claimPeriod)} />
+      <DataIndicator label="Balance" data={"TODO"} />
+      <StyledRouterLink to={`/history/${claimId || ""}`}>
+        View History
+      </StyledRouterLink>{" "}
     </DetailsBox>
   );
 };

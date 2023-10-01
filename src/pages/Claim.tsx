@@ -139,6 +139,7 @@ export const Claims = () => {
               unit={
                 target ? HAUS_NETWORK_DATA[target.CHAIN_ID]?.symbol || "" : ""
               }
+              claimId={cookieJar?.id}
             />
             <ParMd style={{ marginBottom: ".4rem" }}>
               Go to{" "}
@@ -159,6 +160,7 @@ export const Claims = () => {
           claimAmt={data.claimAmt}
           claimPeriod={data.claimPeriod}
           unit={target ? HAUS_NETWORK_DATA[target.CHAIN_ID]?.symbol || "" : ""}
+          claimId={cookieJar?.id}
         />
         <ClaimForm
           user={address}

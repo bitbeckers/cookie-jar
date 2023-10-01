@@ -1,7 +1,14 @@
 import styled from "styled-components";
 
-import { H2, H3, ParMd, SingleColumnLayout } from "@daohaus/ui";
-import { HausAnimated } from "../components/HausAnimated";
+import {
+  Card,
+  H2,
+  H3,
+  ParMd,
+  SingleColumnLayout,
+  Spinner,
+  widthQuery,
+} from "@daohaus/ui";
 
 import { JarCard } from "../components/JarCard";
 import { StyledRouterLink } from "../components/Layout";
@@ -13,14 +20,28 @@ const LinkBox = styled.div`
   justify-content: center;
 `;
 
+const JarContainer = styled(Card)`
+  padding: 3rem;
+  width: 100%;
+  border: none;
+  margin-bottom: 3rem;
+  @media ${widthQuery.lg} {
+    max-width: 100%;
+    min-width: 0;
+  }
+`;
+
 export const Jars = () => {
   const { cookieJars } = useIndexer();
 
   return (
     <SingleColumnLayout>
       <H2>Jars</H2>
+      <LinkBox>
+        <StyledRouterLink to="/create">Create New 🫙</StyledRouterLink>
+      </LinkBox>
 
-      {!cookieJars && <HausAnimated />}
+      {!cookieJars && <Spinner />}
 
       {cookieJars && cookieJars.length === 0 && (
         <>
@@ -28,15 +49,11 @@ export const Jars = () => {
           <ParMd style={{ marginBottom: "2.4rem" }}>
             No Jars found on this network. Create a new one!
           </ParMd>
-
-          <LinkBox>
-            <StyledRouterLink to="/create">Create New</StyledRouterLink>
-          </LinkBox>
         </>
       )}
 
       {cookieJars && cookieJars.length > 0 && (
-        <>
+        <JarContainer>
           {cookieJars.map((jar) => (
             <JarCard record={jar} key={jar.jarUid} />
           ))}
@@ -44,7 +61,7 @@ export const Jars = () => {
           <LinkBox>
             <StyledRouterLink to="/create">Create New</StyledRouterLink>
           </LinkBox>
-        </>
+        </JarContainer>
       )}
     </SingleColumnLayout>
   );
