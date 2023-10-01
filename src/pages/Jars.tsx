@@ -5,8 +5,7 @@ import { HausAnimated } from "../components/HausAnimated";
 
 import { JarCard } from "../components/JarCard";
 import { StyledRouterLink } from "../components/Layout";
-import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "../utils/indexer";
+import { useIndexer } from "../hooks/useIndexer";
 
 const LinkBox = styled.div`
   display: flex;
@@ -15,7 +14,7 @@ const LinkBox = styled.div`
 `;
 
 export const Jars = () => {
-  const cookieJars = useLiveQuery(() => db.cookieJars.toArray());
+  const { cookieJars } = useIndexer();
 
   return (
     <SingleColumnLayout>

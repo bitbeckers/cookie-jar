@@ -97,8 +97,6 @@ export const useCookieJar = ({ cookieJarId }: { cookieJarId: string }) => {
 
   const cookieJar = useLiveQuery(() => db.cookieJars.get(cookieJarId));
 
-  console.log("COOKIE JAR", cookieJar);
-
   const { data, ...rest } = useQuery(
     ["claimData", { address }],
     () =>

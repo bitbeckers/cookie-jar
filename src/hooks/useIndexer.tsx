@@ -13,7 +13,7 @@ const useIndexer = () => {
 
   useEffect(() => {
     const initIndexer = async () => {
-      console.log("set up");
+      console.log("Initializing cookie jar indexer...");
       // check if the indexer has not been initialized
       const indexer = new CookieJarIndexer(publicClient!);
       setIndexer(indexer);
