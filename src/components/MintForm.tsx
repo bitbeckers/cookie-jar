@@ -8,11 +8,7 @@ import { useDHConnect } from "@daohaus/connect";
 import { ZERO_ADDRESS } from "@daohaus/utils";
 import { SuccessText } from "@daohaus/ui";
 import { useTargets } from "../hooks/useTargets";
-import {
-  TransactionReceipt,
-  getEventSelector,
-  hexToBigInt,
-} from "viem";
+import { TransactionReceipt, getEventSelector, hexToBigInt } from "viem";
 
 type Minted = {
   account: string;
@@ -40,10 +36,6 @@ export const MintForm = () => {
   if (!address) return null;
 
   const onSuccess = async (txReceipt: TransactionReceipt) => {
-    const abi = [
-      "event AccountCreated(address account, address indexed cookieJar, uint256 indexed tokenId)",
-    ];
-
     const selector = getEventSelector(
       "AccountCreated(address account, address indexed cookieJar, uint256 indexed tokenId)"
     );

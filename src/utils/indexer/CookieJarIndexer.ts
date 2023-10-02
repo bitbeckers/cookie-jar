@@ -2,12 +2,13 @@ import { PublicClient, decodeEventLog } from "viem";
 import { db, CookieDB } from "./db";
 import { AbiEvent, parseAbi, parseAbiItem } from "abitype";
 import { EventHandlers, getEventHandler } from "./eventHandlers";
-import { debounce, set } from "lodash";
+import { debounce } from "lodash";
 import { postHandler } from "./posterHandlers";
 
 interface CookieJarIndexerInterface {
   db: CookieDB;
   subscribe: (
+    chainId: 5 | 100,
     address: `0x${string}`,
     event: AbiEvent,
     fromBlock: bigint,
@@ -44,7 +45,10 @@ class CookieJarIndexer implements CookieJarIndexerInterface {
     console.log("Updating");
     this.updating = true;
     const currentBlock = await this._publicClient.getBlockNumber();
-    const subscriptions = await this.db.subscriptions.toArray();
+    const chainId = await this._publicClient.getChainId();
+    const subscriptions = await this.db.subscriptions
+      .where({ chainId })
+      .toArray();
 
     console.log(subscriptions);
 
@@ -91,7 +95,7 @@ class CookieJarIndexer implements CookieJarIndexerInterface {
       const cookieJars = (await this.db.cookieJars.toArray()).map(
         (jar) => jar.address as `0x${string}`
       );
-      const posterState = await this.db.keyvals.get("posterState");
+      const posterState = await this.db.keyvals.get(`posterState-${chainId}`);
 
       if (posterState && cookieJars.length > 0) {
         console.log(`Getting posts from ${posterState.lastBlock}`);
@@ -129,7 +133,7 @@ class CookieJarIndexer implements CookieJarIndexerInterface {
           );
         }
 
-        await this.db.keyvals.update("posterState", {
+        await this.db.keyvals.update(`posterState-${chainId}`, {
           lastBlock: currentBlock,
         });
       }
@@ -141,6 +145,7 @@ class CookieJarIndexer implements CookieJarIndexerInterface {
   };
 
   subscribe = async (
+    chainId: 5 | 100,
     address: `0x${string}`,
     event: AbiEvent,
     fromBlock: bigint,
@@ -155,6 +160,7 @@ class CookieJarIndexer implements CookieJarIndexerInterface {
 
     try {
       const id = await this.db.subscriptions.add({
+        chainId,
         address,
         event,
         eventHandler,
@@ -162,7 +168,9 @@ class CookieJarIndexer implements CookieJarIndexerInterface {
         lastBlock: fromBlock,
       });
 
-      console.log(`Subscribed to ${address} ${event} events at id ${id}`);
+      console.log(
+        `Subscribed to ${address} ${event} events at id ${id} on chain ${chainId}`
+      );
     } catch (e) {
       console.error("Failed to subscribe to event", e);
     }

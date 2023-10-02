@@ -56,4 +56,4 @@ export const TARGETS: { [key: string]: Targets } = {
   development: TARGET_GOERLI,
 };
 
-export const DEFAULT_TARGET: Targets = TARGET_GOERLI;
+export const DEFAULT_TARGET: Targets = TARGET_GNOSIS;

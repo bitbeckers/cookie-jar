@@ -1,6 +1,5 @@
 import { Abi, AbiEvent } from "abitype";
 import Dexie, { Table } from "dexie";
-import { CreateContractEventFilterReturnType } from "viem";
 import { EventHandlers } from "./eventHandlers";
 
 export interface CookieJarInitializer {
@@ -17,6 +16,7 @@ export interface ListInitializer extends CookieJarInitializer {
 export type Initializer = CookieJarInitializer | ListInitializer;
 
 export interface CookieJar {
+  chainId: 5 | 100;
   jarUid: string;
   address: string;
   type: string;
@@ -27,6 +27,7 @@ export interface CookieJar {
 }
 
 export interface Subscription {
+  chainId: 5 | 100;
   address: `0x${string}`;
   event: AbiEvent;
   eventHandler: EventHandlers;
@@ -72,8 +73,9 @@ export class CookieDB extends Dexie {
   constructor() {
     super("cookieDb");
     this.version(1).stores({
-      cookieJars: "&jarUid, address, type", // Primary key and indexed props
-      subscriptions: "[address+event.name], address, lastBlock, event.name",
+      cookieJars: "&jarUid, address, type, chainId", // Primary key and indexed props
+      subscriptions:
+        "[chainId+address+event.name], address, lastBlock, event.name, chainId",
       cookies: "[jarUid+cookieUid]",
       reasons: "&reasonTag, user, receiver",
       ratings: "[assessTag+user], assessTag, user, isGood",

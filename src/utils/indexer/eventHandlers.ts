@@ -70,6 +70,7 @@ const storeCookieJar = async (
   }
 
   const { cookieJar, initializer, details, uid } = summonCookieJarLog.args;
+  const chainId = await publicClient.getChainId();
 
   const _details: {} = JSON.parse(details as string) as Details;
 
@@ -87,6 +88,7 @@ const storeCookieJar = async (
 
   const _decodedCookieJar = {
     ..._details,
+    chainId,
     jarUid: uid,
     address: cookieJar.toLowerCase() as `0x${string}`,
     initializer: {
@@ -103,15 +105,18 @@ const storeCookieJar = async (
     const id = await db.cookieJars
       .put(_decodedCookieJar, uid)
       .then(async () => {
-        await db.subscriptions.add({
-          address: _decodedCookieJar.address as `0x${string}`,
-          event: parseAbiItem(
-            "event GiveCookie(address indexed cookieMonster, uint256 amount, string _uid)"
-          ),
-          eventHandler: "StoreCookie",
-          fromBlock: summonCookieJarLog.blockNumber!,
-          lastBlock: summonCookieJarLog.blockNumber!,
-        });
+        if (chainId === 5 || chainId === 100) {
+          await db.subscriptions.add({
+            chainId,
+            address: _decodedCookieJar.address as `0x${string}`,
+            event: parseAbiItem(
+              "event GiveCookie(address indexed cookieMonster, uint256 amount, string _uid)"
+            ),
+            eventHandler: "StoreCookie",
+            fromBlock: summonCookieJarLog.blockNumber!,
+            lastBlock: summonCookieJarLog.blockNumber!,
+          });
+        }
       });
 
     console.log(`Stored cookieJar ${_decodedCookieJar} at ${id}`);
