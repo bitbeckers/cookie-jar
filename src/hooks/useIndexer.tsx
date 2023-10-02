@@ -9,45 +9,52 @@ import { db } from "../utils/indexer";
 const useIndexer = () => {
   const [indexer, setIndexer] = useState<CookieJarIndexer | undefined>();
   const addresses = useTargets();
-  const { publicClient } = useDHConnect();
+  const { publicClient, chainId } = useDHConnect();
 
   useEffect(() => {
-    const initIndexer = async () => {
+    const initIndexer = async (chainId: number) => {
       console.log("Initializing cookie jar indexer...");
       // check if the indexer has not been initialized
       const indexer = new CookieJarIndexer(publicClient!);
       setIndexer(indexer);
 
       // Subscribe to Poster
-      if (!(await db.keyvals.get("posterState")) && addresses) {
+      //TODO better poster state management
+      if (!(await db.keyvals.get(`posterState-${chainId}`)) && addresses) {
         await db.keyvals.add(
           { lastBlock: BigInt(addresses.START_BLOCK) },
-          "posterState"
+          `posterState-${chainId}`
         );
       }
     };
 
-    if (publicClient && !indexer) {
-      initIndexer();
+    if (publicClient && !indexer && Number(chainId) > 0) {
+      initIndexer(Number(chainId));
     }
   }, []);
 
   useEffect(() => {
     if (addresses && indexer) {
-      console.log("Registering initial subscriptions...");
-      // Subscribe to Cookie Jar Factory
-      indexer.subscribe(
-        addresses?.COOKIEJAR_FACTORY_ADDRESS as `0x${string}`,
-        parseAbiItem(
-          "event SummonCookieJar(address cookieJar, bytes initializer, string details, string uid)"
-        ),
-        BigInt(addresses.START_BLOCK),
-        "StoreCookieJar"
-      );
+      const chainId = Number(addresses?.CHAIN_ID);
+      if (chainId === 5 || chainId === 100) {
+        console.log("Registering initial subscriptions...");
+        // Subscribe to Cookie Jar Factory
+        indexer.subscribe(
+          chainId,
+          addresses?.COOKIEJAR_FACTORY_ADDRESS as `0x${string}`,
+          parseAbiItem(
+            "event SummonCookieJar(address cookieJar, bytes initializer, string details, string uid)"
+          ),
+          BigInt(addresses.START_BLOCK),
+          "StoreCookieJar"
+        );
+      }
     }
-  }, [addresses, indexer]);
+  }, [addresses, indexer, publicClient]);
 
-  const cookieJars = useLiveQuery(() => db.cookieJars.toArray());
+  const cookieJars = useLiveQuery(() =>
+    db.cookieJars.where({ chainId: Number(chainId) }).toArray()
+  );
   const cookies = useLiveQuery(() => db.cookies.toArray());
 
   return {
