@@ -1,5 +1,15 @@
 import { parseAbi, parseAbiItem, parseAbiParameters } from "abitype";
-import { Cookie, CookieJar, db } from "./db";
+import {
+  BaalInitializer,
+  Cookie,
+  CookieJar,
+  CookieJarInitializer,
+  ERC20Initializer,
+  ERC721Initializer,
+  Initializer,
+  ListInitializer,
+  db,
+} from "./db";
 import {
   Log,
   decodeAbiParameters,
@@ -8,6 +18,7 @@ import {
   stringToBytes,
   keccak256,
 } from "viem";
+import _ from "lodash";
 
 export type EventHandlers = "StoreCookieJar" | "StoreCookie";
 type SummonLog = {
@@ -27,11 +38,29 @@ const hasArgs = (obj: unknown): obj is { args: unknown } => {
   return typeof obj === "object" && obj !== null && "args" in obj;
 };
 
-export type Details = {
+type Details6551 = {
   type: string;
-  name: string;
+  title: string;
   description: string;
   link: string;
+};
+
+const DETAILS = {
+  ERC20: "ERC20 Cookie Jar V2",
+  ERC721: "NFT Cookie Jar V2",
+  List: "List Cookie Jar V2",
+  Open: "Open Cookie Jar V2",
+  Baal: "Baal CookieJar V2",
+};
+
+const parameterString = {
+  baal: "address safeTarget, uint256 periodLenght, uint256 cookieAmount, address cookieToken, address _dao, uint256 _threshold, bool _useShares, bool _useLoot",
+  erc20:
+    "address safeTarget, uint256 periodLenght, uint256 cookieAmount, address cookieToken, address _erc20addr, uint256 _threshold",
+  erc721:
+    "address safeTarget, uint256 periodLenght, uint256 cookieAmount, address cookieToken, address _erc721addr, uint256 _threshold",
+  list: "address safeTarget, uint256 periodLenght, uint256 cookieAmount, address cookieToken, address[] allowlist",
+  open: "address safeTarget, uint256 periodLenght, uint256 cookieAmount, address cookieToken",
 };
 
 const isSummonLog = (obj: unknown): obj is SummonLog => {
@@ -69,35 +98,170 @@ const storeCookieJar = async (
     return;
   }
 
-  const { cookieJar, initializer, details, uid } = summonCookieJarLog.args;
   const chainId = await publicClient.getChainId();
 
-  const _details: {} = JSON.parse(details as string) as Details;
+  const parseSummonArguments = (log: SummonLog) => {
+    const { cookieJar, initializer, details, uid } = log;
+    const decoded = decodeFunctionData({
+      abi: parseAbi(["function setUp(bytes)"]),
+      data: initializer,
+    });
 
-  const decoded = decodeFunctionData({
-    abi: parseAbi(["function setUp(bytes)"]),
-    data: initializer,
-  });
+    const _details = {
+      type: "",
+      name: "",
+      description: "",
+      link: "",
+    };
 
-  const decodedSetUp = decodeAbiParameters(
-    parseAbiParameters(
-      "address safeTarget, uint256 periodLenght, uint256 cookieAmount, address cookieToken, address[] allowlist"
-    ),
-    decoded.args[0]
+    let _initializer: Initializer | undefined;
+
+    if (details === DETAILS.Baal) {
+      _details.type = "Baal";
+      _details.name = "Cookie Jar V2";
+
+      const decodedAbiParameters = decodeAbiParameters(
+        parseAbiParameters(parameterString.baal),
+        decoded.args[0]
+      );
+
+      _initializer = {
+        safeTarget: decodedAbiParameters[0],
+        periodLength: decodedAbiParameters[1],
+        cookieAmount: decodedAbiParameters[2],
+        cookieToken: decodedAbiParameters[3],
+        _dao: decodedAbiParameters[4],
+        _threshold: decodedAbiParameters[5],
+        _useShares: decodedAbiParameters[6],
+        _useLoot: decodedAbiParameters[7],
+      } as BaalInitializer;
+    }
+
+    if (details === DETAILS.ERC20) {
+      _details.type = "ERC20";
+      _details.name = "Cookie Jar V2";
+
+      const decodedAbiParameters = decodeAbiParameters(
+        parseAbiParameters(parameterString.erc20),
+        decoded.args[0]
+      );
+
+      _initializer = {
+        safeTarget: decodedAbiParameters[0],
+        periodLength: decodedAbiParameters[1],
+        cookieAmount: decodedAbiParameters[2],
+        cookieToken: decodedAbiParameters[3],
+        _erc20addr: decodedAbiParameters[4],
+        _threshold: decodedAbiParameters[5],
+      } as ERC20Initializer;
+    }
+
+    if (details === DETAILS.List) {
+      _details.type = "List";
+      _details.name = "Cookie Jar V2";
+
+      const decodedAbiParameters = decodeAbiParameters(
+        parseAbiParameters(parameterString.list),
+        decoded.args[0]
+      );
+
+      _initializer = {
+        safeTarget: decodedAbiParameters[0],
+        periodLength: decodedAbiParameters[1],
+        cookieAmount: decodedAbiParameters[2],
+        cookieToken: decodedAbiParameters[3],
+        allowList: (decodedAbiParameters[4] as string[]).map((addr: string) =>
+          addr.toLowerCase()
+        ),
+      } as ListInitializer;
+    }
+
+    if (details === DETAILS.ERC721) {
+      _details.type = "ERC721";
+      _details.name = "Cookie Jar V2";
+
+      const decodedAbiParameters = decodeAbiParameters(
+        parseAbiParameters(parameterString.erc721),
+        decoded.args[0]
+      );
+
+      _initializer = {
+        safeTarget: decodedAbiParameters[0],
+        periodLength: decodedAbiParameters[1],
+        cookieAmount: decodedAbiParameters[2],
+        cookieToken: decodedAbiParameters[3],
+        _erc721addr: decodedAbiParameters[4],
+        _threshold: decodedAbiParameters[5],
+      } as ERC721Initializer;
+    }
+
+    if (details === DETAILS.Open) {
+      _details.type = "Open";
+      _details.name = "Cookie Jar V2";
+
+      const decodedAbiParameters = decodeAbiParameters(
+        parseAbiParameters(parameterString.open),
+        decoded.args[0]
+      );
+
+      _initializer = {
+        safeTarget: decodedAbiParameters[0],
+        periodLength: decodedAbiParameters[1],
+        cookieAmount: decodedAbiParameters[2],
+        cookieToken: decodedAbiParameters[3],
+      } as CookieJarInitializer;
+    }
+
+    try {
+      if (JSON.parse(details as string)) {
+        const detailsJson = JSON.parse(details as string) as Details6551;
+
+        console.log("Parsed details to JSON", detailsJson);
+
+        _details.type = detailsJson.type;
+        _details.name = detailsJson.title;
+        _details.description = detailsJson.description;
+        _details.link = detailsJson.link;
+
+        const decodedAbiParameters = decodeAbiParameters(
+          parseAbiParameters(parameterString.list),
+          decoded.args[0]
+        );
+
+        _initializer = {
+          safeTarget: decodedAbiParameters[0],
+          periodLength: decodedAbiParameters[1],
+          cookieAmount: decodedAbiParameters[2],
+          cookieToken: decodedAbiParameters[3],
+          allowList: decodedAbiParameters[4],
+        } as ListInitializer;
+      }
+    } catch (e) {
+      console.error("Failed to parse details to JSON", e);
+    }
+
+    if (_.isEmpty(_details) || !_initializer || _.isEmpty(_initializer)) {
+      throw new Error("Invalid details or initializer");
+    }
+
+    return {
+      cookieJar,
+      uid,
+      initializer: _initializer,
+      details: _details,
+    };
+  };
+
+  const { cookieJar, uid, initializer, details } = parseSummonArguments(
+    summonCookieJarLog.args
   );
 
   const _decodedCookieJar = {
-    ..._details,
+    ...details,
     chainId,
     jarUid: uid,
     address: cookieJar.toLowerCase() as `0x${string}`,
-    initializer: {
-      safeTarget: decodedSetUp[0],
-      periodLength: decodedSetUp[1],
-      cookieAmount: decodedSetUp[2],
-      cookieToken: decodedSetUp[3],
-      allowList: decodedSetUp[4],
-    },
+    initializer,
   } as CookieJar;
 
   try {

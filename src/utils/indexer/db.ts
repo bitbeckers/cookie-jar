@@ -13,7 +13,29 @@ export interface ListInitializer extends CookieJarInitializer {
   allowList: string[];
 }
 
-export type Initializer = CookieJarInitializer | ListInitializer;
+export interface ERC20Initializer extends CookieJarInitializer {
+  _erc20addr: string;
+  _threshold: bigint;
+}
+
+export interface ERC721Initializer extends CookieJarInitializer {
+  _erc721addr: string;
+  _threshold: bigint;
+}
+
+export interface BaalInitializer extends CookieJarInitializer {
+  _dao: string;
+  _threshold: bigint;
+  _useShares: boolean;
+  _useLoot: boolean;
+}
+
+export type Initializer =
+  | CookieJarInitializer
+  | ListInitializer
+  | ERC20Initializer
+  | ERC721Initializer
+  | BaalInitializer;
 
 export interface CookieJar {
   chainId: 5 | 100;
