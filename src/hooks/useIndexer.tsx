@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import { useTargets } from "./useTargets";
 import CookieJarIndexer from "../utils/indexer/CookieJarIndexer";
 import { parseAbiItem } from "abitype";
-import { useLiveQuery } from "dexie-react-hooks";
 import { useDHConnect } from "@daohaus/connect";
 import { db } from "../utils/indexer";
 
 const useIndexer = () => {
-  const [indexer, setIndexer] = useState<CookieJarIndexer | undefined>();
+  const [indexer, setIndexer] = useState<CookieJarIndexer>();
   const addresses = useTargets();
   const { publicClient, chainId } = useDHConnect();
 
@@ -50,7 +49,7 @@ const useIndexer = () => {
         );
       }
     }
-  }, [addresses, indexer, publicClient]);
+  }, [addresses, indexer]);
 
   return {
     indexer,

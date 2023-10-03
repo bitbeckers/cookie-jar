@@ -50,8 +50,7 @@ class CookieJarIndexer implements CookieJarIndexerInterface {
       .where({ chainId })
       .toArray();
 
-    console.log(subscriptions);
-
+    //TODO something cleaner than massice try-catch
     try {
       // Get cookie jars and claim events
       await Promise.all(
