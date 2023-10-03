@@ -52,16 +52,9 @@ const useIndexer = () => {
     }
   }, [addresses, indexer, publicClient]);
 
-  const cookieJars = useLiveQuery(() =>
-    db.cookieJars.where({ chainId: Number(chainId) }).toArray()
-  );
-  const cookies = useLiveQuery(() => db.cookies.toArray());
-
   return {
     indexer,
     client: publicClient,
-    cookieJars,
-    cookies,
   };
 };
 

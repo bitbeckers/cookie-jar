@@ -13,7 +13,9 @@ import {
 
 import { JarCard } from "../components/JarCard";
 import { StyledRouterLink } from "../components/Layout";
-import { useIndexer } from "../hooks/useIndexer";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "../utils/indexer";
+import { useDHConnect } from "@daohaus/connect";
 
 const LinkBox = styled.div`
   display: flex;
@@ -33,7 +35,10 @@ const JarContainer = styled(Card)`
 `;
 
 export const Jars = () => {
-  const { cookieJars } = useIndexer();
+  const { chainId } = useDHConnect();
+  const cookieJars = useLiveQuery(() =>
+    db.cookieJars.where({ chainId: Number(chainId) }).toArray()
+  );
 
   return (
     <SingleColumnLayout>

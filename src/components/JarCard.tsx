@@ -76,6 +76,8 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
   const { isMember } = useCookieJar({ cookieJarId: record.jarUid });
   const [balance, setBalance] = useState<string>("Loading");
 
+  console.log("Rendering JarCard: ", record);
+
   useEffect(() => {
     const getBalance = async () => {
       const _balance = await publicClient?.getBalance({
@@ -96,7 +98,7 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
         <StyledCardHeader>
           <div>
             <img src={cookie} alt="cookie" height={"20px"} />
-            <H4>{record.name}</H4>
+            <H4>{`${record.name} - ${record.type}`}</H4>
             <ParMd style={{ marginBottom: ".4rem" }}>
               {record.description}
             </ParMd>
