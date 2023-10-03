@@ -76,8 +76,6 @@ export const JarCard = ({ record }: { record: CookieJar }) => {
   const { isMember } = useCookieJar({ cookieJarId: record.jarUid });
   const [balance, setBalance] = useState<string>("Loading");
 
-  console.log("Rendering JarCard: ", record);
-
   useEffect(() => {
     const getBalance = async () => {
       const _balance = await publicClient?.getBalance({
