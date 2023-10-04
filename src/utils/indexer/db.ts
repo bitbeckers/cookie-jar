@@ -42,7 +42,7 @@ export interface CookieJar {
   jarUid: string;
   address: string;
   type: string;
-  name: string;
+  title: string;
   description: string;
   link: string;
   initializer: Initializer;
@@ -60,7 +60,7 @@ export interface Subscription {
 export interface Cookie {
   cookieUid: string;
   jarUid: string;
-  cookieGiver: `0x${string}`;
+  cookieGiver: string;
   cookieMonster: string;
   amount: bigint;
   reasonTag: string;
