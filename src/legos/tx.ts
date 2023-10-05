@@ -34,6 +34,15 @@ export const APP_TX = {
       ".formValues.donationToken",
       ".formValues.proposalOffering",
       ".formValues.allowList",
+      {
+        type: "JSONDetails",
+        jsonSchema: {
+          type: { type: "static", value: "6551" },
+          title: ".formValues.title",
+          description: ".formValues.description",
+          link: ".formValues.link",
+        },
+      },
     ],
     overrides: {
       value: ".formValues.proposalOffering",
